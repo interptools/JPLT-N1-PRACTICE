@@ -9,8 +9,8 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="N1 漢字">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <title>N1 漢字練習帳 — Kanji Reviewer</title>
 <meta name="description" content="A stroke-order practice notebook and spaced-review deck for 1,504 JLPT N1 kanji.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -33,6 +33,7 @@ body.night{
   --shu:#E07A66; --kin:#CBA352; --moss:#8CB58F;
 }
 *{box-sizing:border-box}
+[hidden]{display:none!important}
 html{-webkit-text-size-adjust:100%}
 body{
   margin:0; background:var(--paper); color:var(--ink);
@@ -243,10 +244,10 @@ button{touch-action:manipulation}
   }
   nav.tabs button .jp{margin:0;font-size:1.15rem;line-height:1.1}
   nav.tabs button[aria-selected="true"]{border-top-color:var(--shu);color:var(--ai)}
-  .pgrid{grid-template-columns:1fr;gap:20px}
+  .pgrid{grid-template-columns:1fr;gap:14px}
   .cellwrap{width:100%;max-width:var(--cellsize);margin:0 auto}
   .cellbar button{padding:12px 6px;font-size:.84rem}
-  .hint{font-size:.8rem;min-height:2.4em}
+  .hint{font-size:.8rem;min-height:2.2em;margin-top:6px}
   .meta h2{font-size:2.3rem}
   .row{grid-template-columns:4.4em 1fr;gap:10px}
   .list{grid-template-columns:1fr 1fr;gap:8px}
@@ -374,6 +375,7 @@ button{touch-action:manipulation}
       <span id="rvQueue"></span><span id="rvSession"></span>
     </div>
     <div id="rvBody">
+      <div id="rvCards">
       <div class="face" id="face">
         <div class="prompt" id="rvPrompt"></div>
         <div class="q" id="rvQ"></div>
@@ -392,6 +394,12 @@ button{touch-action:manipulation}
         <button data-rate="1">Hard <small>2</small></button>
         <button class="good" data-rate="2">Good <small>3</small></button>
         <button class="easy" data-rate="3">Easy <small>4</small></button>
+      </div>
+      </div>
+      <div class="done" id="rvDone" hidden>
+        <div class="big">Nothing due right now.</div>
+        <p id="rvDoneWhy"></p>
+        <button class="iconbtn" id="rvAgain">Check again</button>
       </div>
       <div class="rvopts">
         <label>Ask me
@@ -438,7 +446,7 @@ button{touch-action:manipulation}
 
 </main>
 
-<script src="https://cdn.jsdelivr.net/npm/hanzi-writer@3.5.0/dist/hanzi-writer.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/hanzi-writer@3/dist/hanzi-writer.min.js"></script>
 <script>
 /* ============================================================
    Data: [kanji, on-romaji, on-kana, kun-romaji, kun-kana, meaning]
@@ -627,7 +635,7 @@ const K = [
 ["還","kan","カン","kae(ru)","かえ(る)","send back, return"],
 ["属","zoku, shoku","ゾク、ショク","sakan, tsuku, yakara","さかん、つく、やから","belong, genus, subordinate official, affiliated"],
 ["慮","ryo","リョ","omonpaku(ru)","おもんぱく(る)","prudence, thought, concern, consider, deliberate, fear"],
-["枠","","-","waku","わく","frame, framework, spindle, spool, bounding-box"],
+["枠","","","waku","わく","frame, framework, spindle, spool, bounding-box"],
 ["恵","kei, e","ケイ、エ","megu(mu)","めぐ(む)","favor, blessing, grace, kindness"],
 ["露","ro, rou","ロ、ロウ","tsuyu","つゆ","dew, tears, expose, Russia"],
 ["沖","chuu","チュウ","oki, okitsu, waku","おき、おきつ、わく","open sea, offing, rise high into sky"],
@@ -778,7 +786,7 @@ const K = [
 ["偽","gi, ka","ギ、カ","itsuwa(ru), nise","いつわ(る)、にせ","falsehood, lie, deceive, pretend, counterfeit, forgery"],
 ["較","kaku, kou","カク、コウ","kura(beru)","くら(べる)","contrast, compare"],
 ["覇","ha, haku","ハ、ハク","hatagashira","はたがしら","hegemony, supremacy, leadership, champion"],
-["畑","","-","hata, hatake, -batake","はた、はたけ、-ばたけ","farm, field, garden, one's specialty, (kokuji)"],
+["畑","","","hata, hatake, -batake","はた、はたけ、-ばたけ","farm, field, garden, one's specialty, (kokuji)"],
 ["詳","shou","ショウ","kuwa(shii), tsumabi(raka)","くわ(しい)、つまび(らか)","detailed, full, minute, accurate, well-informed"],
 ["抵","tei","テイ","","","resist, reach, touch"],
 ["脅","kyou","キョウ","obiya(kasu), odo(su)","おびや(かす)、おど(す)","threaten, coerce"],
@@ -949,7 +957,7 @@ const K = [
 ["豆","tou, zu","トウ、ズ","mame","まめ","beans, pea, midget"],
 ["遂","sui","スイ","to(geru), tsui(ni)","と(げる)、つい(に)","consummate, accomplish, attain, commit (suicide)"],
 ["狂","kyou","キョウ","kuru(u)","くる(う)","lunatic, insane, crazy, confuse"],
-["栃","","-","tochi","とち","horse chestnut, (kokuji)"],
+["栃","","","tochi","とち","horse chestnut, (kokuji)"],
 ["岐","ki, gi","キ、ギ","","","branch off, fork in road, scene, arena, theater"],
 ["陛","hei","ヘイ","","","highness, steps (of throne)"],
 ["緯","i","イ","yokoito, nuki","よこいと、ぬき","horizontal, woof, left & right, (parallels of) latitude, prediction"],
@@ -1076,7 +1084,7 @@ const K = [
 ["謙","ken","ケン","herikuda(ru)","へりくだ(る)","self-effacing, humble oneself, condescend, be modest"],
 ["后","kou, go","コウ、ゴ","kisaki","きさき","empress, queen, after, behind, back, later"],
 ["嘆","tan","タン","nage(ku), nage(kawashii)","なげ(く)、なげ(かわしい)","sigh, lament, moan, grieve, sigh of admiration"],
-["俣","","-","mata","また","crotch, thigh, groin, fork, junction, (kokuji)"],
+["俣","","","mata","また","crotch, thigh, groin, fork, junction, (kokuji)"],
 ["菌","kin","キン","","","germ, fungus, bacteria"],
 ["鎌","ren, ken","レン、ケン","kama","かま","sickle, scythe, trick"],
 ["巣","sou","ソウ","su, su(kuu)","す、す(くう)","nest, rookery, hive, cobweb, den"],
@@ -1099,7 +1107,7 @@ const K = [
 ["漠","baku","バク","","","vague, obscure, desert, wide"],
 ["邪","ja","ジャ","yokoshi(ma)","よこし(ま)","wicked, injustice, wrong"],
 ["晶","shou","ショウ","","","sparkle, clear, crystal"],
-["辻","","-","tsuji","つじ","crossing, crossroad, street corners, (kokuji)"],
+["辻","","","tsuji","つじ","crossing, crossroad, street corners, (kokuji)"],
 ["墨","boku","ボク","sumi","すみ","black ink, India ink, ink stick, Mexico"],
 ["鎮","chin","チン","shizu(meru), osae","しず(める)、おさえ","tranquilize, ancient peace-preservation centers"],
 ["洞","dou","ドウ","hora","ほら","den, cave, excavation"],
@@ -1209,7 +1217,7 @@ const K = [
 ["睡","sui","スイ","nemu(ru), nemu(i)","ねむ(る)、ねむ(い)","drowsy, sleep, die"],
 ["錯","saku, shaku","サク、シャク","","","confused, mix, be in disorder"],
 ["伯","haku","ハク","","","chief, count, earl, uncle, Brazil"],
-["笹","","-","sasa","ささ","bamboo grass, (kokuji)"],
+["笹","","","sasa","ささ","bamboo grass, (kokuji)"],
 ["穀","koku","コク","","","cereals, grain"],
 ["柿","shi","シ","kaki","かき","persimmon"],
 ["陵","ryou","リョウ","misasagi","みささぎ","mausoleum, imperial tomb, mound, hill"],
@@ -1315,7 +1323,7 @@ const K = [
 ["偵","tei","テイ","","","spy"],
 ["喝","katsu","カツ","","","hoarse, scold"],
 ["敢","kan","カン","a(ete)","あ(えて)","daring, brave, bold, sad, tragic, pitiful"],
-["畠","","-","hatake, hata","はたけ、はた","field, farm, garden, (kokuji)"],
+["畠","","","hatake, hata","はたけ、はた","field, farm, garden, (kokuji)"],
 ["胎","tai","タイ","","","womb, uterus"],
 ["酵","kou","コウ","","","fermentation"],
 ["憤","fun","フン","ikidoo(ru)","いきどお(る)","aroused, resent, be indignant, anger"],
@@ -1393,7 +1401,7 @@ const K = [
 ["拙","setsu","セツ","tsutana(i)","つたな(い)","bungling, clumsy, unskillful"],
 ["侍","ji, shi","ジ、シ","samu(rai), habe(ru)","さむらい、はべ(る)","waiter, samurai, wait upon, serve"],
 ["尺","shaku, seki","シャク、セキ","sashi","さし","shaku, Japanese foot, measure, scale, rule"],
-["峠","","-","touge","とうげ","mountain peak, mountain pass, climax, crest, (kokuji)"],
+["峠","","","touge","とうげ","mountain peak, mountain pass, climax, crest, (kokuji)"],
 ["篤","toku","トク","atsu(i)","あつ(い)","fervent, kind, cordial, serious, deliberate"],
 ["肇","chou, jou, tou","チョウ、ジョウ、トウ","haji(meru), hajime","はじ(める)、はじめ","beginning"],
 ["渇","katsu","カツ","kawa(ku)","かわ(く)","thirst, dry up, parch"],
@@ -1544,7 +1552,7 @@ const K = [
 ["稜","ryou, rou","リョウ、ロウ","itsu, kado","いつ、かど","angle, edge, corner, power, majesty"],
 ["牟","bou, mu","ボウ、ム","","","pupil (eye), moo (cow sound)"],
 ["桟","san, sen","サン、セン","kakehashi","かけはし","scaffold, cleat, frame, jetty, bolt (door)"],
-["榊","","-","sakaki","さかき","sacred Shinto tree, (kokuji)"],
+["榊","","","sakaki","さかき","sacred Shinto tree, (kokuji)"],
 ["錫","seki, shaku","セキ、シャク","suzu, tama(u)","すず、たま(う)","copper, tin"],
 ["荏","jin, nin","ジン、ニン","","","bean, perilla, herb, soft, pliable"],
 ["惧","ku, gu","ク、グ","oso(reru)","おそ(れる)","fear, be afraid of, dread"],
@@ -1567,7 +1575,7 @@ const K = [
 ["赳","kyuu","キュウ","","","strong and brave"],
 ["漸","zen","ゼン","youya(ku), yaya, susu(mu)","ようや(く)、やや、すす(む)","steadily, gradually advancing, finally, barely"],
 ["逢","hou","ホウ","a(u), muka(eru)","あ(う)、むか(える)","meeting, tryst, date, rendezvous"],
-["凧","","-","ikanobori, tako","いかのぼり、たこ","kite, (kokuji)"],
+["凧","","","ikanobori, tako","いかのぼり、たこ","kite, (kokuji)"],
 ["鵜","tei, dai","テイ、ダイ","u","う","cormorant"],
 ["庵","an","アン","iori, io","いおり、いお","hermitage, retreat"],
 ["膳","zen, sen","ゼン、セン","kashiwa, susu(meru), sona(eru)","かしわ、すす(める)、そな(える)","small low table, tray"],
@@ -1662,7 +1670,7 @@ const K = [
 ["桶","you, tou","ヨウ、トウ","oke","おけ","tub, bucket"],
 ["惣","sou","ソウ","sube(te)","すべ(て)","all"],
 ["股","ko","コ","mata, momo","また、もも","thigh, crotch"],
-["匂","","-","nio(u), nio(i), nio(waseru)","にお(う)、にお(い)、にお(わせる)","fragrant, stink, glow, insinuate, (kokuji)"],
+["匂","","","nio(u), nio(i), nio(waseru)","にお(う)、にお(い)、にお(わせる)","fragrant, stink, glow, insinuate, (kokuji)"],
 ["鞍","an","アン","kura","くら","saddle"],
 ["蔦","chou","チョウ","tsuta","つた","vine, ivy"],
 ["玩","gan","ガン","mochiaso(bu), moteaso(bu)","もちあそ(ぶ)、もてあそ(ぶ)","play, take pleasure in, trifle with, make sport of"],
@@ -1746,7 +1754,7 @@ const K = [
 ["彗","sui, e, kei, sei","スイ、エ、ケイ、セイ","houki","ほうき","comet"],
 ["謄","tou","トウ","","","mimeograph, copy"],
 ["諌","kan","カン","isa(me)","いさ(め)","admonish, dissuade"],
-["樫","","-","kashi","かし","evergreen oak, (kokuji)"],
+["樫","","","kashi","かし","evergreen oak, (kokuji)"],
 ["噂","son","ソン","uwasa","うわさ","rumor, gossip, hearsay"],
 ["脊","seki","セキ","se, sei","せ、せい","stature, height, spine"],
 ["牝","hin","ヒン","mesu, me-, men","めす、め-、めん","female"],
@@ -1757,7 +1765,7 @@ const K = [
 ["丑","chuu","チュウ","ushi","うし","sign of the ox or cow, 1-3AM, second sign of Chinese zodiac"],
 ["笏","kotsu","コツ","shaku","しゃく","mace, baton, scepter"],
 ["蕨","ketsu","ケツ","warabi","わらび","bracken, fernbrake"],
-["噺","","-","hanashi","はなし","talk, (kokuji)"],
+["噺","","","hanashi","はなし","talk, (kokuji)"],
 ["抒","jo, sho","ジョ、ショ","ku(mu), no(beru)","く(む)、の(べる)","tell"],
 ["嗣","shi","シ","","","heir, succeed"],
 ["隈","wai, e","ワイ、エ","kuma, sumi","くま、すみ","corner, nook, recess"],
@@ -1850,7 +1858,7 @@ const K = [
 ["撚","nen","ネン","yo(ru), yo(reru), yori, hine(ru)","よ(る)、よ(れる)、より、ひね(る)","twist, twine, kinky"],
 ["噛","kou, gou","コウ、ゴウ","ka(mu), ka(jiru)","か(む)、か(じる)","chew, bite, gnaw"],
 ["卯","bou, mou","ボウ、モウ","u","う","sign of the hare or rabbit, fourth sign of Chinese zodiac, 5-7AM, east"],
-["桝","","-","masu","ます","measuring box, (kokuji)"],
+["桝","","","masu","ます","measuring box, (kokuji)"],
 ["撫","bu, fu","ブ、フ","na(deru)","な(でる)","stroke, pat, smooth down"],
 ["喋","chou, tou","チョウ、トウ","shabe(ru), tsuiba(mu)","しゃべ(る)、ついば(む)","talk, chat, chatter"],
 ["但","tan","タン","tada(shi)","ただ(し)","however, but"],
@@ -1886,7 +1894,7 @@ const K = [
 ["蛭","shitsu, chitsu","シツ、チツ","hiru","ひる","leech"],
 ["婆","ba","バ","baba, baa","ばば、ばあ","old woman, grandma, wet nurse"],
 ["叢","sou, su","ソウ、ス","kusamura, mura(garu), mura","くさむら、むら(がる)、むら","plexus, clump of bushes, thicket"],
-["椙","","-","sugi","すぎ","Japanese cedar, cryptomeria, (kokuji)"],
+["椙","","","sugi","すぎ","Japanese cedar, cryptomeria, (kokuji)"],
 ["轟","gou, kou","ゴウ、コウ","todoro(kasu), todoro(ku)","とどろ(かす)、とどろ(く)","roar, thunder, boom resound"],
 ["贋","gan","ガン","nise","にせ","counterfeit, forgery"],
 ["洒","sha, son, sai, sen, sei","シャ、ソン、サイ、セン、セイ","susu(gu), ara(u)","すす(ぐ)、あら(う)","wash, sprinkle"],
@@ -1957,13 +1965,47 @@ const readingRomaji=i=>[onR(i),kunR(i)].filter(Boolean).join(' / ');
 
 /* ---------------- storage (works without localStorage too) ---------------- */
 const KEY='n1kanji.v1';
+const SET_COUNT=Math.ceil(TOTAL/100);
 let mem=null, canPersist=true;
+/* Anything from storage or an imported file is untrusted: coerce it into shape
+   so one bad value can't take the app down on every future load. */
+function sane(o){
+  const out={cards:{},stars:{},dir:'mix',newPerDay:15,setFilter:'all',night:false,last:0,day:'',doneToday:0,newToday:0};
+  if(!o||typeof o!=='object')return out;
+  const num=(v,d)=>Number.isFinite(+v)?+v:d;
+  const idxOK=i=>Number.isInteger(i)&&i>=0&&i<TOTAL;
+  if(o.cards&&typeof o.cards==='object'&&!Array.isArray(o.cards)){
+    for(const k in o.cards){
+      const i=+k, c=o.cards[k];
+      if(!idxOK(i)||!c||typeof c!=='object')continue;
+      out.cards[i]={
+        reps:Math.max(0,Math.round(num(c.reps,0))),
+        ef:Math.min(3.5,Math.max(1.3,num(c.ef,2.5))),
+        iv:Math.max(0,num(c.iv,0)),
+        lapses:Math.max(0,Math.round(num(c.lapses,0))),
+        due:num(c.due,Date.now()),
+        seen:num(c.seen,Date.now())
+      };
+    }
+  }
+  if(o.stars&&typeof o.stars==='object'&&!Array.isArray(o.stars))
+    for(const k in o.stars){const i=+k;if(idxOK(i)&&o.stars[k])out.stars[i]=1;}
+  if(['mix','k2m','m2k','k2r'].includes(o.dir))out.dir=o.dir;
+  out.newPerDay=Math.min(200,Math.max(0,Math.round(num(o.newPerDay,15))));
+  const sf=String(o.setFilter);
+  out.setFilter=(sf==='all'||(/^\d+$/.test(sf)&&+sf<SET_COUNT))?sf:'all';
+  out.night=!!o.night;
+  out.last=Math.min(TOTAL-1,Math.max(0,Math.round(num(o.last,0))));
+  if(typeof o.day==='string')out.day=o.day;
+  out.doneToday=Math.max(0,Math.round(num(o.doneToday,0)));
+  out.newToday=Math.max(0,Math.round(num(o.newToday,0)));
+  return out;
+}
 function load(){
-  const blank={cards:{},stars:{},dir:'mix',newPerDay:15,setFilter:'all',night:false,last:0,day:'',doneToday:0,newToday:0};
   try{
     const raw=localStorage.getItem(KEY);
-    return raw?Object.assign(blank,JSON.parse(raw)):blank;
-  }catch(e){ canPersist=false; return blank; }
+    return sane(raw?JSON.parse(raw):null);
+  }catch(e){ canPersist=false; return sane(null); }
 }
 let S=load();
 function save(){
@@ -2027,8 +2069,9 @@ if(S.night){document.body.classList.add('night');nightBtn.textContent='Day';}
    Cached per character; falls back to the Chinese set, then to a
    font outline the learner can trace freehand.
    ============================================================ */
-const SRC=['https://cdn.jsdelivr.net/npm/hanzi-writer-data-jp@2.0.1/',
-           'https://cdn.jsdelivr.net/npm/hanzi-writer-data@2.0.1/'];
+const SRC=['https://cdn.jsdelivr.net/npm/hanzi-writer-data-jp@2/',
+           'https://cdn.jsdelivr.net/npm/hanzi-writer-data-jp/',
+           'https://cdn.jsdelivr.net/npm/hanzi-writer-data@2/'];
 const cache=new Map();
 async function strokeData(ch){
   if(cache.has(ch))return cache.get(ch);
@@ -2043,10 +2086,11 @@ async function strokeData(ch){
 
 /* ---------------- practice view ---------------- */
 let idx=Math.min(Math.max(0,S.last|0),TOTAL-1);
-let mode='watch', slowOn=false, guideOn=true, writer=null, padCtx=null, drawing=false;
+let mode='watch', userMode='watch', slowOn=false, guideOn=true, writer=null, padCtx=null, drawing=false;
 
-function setMode(m){
+function setMode(m,temporary){
   mode=m;
+  if(!temporary)userMode=m;
   document.body.classList.toggle('mode-draw',m==='draw');
   mWatch.setAttribute('aria-pressed',String(m==='watch'));
   mTrace.setAttribute('aria-pressed',String(m==='trace'));
@@ -2061,13 +2105,14 @@ function setMode(m){
 mWatch.onclick=()=>setMode('watch');
 mTrace.onclick=()=>setMode('trace');
 mDraw.onclick=()=>setMode('draw');
-slow.onclick=()=>{slowOn=!slowOn;slow.setAttribute('aria-pressed',String(slowOn));setMode(mode);};
+slow.onclick=()=>{slowOn=!slowOn;slow.setAttribute('aria-pressed',String(slowOn));setMode(mode,true);};
 guide.onclick=()=>{guideOn=!guideOn;guide.setAttribute('aria-pressed',String(guideOn));ghost.classList.toggle('showghost',guideOn);if(writer)writer.updateColor('outlineColor',guideOn?css('--rule'):'transparent');};
-replay.onclick=()=>setMode(mode);
+replay.onclick=()=>setMode(mode,true);
 
 const css=n=>getComputedStyle(document.body).getPropertyValue(n).trim();
 
 function makeWriter(){
+  if(typeof HanziWriter==='undefined'){noStrokes();return null;}
   hw.innerHTML='';
   const ch=kanjiOf(idx);
   return HanziWriter.create(hw,ch,{
@@ -2085,13 +2130,16 @@ function makeWriter(){
   });
 }
 function noStrokes(){
-  hint.innerHTML='<b>No stroke data for this character.</b> Use Draw mode and trace the outline.';
-  setTimeout(()=>{if(mode!=='draw')setMode('draw');},0);
+  setTimeout(()=>{
+    if(mode!=='draw')setMode('draw',true);
+    hint.innerHTML='<b>No stroke-order data for this one.</b> Write it in Draw mode over the outline.';
+  },0);
 }
 function startWatch(){
   const d=cache.get(kanjiOf(idx));
   if(d===null){noStrokes();return;}
   writer=makeWriter();
+  if(!writer)return;
   writer.animateCharacter();
   hint.textContent=slowOn?'Watching slowly. Trace mode next.':'Watch once, then switch to Trace.';
 }
@@ -2099,6 +2147,7 @@ function startTrace(){
   const d=cache.get(kanjiOf(idx));
   if(d===null){noStrokes();return;}
   writer=makeWriter();
+  if(!writer)return;
   let miss=0;
   writer.quiz({
     leniency:1.05,
@@ -2106,7 +2155,7 @@ function startTrace(){
     onCorrectStroke:s=>{hint.textContent=`Stroke ${s.strokeNum+1} of ${s.strokesRemaining+s.strokeNum+1} — good.`;},
     onComplete:()=>{
       hint.innerHTML=miss===0?'Clean run, no misses. <b>Good.</b>':`Done with ${miss} miss${miss>1?'es':''}. Run it again.`;
-      if(miss===0&&status(idx)==='new')rate(idx,2);
+      if(miss===0&&status(idx)==='new'){rate(idx,2);renderTags();}
     }
   });
   hint.textContent='Draw each stroke in order, straight onto the square.';
@@ -2130,12 +2179,17 @@ addEventListener('resize',()=>{sizePad();});
 
 /* static stroke-order strip */
 async function renderStrip(){
-  strip.innerHTML='';stepnote.textContent='Loading stroke data…';
+  stepnote.textContent='Loading stroke data…';
   const ch=kanjiOf(idx), d=await strokeData(ch);
-  if(!d){strip.innerHTML='';stepnote.textContent='No stroke-order data available for this character.';pStrokes.textContent='';return;}
+  if(ch!==kanjiOf(idx))return;
+  strip.innerHTML='';pStrokes.textContent='';
+  if(typeof HanziWriter==='undefined'){stepnote.textContent='Stroke data could not load — check the connection, then reload.';return;}
+  if(!d){stepnote.textContent='No stroke-order data available for this character.';return;}
   pStrokes.textContent=d.strokes.length+' strokes';
   stepnote.textContent='Each square adds one stroke. The red stroke is the new one.';
-  const t=HanziWriter.getScalingTransform(56,56,3).transform;
+  let t;
+  try{ t=HanziWriter.getScalingTransform(56,56,3).transform; }
+  catch(e){ stepnote.textContent='Stroke diagrams unavailable in this browser.'; return; }
   const frag=document.createDocumentFragment();
   d.strokes.forEach((_,n)=>{
     const fig=document.createElement('figure');
@@ -2169,7 +2223,7 @@ function renderPractice(){
   hint.textContent='';
   renderTags();
   sizePad();
-  setMode(mode==='draw'?'draw':mode);
+  setMode(userMode);
   renderStrip();
 }
 function go(n){idx=(n+TOTAL)%TOTAL;renderPractice();}
@@ -2187,7 +2241,7 @@ addEventListener('keydown',e=>{
   if(pv){
     if(e.key==='ArrowLeft'){go(idx-1);}
     else if(e.key==='ArrowRight'){go(idx+1);}
-    else if(e.key==='r'||e.key==='R'){setMode(mode);}
+    else if(e.key==='r'||e.key==='R'){setMode(mode,true);}
     else if(e.key==='t'||e.key==='T'){setMode('trace');}
     else if(e.key==='s'||e.key==='S'){starBtn.click();}
     else return;
@@ -2218,7 +2272,7 @@ function filter(){
   shown=PAGE;renderList();
 }
 function renderList(){
-  qCount.textContent=matches.length+(matches.length===1?' kanji':' kanji');
+  qCount.textContent=matches.length===1?'1 kanji':matches.length+' kanji';
   qEmpty.hidden=matches.length>0;
   const part=matches.slice(0,shown);
   list.innerHTML=part.map(i=>{
@@ -2250,29 +2304,36 @@ function queue(){
   const room=Math.max(0,(S.newPerDay|0)-(S.newToday|0));
   return {due,fresh:fresh.slice(0,room)};
 }
+let curNew=false;
 function pick(){
   const {due,fresh}=queue();
-  if(due.length){cur=due[Math.floor(Math.random()*Math.min(due.length,12))];return true;}
-  if(fresh.length){cur=fresh[0];S.newToday++;save();return true;}
+  if(due.length){cur=due[Math.floor(Math.random()*Math.min(due.length,12))];curNew=false;return true;}
+  if(fresh.length){cur=fresh[0];curNew=true;return true;}
   cur=null;return false;
 }
 function dirFor(){
   if(S.dir!=='mix')return S.dir;
   return ['k2m','m2k','k2r'][Math.floor(Math.random()*3)];
 }
-function renderReview(){
-  rvDir.value=S.dir;rvNew.value=S.newPerDay;rvSet.value=S.setFilter;
+function refreshHead(){
   const {due,fresh}=queue();
   rvQueue.textContent=`${due.length} due · ${fresh.length} new available`;
   rvSession.textContent=`${S.doneToday} reviewed today`;
+}
+function renderReview(){
+  rvDir.value=S.dir;rvNew.value=S.newPerDay;rvSet.value=S.setFilter;
+  refreshHead();
   if(!pick()){
-    rvBody.innerHTML=`<div class="done"><div class="big">Nothing due right now.</div>
-      <p>Come back later, raise the new-per-day limit in Progress, or open Practice to work through stroke order.</p>
-      <button class="iconbtn" onclick="location.reload()">Refresh</button></div>`;
+    rvCards.hidden=true;rvDone.hidden=false;
+    rvDoneWhy.textContent=(S.newPerDay|0)===0
+      ? 'The new-card limit is set to 0, so nothing new is being introduced. Raise it below, or wait for cards to fall due.'
+      : 'Every card due in this range is cleared. Raise the new-per-day limit, choose another set, or head to Practice for stroke order.';
     return;
   }
+  rvCards.hidden=false;rvDone.hidden=true;
   drawCard();
 }
+rvAgain.onclick=renderReview;
 function drawCard(){
   revealed=false;curDir=dirFor();
   face.classList.remove('revealed');
@@ -2291,10 +2352,10 @@ function drawCard(){
 }
 revealBtn.onclick=()=>{revealed=true;face.classList.add('revealed');rvReveal.hidden=true;rvRate.hidden=false;};
 rvRate.querySelectorAll('button').forEach(b=>b.onclick=()=>{
+  if(cur==null)return;
+  if(curNew){S.newToday++;}
   rate(cur,+b.dataset.rate);
-  const {due,fresh}=queue();
-  rvQueue.textContent=`${due.length} due · ${fresh.length} new available`;
-  rvSession.textContent=`${S.doneToday} reviewed today`;
+  refreshHead();
   if(pick())drawCard();else renderReview();
 });
 rvDir.onchange=()=>{S.dir=rvDir.value;save();drawCard();};
@@ -2340,9 +2401,13 @@ impFile.onchange=async e=>{
   const f=e.target.files[0];if(!f)return;
   try{
     const d=JSON.parse(await f.text());
-    if(!d||typeof d!=='object'||!d.cards)throw 0;
-    S=Object.assign(S,d);save();renderProgress();renderTags();filter();
-    storeNote.textContent='Progress imported.';
+    if(!d||typeof d!=='object'||(!d.cards&&!d.stars))throw 0;
+    S=sane(d);save();
+    document.body.classList.toggle('night',S.night);
+    nightBtn.textContent=S.night?'Day':'Night';paintTheme();
+    idx=S.last;renderPractice();renderProgress();filter();
+    const n=Object.keys(S.cards).length, st=Object.keys(S.stars).length;
+    storeNote.textContent=`Progress imported — ${n} card${n===1?'':'s'} and ${st} star${st===1?'':'s'}.`;
   }catch(err){storeNote.textContent='That file is not a progress export from this app.';}
   e.target.value='';
 };
@@ -2359,7 +2424,7 @@ const themeMeta=document.getElementById('themeMeta');
 function paintTheme(){themeMeta.setAttribute('content',S.night?'#171A1E':'#23355F');}
 paintTheme();
 const _night=nightBtn.onclick;
-nightBtn.onclick=()=>{_night();paintTheme();if(writer)setMode(mode);};
+nightBtn.onclick=()=>{_night();paintTheme();if(writer)setMode(mode,true);};
 
 function banner(html){banner_el.innerHTML=html;banner_el.hidden=false;}
 const banner_el=document.getElementById('banner');
