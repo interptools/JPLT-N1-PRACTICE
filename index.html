@@ -1,0 +1,2473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#23355F" id="themeMeta">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="N1 漢字">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+<title>N1 漢字練習帳 — Kanji Reviewer</title>
+<meta name="description" content="A stroke-order practice notebook and spaced-review deck for 1,504 JLPT N1 kanji.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;600;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#E4E4DC; --cell:#F5F4EF; --rule:#C4C7BE; --rule-soft:#D8DAD2;
+  --ink:#1B1D20; --ink2:#585D64; --ink3:#8A8F94;
+  --ai:#23355F; --ai2:#3E5488; --ai-wash:#DDE0E9;
+  --shu:#B23A2C; --kin:#8A6E2F; --moss:#4C6B4F;
+  --cellsize:min(58vw,300px);
+  --mincho:"Shippori Mincho","Hiragino Mincho ProN","Yu Mincho","Noto Serif JP",serif;
+  --sans:"Zen Kaku Gothic New","Hiragino Kaku Gothic ProN","Yu Gothic",system-ui,-apple-system,sans-serif;
+}
+body.night{
+  --paper:#171A1E; --cell:#1F242A; --rule:#3A424B; --rule-soft:#2C333A;
+  --ink:#E8E6DF; --ink2:#A5ABB2; --ink3:#7B8288;
+  --ai:#9FB4E0; --ai2:#8098CC; --ai-wash:#242C38;
+  --shu:#E07A66; --kin:#CBA352; --moss:#8CB58F;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:var(--sans); font-size:16px; line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--shu); outline-offset:2px}
+.wrap{max-width:1080px;margin:0 auto;padding:0 18px 72px}
+
+/* ---------- masthead ---------- */
+header.top{
+  position:sticky;top:0;z-index:40;background:var(--paper);
+  border-bottom:1px solid var(--rule);
+}
+.mast{max-width:1080px;margin:0 auto;padding:12px 18px 0;display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.mast h1{
+  font-family:var(--mincho);font-weight:800;font-size:1.32rem;margin:0;letter-spacing:.06em;
+}
+.mast .sub{color:var(--ink2);font-size:.82rem}
+.mast .spacer{flex:1}
+.iconbtn{background:none;border:1px solid var(--rule);color:var(--ink2);border-radius:2px;padding:3px 9px;font-size:.78rem}
+.iconbtn:hover{border-color:var(--ai);color:var(--ai)}
+nav.tabs{max-width:1080px;margin:0 auto;padding:8px 18px 0;display:flex;gap:2px;overflow-x:auto}
+nav.tabs button{
+  background:none;border:0;border-bottom:2px solid transparent;padding:8px 12px 9px;
+  color:var(--ink2);font-size:.9rem;white-space:nowrap;font-weight:500;
+}
+nav.tabs button .jp{font-family:var(--mincho);margin-right:6px;font-weight:600}
+nav.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--shu)}
+.view{display:none;padding-top:26px}
+.view.on{display:block}
+
+/* ---------- practice ---------- */
+.pgrid{display:grid;grid-template-columns:var(--cellsize) 1fr;gap:30px;align-items:start}
+@media(max-width:720px){.pgrid{grid-template-columns:1fr}:root{--cellsize:min(80vw,320px)}}
+
+.cellwrap{width:var(--cellsize)}
+.cell{
+  position:relative;width:100%;aspect-ratio:1/1;background:var(--cell);
+  border:1.5px solid var(--ai);
+  background-image:
+    linear-gradient(var(--rule-soft),var(--rule-soft)),
+    linear-gradient(var(--rule-soft),var(--rule-soft)),
+    linear-gradient(var(--rule-soft),var(--rule-soft)),
+    linear-gradient(var(--rule-soft),var(--rule-soft));
+  background-size:100% 1px,1px 100%,100% 1px,1px 100%;
+  background-position:50% 50%,50% 50%,50% 25%,25% 50%;
+  background-repeat:no-repeat;
+  touch-action:none;
+}
+.cell.plain{background-image:linear-gradient(var(--rule-soft),var(--rule-soft)),linear-gradient(var(--rule-soft),var(--rule-soft));background-size:100% 1px,1px 100%;background-position:50% 50%,50% 50%}
+#hw{position:absolute;inset:0;width:100%;height:100%}
+#pad{position:absolute;inset:0;width:100%;height:100%;touch-action:none}
+.ghost{
+  position:absolute;inset:0;display:none;align-items:center;justify-content:center;
+  font-family:var(--mincho);font-size:calc(var(--cellsize) * .78);line-height:1;
+  color:color-mix(in srgb,var(--ink) 14%,transparent);user-select:none;pointer-events:none;
+}
+body.mode-draw .ghost.showghost{display:flex}
+.cellbar{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+.cellbar button{
+  flex:1 1 auto;background:var(--cell);border:1px solid var(--rule);border-radius:2px;
+  padding:7px 6px;font-size:.8rem;color:var(--ink2);min-width:74px;
+}
+.cellbar button[aria-pressed="true"]{background:var(--ai);border-color:var(--ai);color:#F5F4EF}
+body.night .cellbar button[aria-pressed="true"]{color:#171A1E}
+.cellbar .go{border-color:var(--ai);color:var(--ai);font-weight:500}
+.hint{color:var(--ink3);font-size:.76rem;margin-top:8px;min-height:1.2em}
+.hint b{color:var(--shu);font-weight:500}
+
+.meta .num{font-size:.78rem;color:var(--ink3);letter-spacing:.14em}
+.meta h2{font-family:var(--mincho);font-size:2.9rem;line-height:1.05;margin:.1em 0 .3em}
+.meta h2 .k{margin-right:.35em}
+.meta h2 small{font-family:var(--sans);font-size:.8rem;color:var(--ink3);font-weight:400;letter-spacing:.04em}
+.rows{border-top:1px solid var(--rule)}
+.row{display:grid;grid-template-columns:5.2em 1fr;gap:14px;padding:9px 0;border-bottom:1px solid var(--rule-soft)}
+.row dt{color:var(--ink3);font-size:.78rem;padding-top:.25em}
+.row dd{margin:0}
+.kana{font-family:var(--mincho);font-size:1.12rem}
+.romaji{color:var(--ink2);font-size:.86rem}
+.mean{font-size:1rem}
+.tagline{display:flex;gap:8px;align-items:center;margin-top:14px;flex-wrap:wrap}
+.pill{font-size:.74rem;border:1px solid var(--rule);border-radius:999px;padding:2px 10px;color:var(--ink2)}
+.pill.due{border-color:var(--shu);color:var(--shu)}
+.pill.mastered{border-color:var(--kin);color:var(--kin)}
+.pill.star{border-color:var(--kin);color:var(--kin)}
+
+.steps{margin-top:26px;border-top:1px solid var(--rule);padding-top:14px}
+.steps h3{font-size:.8rem;color:var(--ink3);font-weight:500;margin:0 0 10px;letter-spacing:.06em}
+.strip{display:flex;flex-wrap:wrap;gap:6px}
+.strip figure{margin:0;width:56px}
+.strip .box{width:56px;height:56px;background:var(--cell);border:1px solid var(--rule-soft);position:relative}
+.strip .box svg{position:absolute;inset:0;width:100%;height:100%}
+.strip figcaption{font-size:.66rem;color:var(--ink3);text-align:center;margin-top:2px}
+.stepnote{color:var(--ink3);font-size:.78rem}
+
+.pager{display:flex;gap:8px;align-items:center;margin-top:28px;flex-wrap:wrap}
+.pager button{background:var(--cell);border:1px solid var(--rule);border-radius:2px;padding:8px 14px;font-size:.86rem}
+.pager button:hover{border-color:var(--ai);color:var(--ai)}
+.pager .kbd{color:var(--ink3);font-size:.74rem;margin-left:auto}
+.jump{background:var(--cell);border:1px solid var(--rule);border-radius:2px;padding:7px 8px;width:6.5em}
+
+/* ---------- browse ---------- */
+.filters{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
+.filters input[type=search]{
+  flex:1 1 240px;background:var(--cell);border:1px solid var(--rule);border-radius:2px;padding:9px 11px;
+}
+.filters select{background:var(--cell);border:1px solid var(--rule);border-radius:2px;padding:9px 8px}
+.count{color:var(--ink3);font-size:.8rem}
+.list{display:grid;grid-template-columns:repeat(auto-fill,minmax(268px,1fr));gap:10px}
+.card{
+  display:grid;grid-template-columns:52px 1fr;gap:12px;text-align:left;
+  background:var(--cell);border:1px solid var(--rule-soft);border-left:3px solid var(--rule);
+  padding:10px 12px;border-radius:2px;
+}
+.card:hover{border-color:var(--ai);border-left-color:var(--ai)}
+.card.is-learning{border-left-color:var(--ai2)}
+.card.is-mastered{border-left-color:var(--kin)}
+.card .big{font-family:var(--mincho);font-size:2.05rem;line-height:1}
+.card .n{font-size:.68rem;color:var(--ink3);letter-spacing:.1em}
+.card .rd{font-family:var(--mincho);font-size:.86rem;color:var(--ink2);margin-top:2px}
+.card .mn{font-size:.8rem;color:var(--ink2);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.empty{padding:40px 0;color:var(--ink2)}
+.more{margin:18px auto 0;display:block;background:none;border:1px solid var(--rule);padding:9px 18px;border-radius:2px;color:var(--ink2)}
+
+/* ---------- review ---------- */
+.rvwrap{max-width:600px;margin:0 auto}
+.rvhead{display:flex;justify-content:space-between;align-items:baseline;color:var(--ink3);font-size:.8rem;margin-bottom:12px}
+.face{
+  background:var(--cell);border:1px solid var(--rule);border-top:3px solid var(--ai);
+  padding:34px 22px;text-align:center;min-height:214px;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:10px;border-radius:2px;
+}
+.face .q{font-family:var(--mincho);font-size:4.4rem;line-height:1}
+.face .qs{font-size:1.24rem;font-family:var(--mincho)}
+.face .prompt{color:var(--ink3);font-size:.78rem;letter-spacing:.06em}
+.face .a{display:none;border-top:1px solid var(--rule-soft);padding-top:14px;width:100%}
+.face.revealed .a{display:block}
+.face .a .kana{font-size:1.16rem}
+.face .a .romaji{margin-top:2px}
+.face .a .mean{margin-top:8px}
+.rvbar{display:flex;gap:8px;margin-top:14px}
+.rvbar button{flex:1;background:var(--cell);border:1px solid var(--rule);padding:12px 6px;border-radius:2px;font-size:.86rem}
+.rvbar button small{display:block;color:var(--ink3);font-size:.68rem}
+.rvbar .again{border-color:var(--shu);color:var(--shu)}
+.rvbar .good{border-color:var(--ai);color:var(--ai)}
+.rvbar .easy{border-color:var(--kin);color:var(--kin)}
+.rvbar .reveal{border-color:var(--ai);color:var(--ai)}
+.rvopts{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px;color:var(--ink2);font-size:.82rem;align-items:center}
+.rvopts select,.rvopts input{background:var(--cell);border:1px solid var(--rule);border-radius:2px;padding:6px 8px}
+.done{text-align:center;padding:50px 10px;color:var(--ink2)}
+.done .big{font-family:var(--mincho);font-size:2rem;color:var(--ink);margin-bottom:8px}
+
+/* ---------- progress ---------- */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:28px}
+.stat{background:var(--cell);border:1px solid var(--rule-soft);padding:14px;border-radius:2px}
+.stat .v{font-family:var(--mincho);font-size:1.9rem;line-height:1.1}
+.stat .l{color:var(--ink3);font-size:.76rem;margin-top:4px}
+.setrow{display:grid;grid-template-columns:6.5em 1fr 4.5em;gap:12px;align-items:center;padding:6px 0;font-size:.82rem}
+.bar{height:8px;background:var(--ai-wash);border-radius:1px;overflow:hidden;display:flex}
+.bar i{display:block;height:100%}
+.bar .m{background:var(--kin)}
+.bar .l{background:var(--ai2)}
+.legend{display:flex;gap:16px;color:var(--ink3);font-size:.76rem;margin:6px 0 14px}
+.legend span::before{content:"";display:inline-block;width:9px;height:9px;margin-right:5px;vertical-align:middle}
+.legend .m::before{background:var(--kin)}
+.legend .l::before{background:var(--ai2)}
+.legend .n::before{background:var(--ai-wash)}
+.datatools{display:flex;gap:8px;flex-wrap:wrap;margin-top:26px}
+.datatools button,.datatools label{background:var(--cell);border:1px solid var(--rule);padding:8px 14px;border-radius:2px;font-size:.84rem;color:var(--ink2)}
+.datatools .danger{border-color:var(--shu);color:var(--shu)}
+.note{color:var(--ink3);font-size:.78rem;margin-top:12px;max-width:62ch}
+h3.sec{font-family:var(--mincho);font-size:1.05rem;margin:0 0 6px;font-weight:600}
+
+/* ---------- install / update strip ---------- */
+.banner{
+  background:var(--ai-wash);border-bottom:1px solid var(--rule);
+  font-size:.82rem;color:var(--ink);padding:9px 18px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;
+}
+.banner button{background:none;border:1px solid var(--ai);color:var(--ai);border-radius:2px;padding:4px 10px;font-size:.78rem}
+.banner .x{border-color:var(--rule);color:var(--ink3)}
+.dlwrap{display:flex;align-items:center;gap:12px;margin-top:12px}
+.dlwrap .bar{flex:1;max-width:320px}
+.dlwrap span{font-size:.8rem;color:var(--ink3)}
+
+/* ---------- phone ---------- */
+html,body{overscroll-behavior-y:contain}
+button{touch-action:manipulation}
+@media(max-width:760px){
+  :root{--cellsize:min(90vw,420px)}
+  header.top{padding-top:env(safe-area-inset-top)}
+  .mast{padding:10px 14px}
+  .mast h1{font-size:1.08rem}
+  .mast .sub{display:none}
+  .banner{padding:9px 14px}
+  .wrap{padding:0 14px calc(94px + env(safe-area-inset-bottom))}
+  .view{padding-top:16px}
+  nav.tabs{
+    position:fixed;bottom:0;left:0;right:0;z-index:50;max-width:none;
+    background:var(--paper);border-top:1px solid var(--rule);
+    padding:0 4px env(safe-area-inset-bottom);overflow:visible;
+  }
+  nav.tabs button{
+    flex:1;display:flex;flex-direction:column;align-items:center;gap:1px;
+    padding:8px 2px 9px;font-size:.64rem;border-bottom:0;border-top:2px solid transparent;
+  }
+  nav.tabs button .jp{margin:0;font-size:1.15rem;line-height:1.1}
+  nav.tabs button[aria-selected="true"]{border-top-color:var(--shu);color:var(--ai)}
+  .pgrid{grid-template-columns:1fr;gap:20px}
+  .cellwrap{width:100%;max-width:var(--cellsize);margin:0 auto}
+  .cellbar button{padding:12px 6px;font-size:.84rem}
+  .hint{font-size:.8rem;min-height:2.4em}
+  .meta h2{font-size:2.3rem}
+  .row{grid-template-columns:4.4em 1fr;gap:10px}
+  .list{grid-template-columns:1fr 1fr;gap:8px}
+  .card{grid-template-columns:42px 1fr;gap:9px;padding:9px 10px}
+  .card .big{font-size:1.75rem}
+  .card .rd{font-size:.76rem}
+  .card .mn{font-size:.72rem}
+  .filters input[type=search]{flex:1 1 100%}
+  .filters select{flex:1 1 40%}
+  .face{padding:26px 14px;min-height:190px}
+  .face .q{font-size:3.6rem}
+  .face .qs{font-size:1.1rem}
+  .rvbar button{padding:15px 4px}
+  .rvopts{gap:8px}
+  .pager button{flex:1 1 40%;padding:12px 10px}
+  .pager .jump{flex:1 1 30%;width:auto}
+  .pager .kbd{display:none}
+  .strip figure,.strip .box{width:48px}
+  .strip .box{height:48px}
+  .stat .v{font-size:1.6rem}
+  .setrow{grid-template-columns:5.4em 1fr 3.4em;font-size:.78rem}
+}
+@media(max-width:400px){ .list{grid-template-columns:1fr} }
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="mast">
+    <h1>N1 漢字練習帳</h1>
+    <span class="sub">1,504 kanji · stroke order, readings, spaced review</span>
+    <span class="spacer"></span>
+    <button class="iconbtn" id="installBtn" hidden>Install</button>
+    <button class="iconbtn" id="nightBtn">Night</button>
+  </div>
+  <div class="banner" id="banner" hidden></div>
+  <nav class="tabs" role="tablist">
+    <button role="tab" data-view="practice" aria-selected="true"><span class="jp">練習</span>Practice</button>
+    <button role="tab" data-view="browse" aria-selected="false"><span class="jp">一覧</span>Browse</button>
+    <button role="tab" data-view="review" aria-selected="false"><span class="jp">復習</span>Review</button>
+    <button role="tab" data-view="progress" aria-selected="false"><span class="jp">記録</span>Progress</button>
+  </nav>
+</header>
+
+<main class="wrap">
+
+<!-- PRACTICE -->
+<section class="view on" id="v-practice">
+  <div class="pgrid">
+    <div class="cellwrap">
+      <div class="cell" id="cell">
+        <div class="ghost" id="ghost"></div>
+        <svg id="hw" xmlns="http://www.w3.org/2000/svg"></svg>
+        <canvas id="pad"></canvas>
+      </div>
+      <div class="cellbar">
+        <button id="mWatch" aria-pressed="true">Watch</button>
+        <button id="mTrace" aria-pressed="false">Trace</button>
+        <button id="mDraw" aria-pressed="false">Draw</button>
+      </div>
+      <div class="cellbar">
+        <button class="go" id="replay">Replay</button>
+        <button id="slow" aria-pressed="false">Slow</button>
+        <button id="guide" aria-pressed="true">Guide</button>
+      </div>
+      <p class="hint" id="hint"></p>
+    </div>
+
+    <div class="meta">
+      <div class="num" id="pNum"></div>
+      <h2><span class="k" id="pKanji"></span><small id="pStrokes"></small></h2>
+      <dl class="rows">
+        <div class="row"><dt>音読み</dt><dd><div class="kana" id="pOnK"></div><div class="romaji" id="pOnR"></div></dd></div>
+        <div class="row"><dt>訓読み</dt><dd><div class="kana" id="pKunK"></div><div class="romaji" id="pKunR"></div></dd></div>
+        <div class="row"><dt>Meaning</dt><dd class="mean" id="pMean"></dd></div>
+      </dl>
+      <div class="tagline" id="pTags"></div>
+      <div class="tagline">
+        <button class="iconbtn" id="starBtn">Star</button>
+        <button class="iconbtn" id="knowBtn">I know this</button>
+        <button class="iconbtn" id="relearnBtn">Review again</button>
+      </div>
+
+      <div class="steps">
+        <h3>Stroke order, one stroke at a time</h3>
+        <div class="strip" id="strip"></div>
+        <p class="stepnote" id="stepnote"></p>
+      </div>
+
+      <div class="pager">
+        <button id="prev">← Previous</button>
+        <button id="next">Next →</button>
+        <button id="rand">Random</button>
+        <input class="jump" id="jump" type="number" min="1" max="1504" placeholder="No.">
+        <span class="kbd">← → move · R replay · T trace · S star</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BROWSE -->
+<section class="view" id="v-browse">
+  <div class="filters">
+    <input type="search" id="q" placeholder="Search kanji, reading, romaji or meaning">
+    <select id="fSet"></select>
+    <select id="fStatus">
+      <option value="all">All</option>
+      <option value="new">Not started</option>
+      <option value="learning">Learning</option>
+      <option value="mastered">Mastered</option>
+      <option value="due">Due now</option>
+      <option value="star">Starred</option>
+    </select>
+    <span class="count" id="qCount"></span>
+  </div>
+  <div class="list" id="list"></div>
+  <button class="more" id="more" hidden>Show more</button>
+  <p class="empty" id="qEmpty" hidden>Nothing matches that. Try a shorter search.</p>
+</section>
+
+<!-- REVIEW -->
+<section class="view" id="v-review">
+  <div class="rvwrap">
+    <div class="rvhead">
+      <span id="rvQueue"></span><span id="rvSession"></span>
+    </div>
+    <div id="rvBody">
+      <div class="face" id="face">
+        <div class="prompt" id="rvPrompt"></div>
+        <div class="q" id="rvQ"></div>
+        <div class="a">
+          <div class="kana" id="rvKana"></div>
+          <div class="romaji" id="rvRomaji"></div>
+          <div class="mean" id="rvMean"></div>
+          <div class="romaji" id="rvNo" style="margin-top:8px"></div>
+        </div>
+      </div>
+      <div class="rvbar" id="rvReveal">
+        <button class="reveal" id="revealBtn">Show answer <small>space</small></button>
+      </div>
+      <div class="rvbar" id="rvRate" hidden>
+        <button class="again" data-rate="0">Again <small>1</small></button>
+        <button data-rate="1">Hard <small>2</small></button>
+        <button class="good" data-rate="2">Good <small>3</small></button>
+        <button class="easy" data-rate="3">Easy <small>4</small></button>
+      </div>
+      <div class="rvopts">
+        <label>Ask me
+          <select id="rvDir">
+            <option value="mix">mixed</option>
+            <option value="k2m">kanji → meaning</option>
+            <option value="m2k">meaning → kanji</option>
+            <option value="k2r">kanji → reading</option>
+          </select>
+        </label>
+        <label>New per day <input id="rvNew" type="number" min="0" max="200" style="width:5em"></label>
+        <label>From
+          <select id="rvSet"></select>
+        </label>
+        <button class="iconbtn" id="rvPractice">Practise this one</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROGRESS -->
+<section class="view" id="v-progress">
+  <div class="stats" id="stats"></div>
+  <h3 class="sec">By set of 100</h3>
+  <div class="legend"><span class="m">Mastered</span><span class="l">Learning</span><span class="n">Not started</span></div>
+  <div id="sets"></div>
+  <h3 class="sec">Offline stroke data</h3>
+  <p class="note">Stroke paths download the first time you view a character. Fetch them ahead of
+  time here and the app keeps working on the train, on a plane, anywhere without signal.</p>
+  <div class="datatools">
+    <select id="dlScope" style="background:var(--cell);border:1px solid var(--rule);border-radius:2px;padding:8px"></select>
+    <button id="dlBtn">Download for offline</button>
+  </div>
+  <div class="dlwrap"><span class="bar"><i class="m" id="dlBar" style="width:0"></i></span><span id="dlMsg"></span></div>
+
+  <h3 class="sec" style="margin-top:30px">Your progress file</h3>
+  <div class="datatools">
+    <button id="expBtn">Export progress</button>
+    <label>Import progress<input id="impFile" type="file" accept="application/json" hidden></label>
+    <button class="danger" id="resetBtn">Reset all progress</button>
+  </div>
+  <p class="note" id="storeNote"></p>
+</section>
+
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/hanzi-writer@3.5.0/dist/hanzi-writer.min.js"></script>
+<script>
+/* ============================================================
+   Data: [kanji, on-romaji, on-kana, kun-romaji, kun-kana, meaning]
+   Index + 1 is the entry number in the original N1 list.
+   ============================================================ */
+const K = [
+["氏","shi","シ","uji","うじ","family name, surname, clan"],
+["統","tou","トウ","su(beru)","す(べる)","ruling, governing"],
+["基","ki","キ","moto, motoi","もと、もとい","fundamentals, counter for machines, foundation"],
+["価","ka","カ","atai","あたい","value, price"],
+["提","tei","テイ","sa(geru)","さ(げる)","propose, take along, carry in hand"],
+["挙","kyo","キョ","a(geru), kozo(ru)","あ(げる)、こぞ(る)","raise, plan, project, behavior, actions"],
+["応","ou","オウ","kota(eru)","こた(える)","apply, answer, yes, OK, reply, accept"],
+["企","ki","キ","kuwada(teru), takura(mu)","くわだ(てる)、たくら(む)","undertake, scheme, design, attempt, plan"],
+["検","ken","ケン","shira(beru)","しら(べる)","examination, investigate"],
+["藤","tou","トウ","fuji","ふじ","wisteria"],
+["沢","taku","タク","sawa","さわ","swamp, marsh, brilliance, grace"],
+["裁","sai","サイ","ta(tsu), saba(ku)","た(つ)、さば(く)","tailor, judge, decision, cut out (pattern)"],
+["証","shou","ショウ","akashi","あかし","evidence, proof, certificate"],
+["援","en","エン","","","abet, help, save"],
+["可","ka","カ","be(ki)","べ(き)","can, passable, mustn't, should not"],
+["施","shi, se","シ、セ","hodoko(su)","ほどこ(す)","give, bestow, perform, alms"],
+["井","sei, shou","セイ、ショウ","i","い","well, well crib, town, community"],
+["護","go","ゴ","mamo(ru)","まも(る)","safeguard, protect"],
+["展","ten","テン","","","unfold, expand"],
+["態","tai","タイ","waza(to)","わざ(と)","attitude, condition"],
+["鮮","sen","セン","aza(yaka)","あざ(やか)","fresh, vivid, clear"],
+["視","shi","シ","mi(ru)","み(る)","inspection, regard as, see, look at"],
+["条","jou, chou, deki","ジョウ、チョウ、デキ","eda, suji","えだ、すじ","article, clause, counter for articles"],
+["幹","kan","カン","miki","みき","tree trunk, main part, talent, capability"],
+["独","doku","ドク","hito(ri)","ひと(り)","single, alone, spontaneously"],
+["宮","kyuu, guu, ku","キュウ、グウ、ク","miya","みや","Shinto shrine, constellations, palace, princess"],
+["率","sotsu, ritsu","ソツ、リツ","hiki(iru)","ひき(いる)","ratio, rate, proportion, %, factor, lead"],
+["衛","ei","エイ","","","defense, protection"],
+["張","chou","チョウ","ha(ru)","は(る)","lengthen, stretch, spread, put up (tent)"],
+["監","kan","カン","","","oversee, official, govt office, rule, administer"],
+["環","kan","カン","wa","わ","ring, circle, link, wheel"],
+["審","shin","シン","tsumabi(raka), tsubusa(ni)","つまび(らか)、つぶさ(に)","hearing, judge, trial"],
+["義","gi","ギ","","","righteousness, justice, morality, honor, loyalty, meaning"],
+["訴","so","ソ","utta(eru)","うった(える)","accusation, sue, complain of pain, appeal to"],
+["株","shu","シュ","kabu","かぶ","stocks, stump, shares, stock, counter for small plants"],
+["姿","shi","シ","sugata","すがた","figure, form, shape"],
+["閣","kaku","カク","","","tower, tall building, palace"],
+["韓","kan","カン","kara, igeta","から、いげた","Korea"],
+["衆","shuu, shu","シュウ、シュ","oo(i)","おお(い)","masses, great numbers, multitude, populace"],
+["評","hyou","ヒョウ","","","evaluate, criticism, comment"],
+["岡","kou","コウ","oka","おか","mount, hill, knoll"],
+["影","ei","エイ","kage","かげ","shadow, silhouette, phantom"],
+["松","shou","ショウ","matsu","まつ","pine tree"],
+["撃","geki","ゲキ","u(tsu)","う(つ)","beat, attack, defeat, conquer"],
+["佐","sa","サ","","","assistant, help"],
+["核","kaku","カク","","","nucleus, core, kernel"],
+["整","sei","セイ","totono(eru)","ととの(える)","organize, arranging, tune, tone, meter, key (music)"],
+["融","yuu","ユウ","to(keru)","と(ける)","dissolve, melt"],
+["製","sei","セイ","","","made in..., manufacture"],
+["票","hyou","ヒョウ","","","ballot, label, ticket, sign"],
+["渉","shou","ショウ","wata(ru)","わた(る)","ford, go cross, transit, ferry, import, involve"],
+["響","kyou","キョウ","hibi(ku)","ひび(く)","echo, sound, resound, ring, vibrate"],
+["推","sui","スイ","o(su)","お(す)","conjecture, infer, guess, suppose, support, push (for)"],
+["請","sei, shin, shou","セイ、シン、ショウ","ko(u), u(keru)","こ(う)、う(ける)","solicit, invite, ask"],
+["器","ki","キ","utsuwa","うつわ","utensil, vessel, receptacle, implement, ability, container, tool, set"],
+["士","shi","シ","samurai","さむらい","gentleman, scholar, samurai"],
+["討","tou","トウ","u(tsu)","う(つ)","chastise, attack, defeat, destroy, conquer"],
+["攻","kou","コウ","se(meru)","せ(める)","aggression, attack, criticize, polish"],
+["崎","ki","キ","saki, sai, misaki","さき、さい、みさき","promontory, cape, spit"],
+["督","toku","トク","","","coach, command, urge, lead, supervise"],
+["授","ju","ジュ","sazu(keru)","さず(ける)","impart, instruct, grant, confer"],
+["催","sai","サイ","moyou(su), moyoo(su)","もよう(す)、もよお(す)","sponsor, hold (a meeting), give (a dinner)"],
+["及","kyuu","キュウ","oyo(bu), oyobi","およ(ぶ)、および","reach out, exert, exercise, cause"],
+["憲","ken","ケン","","","constitution, law"],
+["離","ri","リ","hana(reru)","はな(れる)","detach, separation, disjoin, digress"],
+["激","geki","ゲキ","hage(shii)","はげ(しい)","violent, get excited, enraged, chafe, incite"],
+["摘","teki","テキ","tsu(mu)","つ(む)","pinch, pick, pluck, trim, clip, summarize"],
+["系","kei","ケイ","","","lineage, system"],
+["批","hi","ヒ","","","criticism, strike"],
+["郎","rou, ryou","ロウ、リョウ","otoko","おとこ","son, counter for sons"],
+["健","ken","ケン","suko(yaka)","すこ(やか)","healthy, health, strength, persistence"],
+["従","juu, shou, ju","ジュウ、ショウ、ジュ","shitaga(u), yori","したが(う)、より","accompany, obey, submit to, comply, follow, secondary, subordinate"],
+["修","shuu, shu","シュウ、シュ","osa(meru)","おさ(める)","discipline, conduct oneself well, study, master"],
+["隊","tai","タイ","","","regiment, party, company, squad"],
+["織","shoku, shiki","ショク、シキ","o(ru), ori","お(る)、おり","weave, fabric"],
+["拡","kaku, kou","カク、コウ","hiro(garu)","ひろ(がる)","broaden, extend, expand, enlarge"],
+["故","ko","コ","yue, furu(i), moto","ゆえ、ふる(い)、もと","happenstance, especially, intentionally, reason, cause, the late, therefore"],
+["振","shin","シン","fu(ru)","ふ(る)","shake, wave, wag, swing"],
+["弁","ben, hen","ベン、ヘン","kanmuri, wakima(eru), wa(keru), hanabira","かんむり、わきま(える)、わ(ける)、はなびら","valve, petal, braid, speech, dialect, discrimination, dispose of, distinguish"],
+["就","shuu, ju","シュウ、ジュ","tsu(ku)","つ(く)","concerning, settle, take position, depart, study, per"],
+["異","i","イ","koto, koto(naru), ke","こと、こと(なる)、け","uncommon, different, queerness, strangeness, wonderful, curious, unusual"],
+["献","ken, kon","ケン、コン","tatematsu(ru)","たてまつ(る)","offering, counter for drinks, present, offer"],
+["厳","gen, gon","ゲン、ゴン","ogoso(ka), kibi(shii), ika(meshii), itsukushi","おごそ(か)、きび(しい)、いか(めしい)、いつくし","stern, strictness, severity, rigidity"],
+["維","i","イ","","","fiber, tie, rope"],
+["浜","hin","ヒン","hama","はま","seacoast, beach, seashore"],
+["遺","i, yui","イ、ユイ","noko(su)","のこ(す)","bequeath, leave behind, reserve"],
+["塁","rui, rai, sui","ルイ、ライ、スイ","toride","とりで","bases, fort, rampart, walls, base(ball)"],
+["邦","hou","ホウ","kuni","くに","home country, country, Japan"],
+["素","so, su","ソ、ス","moto","もと","elementary, principle, naked, uncovered"],
+["遣","ken","ケン","tsuka(u), ya(ru)","つか(う)、や(る)","dispatch, despatch, send, give, donate, do, undertake"],
+["抗","kou","コウ","araga(u)","あらが(う)","confront, resist, defy, oppose"],
+["模","mo, bo","モ、ボ","","","imitation, copy, mock"],
+["雄","yuu","ユウ","o-, osu, on","お-、おす、おん","masculine, male, hero, leader, superiority, excellence"],
+["益","eki, yaku","エキ、ヤク","ma(su)","ま(す)","benefit, gain, profit, advantage"],
+["緊","kin","キン","shi(meru)","し(める)","tense, solid, hard, reliable, tight"],
+["標","hyou","ヒョウ","shirube, shirushi","しるべ、しるし","signpost, seal, mark, stamp, imprint, symbol, emblem, trademark, evidence"],
+["宣","sen","セン","notama(u)","のたま(う)","proclaim, say, announce"],
+["昭","shou","ショウ","","","shining, bright"],
+["廃","hai","ハイ","suta(reru)","すた(れる)","abolish, obsolete, cessation, discarding, abandon"],
+["伊","i","イ","kare","かれ","Italy, that one"],
+["江","kou","コウ","e","え","creek, inlet, bay"],
+["僚","ryou","リョウ","","","colleague, official, companion"],
+["吉","kichi, kitsu","キチ、キツ","yoshi","よし","good luck, joy, congratulations"],
+["盛","sei, jou","セイ、ジョウ","mo(ru), saka(ru)","も(る)、さか(る)","boom, prosper, copulate"],
+["皇","kou, ou","コウ、オウ","","","emperor"],
+["臨","rin","リン","nozo(mu)","のぞ(む)","look to, face, meet, confront, attend, call on"],
+["踏","tou","トウ","fu(mu)","ふ(む)","step, trample, carry through, appraise, evade payment"],
+["壊","kai, e","カイ、エ","kowa(su), yabu(ru)","こわ(す)、やぶ(る)","demolition, break, destroy"],
+["債","sai","サイ","","","bond, loan, debt"],
+["興","kou, kyou","コウ、キョウ","oko(su)","おこ(る)","entertain, revive, retrieve, interest, pleasure"],
+["源","gen","ゲン","minamoto","みなもと","source, origin"],
+["儀","gi","ギ","","","ceremony, rule, affair, case, a matter"],
+["創","sou, shou","ソウ、ショウ","tsuku(ru), haji(meru), kizu","つく(る)、はじ(める)、きず","genesis, wound, injury, hurt, start, originate"],
+["障","shou","ショウ","sawa(ru)","さわ(る)","hinder, hurt, harm"],
+["継","kei","ケイ","tsu(gu), mama-","つ(ぐ)、まま-","inherit, succeed, continue, patch, graft (tree)"],
+["筋","kin","キン","suji","すじ","muscle, sinew, tendon, fiber, plot, plan, descent"],
+["狙","so, sho","ソ、ショ","nera(u)","ねら(う)","aim at, sight, shadow, stalk"],
+["闘","tou","トウ","tataka(u), araso(u)","たたか(う)、あらそ(う)","fight, war"],
+["葬","sou","ソウ","houmu(ru)","ほうむ(る)","interment, bury, shelve"],
+["避","hi","ヒ","sa(keru), yo(keru)","さ(ける)、よ(ける)","evade, avoid, avert, ward off, shirk, shun"],
+["司","shi","シ","tsukasado(ru)","つかさど(る)","director, official, govt office, rule, administer"],
+["康","kou","コウ","","","ease, peace"],
+["善","zen","ゼン","yo(i), i(i), yoshi(tosuru)","よ(い)、い(い)、よし(とする)","virtuous, good, goodness"],
+["逮","tai","タイ","","","apprehend, chase"],
+["迫","haku","ハク","sema(aru)","せま(る)","urge, force, imminent, spur on"],
+["惑","waku","ワク","mado(u)","まど(う)","beguile, delusion, perplexity"],
+["崩","hou","ホウ","kuzu(reru)","くず(れる)","crumble, die, demolish, level"],
+["紀","ki","キ","","","chronicle, account, narrative, history, annals, geologic period"],
+["聴","chou, tei","チョウ、テイ","ki(ku), yuru(su)","き(く)、ゆる(す)","listen, headstrong, naughty, careful inquiry"],
+["脱","datsu","ダツ","nu(gu)","ぬ(ぐ)","undress, removing, escape from, get rid of, be left out, take off"],
+["級","kyuu","キュウ","","","class, rank, grade"],
+["博","haku, baku","ハク、バク","","","Dr., command, esteem, Ph.D."],
+["締","tei","テイ","shi(maru), -ji(me)","し(まる)、-じ(め)","tighten, tie, shut, lock, fasten"],
+["救","kyuu","キュウ","suku(u)","すく(う)","salvation, save, help, rescue, reclaim"],
+["執","shitsu, shuu","シツ、シュウ","to(ru)","と(る)","tenacious, take hold, grasp, take to heart"],
+["房","bou","ボウ","fusa","ふさ","tassel, tuft, fringe, bunch, lock (hair), segment (orange), house, room"],
+["撤","tetsu","テツ","","","remove, withdraw, disarm, dismantle, reject, exclude"],
+["削","saku","サク","kezu(ru), so(gu)","けず(る)、そ(ぐ)","plane, sharpen, whittle, pare, shave"],
+["密","mitsu","ミツ","hiso(ka)","ひそ(か)","secrecy, density (pop), minuteness, carefulness"],
+["措","so","ソ","o(ku)","お(く)","set aside, give up, suspend, discontinue, lay aside, except"],
+["志","shi","シ","kokoroza(su), kokorozashi","こころざ(す)、こころざし","intention, plan, resolve, aspire, motive, hopes, shilling"],
+["載","sai","サイ","no(seru)","の(せる)","ride, board, get on, place, spread, record, publish"],
+["陣","jin","ジン","","","camp, battle array, ranks, position, sudden, brief time"],
+["我","ga","ガ","ware, wa, wa(ga)-","われ、わ、わ(が)-","ego, I, selfish, our, oneself"],
+["為","i","イ","tame, na(ru), su(ru), tsuku(ru)","ため、な(る)、す(る)、つく(る)","do, change, make, benefit, welfare, be of use, try, practice, serve as"],
+["抑","yoku","ヨク","osa(eru)","おさ(える)","repress, well, now, in the first place, push, shove, press, seal"],
+["幕","maku, baku","マク、バク","tobari","とばり","curtain, bunting, act of play"],
+["染","sen","セン","so(meru), shi(meru)","そ(める)、し(みる)","dye, color, paint, stain, print"],
+["奈","na, nai, dai","ナ、ナイ、ダイ","ikan, karanashi","いかん、からなし","Nara, what?"],
+["傷","shou","ショウ","kizu, ita(mu)","きず、いた(む)","wound, hurt, injure, impair, pain, injury, cut, gash, scar, weak point"],
+["択","taku","タク","era(bu)","えら(ぶ)","choose, select, elect, prefer"],
+["秀","shuu","シュウ","hii(deru)","ひい(でる)","excel, excellence, beauty, surpass"],
+["徴","chou, chi","チョウ、チ","shirushi","しるし","indications, sign, omen, symptom, collect, seek, refer to, question"],
+["弾","dan, tan","ダン、タン","hi(ku), hazu(mu), tama, haji(ku)","ひ(く)、はず(む)、たま、はじ(く)","bullet, twang, flip, snap"],
+["償","shou","ショウ","tsuguna(u)","つぐな(う)","reparation, make up for, recompense, redeem"],
+["功","kou, ku","コウ、ク","isao","いさお","achievement, merits, success, honor, credit"],
+["拠","kyo, ko","キョ、コ","yo(ru)","よ(る)","foothold, based on, follow, therefore"],
+["秘","hi","ヒ","hi(meru), hiso(ka), kaku(su)","ひ(める)、ひそ(か)、かく(す)","secret, conceal"],
+["拒","kyo, go","キョ、ゴ","koba(mu)","こば(む)","repel, refuse, reject, decline"],
+["刑","kei","ケイ","","","punish, penalty, sentence, punishment"],
+["塚","chou","チョウ","tsuka","つか","hillock, mound"],
+["致","chi","チ","ita(su)","いた(す)","doth, do, send, forward, cause, exert, incur, engage"],
+["繰","sou","ソウ","ku(ru)","く(る)","winding, reel, spin, turn (pages), look up, refer to"],
+["尾","bi","ビ","o","お","tail, end, counter for fish, lower slope of mountain"],
+["描","byou","ビョウ","ega(ku), ka(ku)","えが(く)、か(く)","sketch, compose, write, draw, paint"],
+["鈴","rei, rin","レイ、リン","suzu","すず","small bell, buzzer"],
+["盤","ban","バン","","","tray, shallow bowl, platter, tub, board, phonograph record"],
+["項","kou","コウ","unaji","うなじ","paragraph, nape of neck, clause, item, term (expression)"],
+["喪","sou","ソウ","mo","も","miss, mourning"],
+["伴","han, ban","ハン、バン","tomona(u)","ともな(う)","consort, accompany, bring with, companion"],
+["養","you, ryou","ヨウ、リョウ","yashina(u)","やしな(う)","foster, bring up, rear, develop, nurture"],
+["懸","ken, ke","ケン、ケ","ka(keru)","か(ける)","state of suspension, hang, depend, consult, distant, far apart"],
+["街","gai, kai","ガイ、カイ","machi","まち","boulevard, street, town"],
+["契","kei","ケイ","chigi(ru)","ちぎ(る)","pledge, promise, vow"],
+["掲","kei","ケイ","kaka(geru)","かか(げる)","put up (a notice), hoist, display, hang out, publish, describe"],
+["躍","yaku","ヤク","odo(ru)","おど(る)","leap, dance, skip"],
+["棄","ki","キ","su(teru)","す(てる)","abandon, throw away, discard, resign, reject, sacrifice"],
+["邸","tei","テイ","yashiki","やしき","residence, mansion"],
+["縮","shuku","シュク","chidji(mu)","ちぢ(む)","shrink, contract, shrivel, wrinkle, reduce"],
+["還","kan","カン","kae(ru)","かえ(る)","send back, return"],
+["属","zoku, shoku","ゾク、ショク","sakan, tsuku, yakara","さかん、つく、やから","belong, genus, subordinate official, affiliated"],
+["慮","ryo","リョ","omonpaku(ru)","おもんぱく(る)","prudence, thought, concern, consider, deliberate, fear"],
+["枠","","-","waku","わく","frame, framework, spindle, spool, bounding-box"],
+["恵","kei, e","ケイ、エ","megu(mu)","めぐ(む)","favor, blessing, grace, kindness"],
+["露","ro, rou","ロ、ロウ","tsuyu","つゆ","dew, tears, expose, Russia"],
+["沖","chuu","チュウ","oki, okitsu, waku","おき、おきつ、わく","open sea, offing, rise high into sky"],
+["緩","kan","カン","yuru(i)","ゆる(い)","slacken, loosen, relax, lessen, be moderate, ease"],
+["節","setsu, sechi","セツ、セチ","fushi, notto","ふし、のっと","node, season, period, occasion, verse, clause, stanza, joint, knot, tune, melody"],
+["需","ju","ジュ","","","demand, request, need"],
+["射","sha","シャ","i(ru), sa(su), u(tsu)","い(る)、さ(す)、う(つ)","shoot, shine into, onto, archery"],
+["購","kou","コウ","","","subscription, buy"],
+["揮","ki","キ","furu(u)","ふる(う)","brandish, wave, wag, swing, shake"],
+["充","juu","ジュウ","a(teru), mi(tasu)","あ(てる)、み(たす)","allot, fill"],
+["貢","kou, ku","コウ、ク","mitsu(gu)","みつ(ぐ)","tribute, support, finance"],
+["鹿","roku","ロク","shika, ka","しか、か","deer"],
+["却","kyaku","キャク","kae(tte), shirizo(ku)","かえ(って)、しりぞ(く)","instead, on the contrary, rather, step back, withdraw, retreat"],
+["端","tan","タン","hashi, ha, hata, hana","はし、は、はた、はな","edge, origin, end, point, border, verge, cape"],
+["賃","chin","チン","","","fare, fee, hire, rent, wages, charge"],
+["獲","kaku","カク","e(ru)","え(る)","seize, get, find, earn, acquire, can, may, able to"],
+["郡","gun","グン","koori","こおり","county, district"],
+["併","hei","ヘイ","awa(seru)","あわ(せる)","join, get together, unite, collective"],
+["徹","tetsu","テツ","","","penetrate, clear, pierce, strike home, sit up (all night)"],
+["貴","ki","キ","tatto(i), touto(i)","たっと(い)、とうと(い)","precious, value, prize, esteem, honor"],
+["埼","ki","キ","saki, sai, misaki","さき、さい、みさき","cape, spit, promontory"],
+["衝","shou","ショウ","tsu(ku)","つ(く)","collide, brunt, highway, opposition (astronomy), thrust, pierce, stab, prick"],
+["焦","shou","ショウ","ko(geru), ase(ru), ji(reru)","こ(げる)、あせ(る)、じ(れる)","char, hurry, impatient, irritate, burn, scorch, singe"],
+["奪","datsu","ダツ","uba(u)","うば(う)","rob, take by force, snatch away, dispossess, plunder, usurp"],
+["災","sai","サイ","wazawa(i)","わざわ(い)","disaster, calamity, woe, curse, evil"],
+["浦","ho","ホ","ura","うら","bay, creek, inlet, gulf, beach, seacoast"],
+["析","seki","セキ","","","chop, divide, tear, analyze"],
+["譲","jou","ジョウ","yuzu(ru)","ゆず(る)","defer, turnover, transfer, convey"],
+["称","shou","ショウ","tata(eru), tona(eru), a(geru), home(ru)","たた(える)、とな(える)、あ(げる)、ほめ(る)","appellation, praise, admire, name, title, fame"],
+["納","nou, natsu, na, nan, tou","ノウ、ナッ、ナ、ナン、トウ","osa(meru)","おさ(める)","settlement, obtain, reap, pay, supply, store"],
+["樹","ju","ジュ","ki","き","timber, trees, wood, establish, set up"],
+["挑","chou","チョウ","ido(mu)","いど(む)","challenge, contend for, make love to"],
+["誘","yuu","ユウ","saso(u), izana(u)","さそ(う)、いざな(う)","entice, lead, tempt, invite, ask, call for, seduce, allure"],
+["紛","fun","フン","magi(reru)","まぎ(れる)","distract, be mistaken for, go astray, divert"],
+["至","shi","シ","ita(ru)","いた(る)","climax, arrive, proceed, reach, attain, result in"],
+["宗","shuu, sou","シュウ、ソウ","mune","むね","religion, sect, denomination, main point, origin, essence"],
+["促","soku","ソク","unaga(su)","うなが(す)","stimulate, urge, press, demand, incite"],
+["慎","shin","シン","tsutsushi(mu), tsutsu(mashii)","つつし(む)、つつ(ましい)","humility, be careful, discreet, prudent"],
+["控","kou","コウ","hika(eru)","ひか(える)","withdraw, draw in, hold back, refrain from, be moderate"],
+["智","chi","チ","","","wisdom, intellect, reason"],
+["握","aku","アク","nigi(ru)","にぎ(る)","grip, hold, mould sushi, bribe"],
+["宙","chuu","チュウ","","","mid-air, air, space, sky, memorization, interval of time"],
+["俊","shun","シュン","","","sagacious, genius, excellence"],
+["銭","sen, zen","セン、ゼン","zeni, suki","ぜに、すき","coin, .01 yen, money"],
+["渋","juu, shuu","ジュウ、シュウ","shibu, shibu(i)","しぶ、しぶ(い)","astringent, hesitate, reluctant, have diarrhea"],
+["銃","juu","ジュウ","tsutsu","つつ","gun, arms"],
+["操","sou, san","ソウ、サン","misao, ayatsu(ru)","みさお、あやつ(る)","maneuver, manipulate, operate, steer, chastity, virginity, fidelity"],
+["携","kei","ケイ","tazusa(eru)","たずさ(える)","portable, carry (in hand), armed with, bring along"],
+["診","shin","シン","mi(ru)","み(る)","checkup, seeing, diagnose, examine"],
+["託","taku","タク","kakotsu(keru), kako(tsu)","かこつ(ける)、かこ(つ)","consign, requesting, entrusting with, pretend, hint"],
+["撮","satsu","サツ","to(ru), tsuma(mu)","と(る)、つま(む)","snapshot, take pictures"],
+["誕","tan","タン","","","nativity, be born, declension, lie, be arbitrary"],
+["侵","shin","シン","oka(su)","おか(す)","encroach, invade, raid, trespass, violate"],
+["括","katsu","カツ","kuku(ru)","くく(る)","fasten, tie up, arrest, constrict"],
+["謝","sha","シャ","ayama(ru)","あやま(る)","apologize, thank, refuse"],
+["孝","kou, kyou","コウ、キョウ","","","filial piety, child's respect"],
+["駆","ku","ク","ka(keru)","か(ける)","drive, run, gallop, advance, inspire, impel"],
+["透","tou","トウ","su(ku), tou(ru)","す(く)、とう(る)","transparent, permeate, filter, penetrate"],
+["津","shin","シン","tsu","つ","haven, port, harbor, ferry"],
+["壁","heki","ヘキ","kabe","かべ","wall, lining (stomach), fence"],
+["稲","tou, te","トウ、テ","ine, ina-","いね、いな-","rice plant"],
+["仮","ka, ke","カ、ケ","kari","かり","sham, temporary, interim, assumed (name), informal"],
+["裂","retsu","レツ","sa(ku), -gi(re)","さ(く)、-ぎ(れ)","split, rend, tear"],
+["敏","bin","ビン","satoi","さとい","cleverness, agile, alert"],
+["是","ze, shi","ゼ、シ","kore, kono, koko","これ、この、ここ","just so, this, right, justice"],
+["排","hai","ハイ","","","repudiate, exclude, expel, reject, line up, arrange"],
+["裕","yuu","ユウ","","","abundant, rich, fertile"],
+["堅","ken","ケン","kata(i)","かた(い)","strict, hard, solid, tough, tight, reliable"],
+["訳","yaku","ヤク","wake","わけ","translate, reason, circumstance, case"],
+["芝","shi","シ","shiba","しば","turf, lawn"],
+["綱","kou","コウ","tsuna","つな","hawser, class (genus), rope, cord, cable"],
+["典","ten, den","テン、デン","fumi, nori","ふみ、のり","code, ceremony, law, rule"],
+["賀","ga","ガ","","","congratulations, joy"],
+["扱","sou, kyuu","ソウ、キュウ","atsuka(i), ko(ku)","あつか(い)、こ(く)","handle, entertain, thresh, strip"],
+["顧","ko","コ","kaeri(miru)","かえり(みる)","look back, review, examine oneself, turn around"],
+["弘","kou, gu","コウ、グ","hiro(i)","ひろ(い)","vast, broad, wide"],
+["看","kan","カン","mi(ru)","み(る)","watch over, see"],
+["訟","shou","ショウ","","","sue, accuse"],
+["戒","kai","カイ","imashi(meru)","いまし(める)","commandment"],
+["祉","shi","シ","","","welfare, happiness"],
+["誉","yo","ヨ","homa(re), ho(meru)","ほま(れ)、ほ(める)","reputation, praise, honor, glory"],
+["歓","kan","カン","yoroko(bu)","よろこ(ぶ)","delight, joy"],
+["奏","sou","ソウ","kana(deru)","かな(でる)","play music, speak to a ruler, complete"],
+["勧","kan, ken","カン、ケン","susu(meru)","すす(める)","persuade, recommend, advise, encourage, offer"],
+["騒","sou","ソウ","sawa(gu), urei","さわ(ぐ)、うれい","boisterous, make noise, clamor, disturb, excite"],
+["閥","batsu","バツ","","","clique, lineage, pedigree, faction, clan"],
+["甲","kou, kan","コウ、カン","kinoe","きのえ","armor, high (voice), A grade, first class, former, instep, carapace"],
+["縄","jou","ジョウ","nawa, tada(su)","なわ、ただ(す)","straw rope, cord"],
+["郷","kyou, gou","キョウ、ゴウ","sato","さと","home town, village, native place, district"],
+["揺","you","ヨウ","yu(reru), ugo(ku)","ゆ(れる)、うご(く)","swing, shake, sway, rock, tremble, vibrate"],
+["免","men","メン","manuka(reru), manuga(reru)","まぬか(れる)、まぬが(れる)","excuse, dismissal"],
+["既","ki","キ","sude(ni)","すで(に)","previously, already, long ago"],
+["薦","sen","セン","susu(meru)","すす(める)","recommend, mat, advise, encourage, offer"],
+["隣","rin","リン","tona(ru), tonari","とな(る)、となり","neighboring"],
+["華","ka, ke","カ、ケ","hana","はな","splendor, flower, petal, shine, luster, ostentatious, showy, gorgeous"],
+["範","han","ハン","","","pattern, example, model"],
+["隠","in, on","イン、オン","kaku(su), yo(ru)","かく(す)、よ(る)","conceal, hide, cover"],
+["徳","toku","トク","","","benevolence, virtue, goodness, commanding respect"],
+["哲","tetsu","テツ","satoi, akiraka","さとい、あきらか","philosophy, clear"],
+["杉","san","サン","sugi","すぎ","cedar, cryptomeria"],
+["里","ri","リ","sato","さと","ri, village, parent's home, league"],
+["釈","shaku, seki","シャク、セキ","toku, su(teru), yuru(su)","とく、す(てる)、ゆる(す)","explanation"],
+["己","ko, ki","コ、キ","onore, tsuchinoto, na","おのれ、つちのと、な","self"],
+["妥","da","ダ","","","gentle, peace, satisfactory, appropriate"],
+["威","i","イ","odo(su)","おど(す)","intimidate, dignity, majesty, menace, threaten"],
+["豪","gou","ゴウ","era(i)","えら(い)","overpowering, great, powerful, excelling, Australia"],
+["熊","yuu","ユウ","kuma","くま","bear"],
+["滞","tai, tei","タイ、テイ","todokoo(ru)","とどこお(る)","stagnate, be delayed, overdue, arrears"],
+["微","bi","ビ","kasu(ka)","かす(か)","delicate, minuteness, insignificance"],
+["隆","ryuu","リュウ","","","hump, high, noble, prosperity"],
+["症","shou","ショウ","","","symptoms, illness"],
+["暫","zan","ザン","shibara(ku)","しばら(く)","temporarily, a while, moment, long time"],
+["忠","chuu","チュウ","","","loyalty, fidelity, faithfulness"],
+["倉","sou","ソウ","kura","くら","godown, warehouse, storehouse, cellar, treasury"],
+["彦","gen","ゲン","hiko","ひこ","lad, boy (ancient)"],
+["肝","kan","カン","kimo","きも","liver, pluck, nerve, chutzpah"],
+["喚","kan","カン","wame(ku)","わめ(く)","yell, cry, call, scream, summon"],
+["沿","en","エン","so(u), -zo(i)","そ(う)、-ぞ(い)","run alongside, follow along, run along, lie along"],
+["妙","myou, byou","ミョウ、ビョウ","tae","たえ","exquisite, strange, queer, mystery, miracle, excellent, delicate, charming"],
+["唱","shou","ショウ","tona(eru)","とな(える)","chant, recite, call upon, yell"],
+["阿","a, o","ア、オ","omone(ru), kuma","おもね(る)、くま","Africa, flatter, fawn upon, corner, nook, recess"],
+["索","saku","サク","","","cord, rope, searching, inquiring"],
+["誠","sei","セイ","makoto","まこと","sincerity, admonish, warn, prohibit, truth, fidelity"],
+["襲","shuu","シュウ","oso(u), kasa(ne)","おそ(う)、かさ(ね)","attack, advance on, succeed to, pile, heap"],
+["懇","kon","コン","nengo(ro)","ねんご(ろ)","sociable, kind, courteous, hospitable, cordial"],
+["俳","hai","ハイ","","","haiku, actor"],
+["柄","hei","ヘイ","gara, e, tsuka","がら、え、つか","design, pattern, build, nature, character, handle, crank, grip, knob, shaft"],
+["驚","kyou","キョウ","odoro(ku)","おどろ(く)","wonder, be surprised, frightened, amazed"],
+["麻","ma, maa","マ、マア","asa","あさ","hemp, flax, numb"],
+["李","ri","リ","sumomo","すもも","plum"],
+["浩","kou","コウ","ooki(i), hiro(i)","おおき(い)、ひろ(い)","wide expanse, abundance, vigorous"],
+["剤","zai, sui, sei","ザイ、スイ、セイ","karu, kezu(ru)","かる、けず(る)","dose, medicine, drug"],
+["瀬","rai","ライ","se","せ","rapids, current, torrent, shallows, shoal"],
+["趣","shu","シュ","omomuki, omomu(ku)","おもむき、おもむ(く)","purport, gist, elegance, interest, proceed to, tend, become"],
+["陥","kan","カン","ochii(ru), otoshii(reru)","おちい(る)、おとしい(れる)","collapse, fall into, cave in, fall (castle), slide into"],
+["斎","sai","サイ","toki, tsutsushi(mu), i(mu), iwa(u)","とき、つつし(む)、い(む)、いわ(う)","purification, Buddhist food, room, worship, avoid, alike"],
+["貫","kan","カン","tsuranu(ku), nu(ku), nuki","つらぬ(く)、ぬ(く)、ぬき","pierce, penetrate, brace"],
+["仙","sen, sento","セン、セント","","","hermit, wizard, cent"],
+["慰","i","イ","nagusa(meru)","なぐさ(める)","consolation, amusement, seduce, cheer, comfort, console"],
+["序","jo","ジョ","tsui(de), tsuide","つい(で)、ついで","preface, beginning, order, precedence, occasion, chance, incidentally"],
+["旬","jun, shun","ジュン、シュン","","","decameron, ten-day period, season (for specific products)"],
+["兼","ken","ケン","ka(neru)","か(ねる)","concurrently, and, beforehand, in advance"],
+["聖","sei, shou","セイ、ショウ","hijiri","ひじり","holy, saint, sage, master, priest"],
+["旨","shi","シ","mune, uma(i)","むね、うま(い)","delicious, relish, show a liking for, purport, will, clever, expert"],
+["即","soku","ソク","tsu(ku), sunawa(chi)","つ(く)、すなわ(ち)","instant, namely, as is, conform, agree, adapt"],
+["柳","ryuu","リュウ","yanagi","やなぎ","willow"],
+["舎","sha, seki","シャ、セキ","yado(ru)","やど(る)","cottage, inn, hut, house, mansion"],
+["偽","gi, ka","ギ、カ","itsuwa(ru), nise","いつわ(る)、にせ","falsehood, lie, deceive, pretend, counterfeit, forgery"],
+["較","kaku, kou","カク、コウ","kura(beru)","くら(べる)","contrast, compare"],
+["覇","ha, haku","ハ、ハク","hatagashira","はたがしら","hegemony, supremacy, leadership, champion"],
+["畑","","-","hata, hatake, -batake","はた、はたけ、-ばたけ","farm, field, garden, one's specialty, (kokuji)"],
+["詳","shou","ショウ","kuwa(shii), tsumabi(raka)","くわ(しい)、つまび(らか)","detailed, full, minute, accurate, well-informed"],
+["抵","tei","テイ","","","resist, reach, touch"],
+["脅","kyou","キョウ","obiya(kasu), odo(su)","おびや(かす)、おど(す)","threaten, coerce"],
+["茂","mo","モ","shige(ru)","しげ(る)","overgrown, grow thick, be luxuriant"],
+["犠","gi, ki","ギ、キ","ikenie","いけにえ","sacrifice"],
+["旗","ki","キ","hata","はた","national flag, banner, standard"],
+["距","kyo","キョ","heda(taru), kedzume","へだ(たる)、けづめ","long-distance, spur, fetlock"],
+["雅","ga","ガ","miya(bi)","みや(び)","gracious, elegant, graceful, refined"],
+["飾","shoku","ショク","kaza(ru)","かざ(る)","decorate, ornament, adorn, embellish"],
+["網","mou","モウ","ami","あみ","netting, network"],
+["竜","ryuu, ryou, rou","リュウ、リョウ、ロウ","tatsu, ise","たつ、いせ","dragon, imperial"],
+["詩","shi","シ","uta","うた","poem, poetry"],
+["繁","han","ハン","shige(ku)","しげ(く)","luxuriant, thick, overgrown, frequency, complexity, trouble"],
+["翼","yoku","ヨク","tsubasa","つばさ","wing, plane, flank"],
+["茨","shi, ji","シ、ジ","ibara, kaya, kusabuki","いばら、かや、くさぶき","briar, thorn"],
+["潟","seki","セキ","kata, -gata","かた、-がた","lagoon"],
+["敵","teki","テキ","kataki, ada, kana(u)","かたき、あだ、かな(う)","enemy, foe, opponent"],
+["魅","mi","ミ","","","fascination, charm, bewitch"],
+["嫌","ken, gen","ケン、ゲン","kira(i), iya","きら(い)、いや","dislike, detest, hate"],
+["斉","sei, sai","セイ、サイ","soro(u), hito(shii), ataru","そろ(う)、ひと(しい)、あたる","adjusted, alike, equal, similar variety of"],
+["敷","fu","フ","shi(ku), -shi(ki)","し(く)、-し(き)","spread, pave, sit, promulgate"],
+["擁","yoku","ヨウ","","","hug, embrace, possess, protect, lead"],
+["圏","ken","ケン","kako(i)","かこ(い)","sphere, circle, radius, range"],
+["酸","san","サン","su(i)","す(い)","acid, bitterness, sour, tart"],
+["罰","batsu, bachi, hatsu","バツ、バチ、ハツ","bas(suru)","ばっ(する)","penalty, punishment"],
+["滅","metsu","メツ","horo(biru), horo(basu)","ほろ(びる)、ほろ(ぼす)","destroy, ruin, overthrow, perish"],
+["礎","so","ソ","ishizue","いしずえ","cornerstone, foundation stone"],
+["腐","fu","フ","kusa(ru)","くさ(る)","rot, decay, sour"],
+["脚","kyaku, kya, kaku","キャク、キャ、カク","ashi","あし","skids, leg, undercarriage, lower part, base"],
+["菱","ryou","リョウ","hishi","ひし","diamond (shape), water chestnut, rhombus"],
+["潮","chou","チョウ","shio, ushio","しお、うしお","tide, salt water, opportunity"],
+["梅","bai","バイ","ume","うめ","plum"],
+["尽","jin, san","ジン、サン","tsu(kiru), tsu(kusu)","つ(きる)、つ(くす)","exhaust, use up, run out of, deplete, befriend, serve"],
+["僕","boku","ボク","shimobe","しもべ","me, I (male), servant, manservant"],
+["桜","ou, you","オウ、ヨウ","sakura","さくら","cherry"],
+["滑","katsu, kotsu","カツ、コツ","sube(ru), name(raka)","すべ(る)、なめ(らか)","slippery, slide, slip, fail exam"],
+["孤","ko","コ","","","orphan, alone"],
+["煕","ki","キ","tanoshi(mu), hika(ru), hiro(i), yoroko(bu)","たのし(む)、ひか(る)、ひろ(い)、よろこ(ぶ)","shine"],
+["炎","en","エン","honoo","ほのお","inflammation, flame, blaze"],
+["賠","bai","バイ","","","compensation, indemnify"],
+["句","ku","ク","","","phrase, clause, sentence, passage, paragraph, counter for haiku"],
+["寿","ju, su, shuu","ジュ、ス、シュウ","kotobuki, kotobu(ku)","ことぶき、ことぶ(く)","longevity, congratulations, one's natural life"],
+["鋼","kou","コウ","hagane","はがね","steel"],
+["頑","gan","ガン","kataku(na)","かたく(な)","stubborn, foolish, firmly"],
+["鎖","sa","サ","kusari, toza(su)","くさり、とざ(す)","chain, irons, connection"],
+["彩","sai","サイ","irodo(ru)","いろど(る)","coloring, paint, makeup"],
+["摩","ma","マ","ma(suru), sasu(ru), su(ru)","ま(する)、さす(る)、す(る)","chafe, rub, polish, grind, scrape"],
+["励","rei","レイ","hage(mu), hage(masu)","はげ(む)、はげ(ます)","encourage, be diligent, inspire"],
+["縦","juu","ジュウ","tate","たて","vertical, length, height, self-indulgent, wayward"],
+["輝","ki","キ","kagaya(ku)","かがや(く)","radiance, shine, sparkle, gleam, twinkle"],
+["蓄","chiku","チク","takuwa(eru)","たくわ(える)","amass, raise, hoard, store"],
+["軸","jiku","ジク","","","axis, pivot, stem, stalk, counter for book scrolls"],
+["巡","jun","ジュン","megu(ru), megu(ri)","めぐ(る)、めぐ(り)","patrol, go around, circumference"],
+["稼","ka","カ","kase(gu)","かせ(ぐ)","earnings, work, earn money"],
+["瞬","shun","シュン","matata(ku), majiro(gu)","またた(く)、まじろ(ぐ)","wink, blink, twinkle"],
+["砲","hou","ホウ","","","cannon, gun"],
+["噴","fun","フン","fu(ku)","ふ(く)","erupt, spout, emit, flush out"],
+["誇","ko","コ","hoko(ru)","ほこ(る)","boast, be proud, pride, triumphantly"],
+["祥","shou","ショウ","saiwa(i), kiza(shi), yo(i)","さいわ(い)、きざ(し)、よ(い)","auspicious, happiness, blessedness, good omen, good fortune"],
+["牲","sei","セイ","","","animal sacrifice, offering"],
+["秩","chitsu","チツ","","","regularity, salary, order"],
+["帝","tei","テイ","mikado","みかど","sovereign, the emperor, god, creator"],
+["宏","kou","コウ","hiro(i)","ひろ(い)","wide, large"],
+["唆","sa","サ","soso(ru), sosonoka(su)","そそ(る)、そそのか(す)","tempt, seduce, instigate, promote"],
+["阻","so","ソ","haba(mu)","はば(む)","thwart, separate from, prevent, obstruct, deter, impede"],
+["泰","tai","タイ","","","peaceful, calm, peace, easy, Thailand, extreme, excessive, great"],
+["賄","wai","ワイ","makana(u)","まかな(う)","bribe, board, supply, finance"],
+["撲","boku","ボク","","","slap, strike, hit, beat, tell, speak"],
+["堀","kutsu","クツ","hori","ほり","ditch, moat, canal"],
+["菊","kiku","キク","","","chrysanthemum"],
+["絞","kou","コウ","shibo(ru), shi(meru), shi(maru)","しぼ(る)、し(める)、し(まる)","strangle, constrict, wring"],
+["縁","en","エン","fuchi, yukari, heri, enishi","ふち、ゆかり、へり、えにし","affinity, relation, connection, edge, border, verge, brink"],
+["唯","yui, i","ユイ、イ","tada","ただ","solely, only, merely, simply"],
+["膨","bou","ボウ","fuku(ramu), fuku(reru)","ふく(らむ)、ふく(れる)","swell, get fat, thick"],
+["耐","tai","タイ","ta(eru)","た(える)","-proof, enduring"],
+["塾","juku","ジュク","","","cram school, private school"],
+["漏","rou","ロウ","mo(ru), mo(reru), mo(rasu)","も(る)、も(れる)、も(らす)","leak, escape, time"],
+["慶","kei","ケイ","yoroko(bi)","よろこ(び)","jubilation, congratulate, rejoice, be happy"],
+["猛","mou","モウ","","","fierce, rave, rush, become furious, wildness, strength"],
+["芳","hou","ホウ","kanba(shii)","かんば(しい)","perfume, balmy, favorable, fragrant"],
+["懲","chou","チョウ","ko(riru), ko(rasu), ko(rashimeru)","こ(りる)、こ(らす)、こ(らしめる)","penal, chastise, punish, discipline"],
+["剣","ken","ケン","tsurugi","つるぎ","sabre, sword, blade, clock hand"],
+["幌","kou","コウ","horo, tobari","ほろ、とばり","canopy, awning, hood, curtain"],
+["彰","shou","ショウ","","","patent, clear"],
+["棋","ko","キ","go","ご","chess piece, Japanese chess, shogi"],
+["丁","chou, tei, chin, tou, chi","チョウ、テイ、チン、トウ、チ","hinoto","ひのと","street, ward, town, counter for guns, tools"],
+["恒","kou","コウ","tsune, tsuneni","つね、つねに","constancy, always"],
+["揚","you","ヨウ","a(geru)","あ(げる)","raise, elevate, hoist, praise, extol, fry in deep fat"],
+["冒","bou","ボウ","oka(su)","おか(す)","risk, face, defy, dare, damage, assume (a name)"],
+["之","shi","シ","no, kore, yuku, kono","の、これ、ゆく、この","of, this"],
+["曽","sou, so","ソウ、ソ","katsu, katsute, sunawachi","かつ、かつて、すなわち","formerly, once, before, ever, never, ex-"],
+["倫","rin","リン","","","ethics, companion"],
+["陳","chin","チン","hi(neru)","ひ(ねる)","exhibit, state, relate, explain"],
+["憶","oku","オク","","","recollection, think, remember"],
+["潜","sen","セン","hiso(mu), mogu(ru), kaku(reru), kugu(ru)","ひそ(む)、もぐ(る)、かく(れる)、くぐ(る)","submerge, conceal, hide, lower (voice), hush"],
+["梨","ri","リ","nashi","なし","pear tree"],
+["仁","jin, ni, nin","ジン、ニ、ニン","","","humanity, virtue, benevolence, charity, man, kernel"],
+["克","koku","コク","ka(tsu)","か(つ)","overcome, kindly, skillfully"],
+["岳","gaku","ガク","dake","たけ","point, peak, mountain"],
+["概","gai","ガイ","oomu(ne)","おおむ(ね)","outline, condition, approximation, generally"],
+["拘","kou","コウ","kaka(waru)","かか(わる)","arrest, seize, concerned, adhere to, despite"],
+["墓","bo","ボ","haka","はか","grave, tomb"],
+["黙","moku, boku","モク、ボク","dama(ru), moda(su)","だま(る)、もだ(す)","silence, become silent, stop speaking, leave as is"],
+["須","su, shu","ス、シュ","subekara(ku), subeshi, moto(meru)","すべから(く)、すべし、もと(める)","ought, by all means, necessarily"],
+["偏","hen","ヘン","katayo(ru)","かたよ(る)","partial, side, left-side radical, inclining, biased"],
+["雰","fun","フン","","","atmosphere, fog"],
+["遇","guu","グウ","a(u)","あ(う)","meet, encounter, interview, treat, entertain, receive, deal with"],
+["諮","shi","シ","haka(ru)","はか(る)","consult with"],
+["狭","kyou, kou","キョウ、コウ","sema(i), seba(meru), sa","せま(い)、せば(める)、さ","cramped, narrow, contract, tight"],
+["卓","taku","タク","","","eminent, table, desk, high"],
+["亀","ki, kyuu, kin","キ、キュウ、キン","kame","かめ","tortoise, turtle"],
+["糧","ryou, rou","リョウ、ロウ","kate","かて","provisions, food, bread"],
+["梶","bi","ビ","kaji, kozue","かじ、こずえ","sculling oar"],
+["簿","bo","ボ","","","register, record book"],
+["炉","ro","ロ","irori","いろり","hearth, furnace, kiln, reactor"],
+["牧","boku","ボク","maki","まき","breed, care for, shepherd, feed, pasture"],
+["殊","shu","シュ","koto","こと","particularly, especially, exceptionally"],
+["殖","shoku","ショク","fu(eru), fu(yasu)","ふ(える)、ふ(やす)","augment, increase, multiply, raise"],
+["艦","kan","カン","","","warship"],
+["輩","hai","ハイ","-bara, yakara, tomogara","-ばら、やから、ともがら","comrade, fellow, people, companions"],
+["穴","ketsu","ケツ","ana","あな","hole, aperture, slit, cave, den"],
+["奇","ki","キ","ku(shiki), aya(shii), mezura(shii)","く(しき)、あや(しい)、めずら(しい)","strange, strangeness, curiosity"],
+["慢","man","マン","","","ridicule, laziness"],
+["鶴","kaku","カク","tsuru","つる","crane, stork"],
+["謀","bou, mu","ボウ、ム","haka(ru), tabaka(ru), hakarigoto","はか(る)、たばか(る)、はかりごと","conspire, cheat, impose on, plan, devise, scheme, deceive"],
+["暖","dan, non","ダン、ノン","atata(kai)","あたた(かい)","warmth"],
+["昌","shou","ショウ","sakan","さかん","prosperous, bright, clear"],
+["拍","haku, hyou","ハク、ヒョウ","","","clap, beat (music)"],
+["朗","rou","ロウ","hoga(raka), aki(raka)","ほが(らか)、あき(らか)","melodious, clear, bright, serene, cheerful"],
+["丈","jou","ジョウ","take, dake","たけ、だけ","length, measure, Mr., Ms., height, stature, all (one has), only, merely"],
+["寛","kan","カン","kutsuro(gu), hiro(i), yuru(yaka)","くつろ(ぐ)、ひろ(い)、ゆる(やか)","tolerant, leniency, generosity, relax, feel at home, be at ease, broadminded"],
+["覆","fuku","フク","oo(u), kutsugae(su)","おお(う)、くつがえ(す)","capsize, cover, shade, mantle, be ruined"],
+["胞","hou","ホウ","","","placenta, sac, sheath"],
+["泣","kyuu","キュウ","na(ku)","な(く)","cry, weep, moan"],
+["隔","kaku","カク","heda(teru)","へだ(てる)","isolate, alternate, distance, separate, gulf"],
+["浄","jou, sei","ジョウ、セイ","kiyo(meru), kiyo(i)","きよ(める)、きよ(い)","clean, purify, cleanse, exorcise, Manchu Dynasty"],
+["没","botsu, motsu","ボツ、モツ","obo(reru), shizu(mu), nai","おぼ(れる)、しず(む)、ない","drown, sink, hide, fall into, disappear, die"],
+["暇","ka","カ","hima, itoma","ひま、いとま","spare time, rest, leisure, time, leave of absence"],
+["肺","hai","ハイ","","","lungs"],
+["貞","tei, jou","テイ、ジョウ","tadashi(i), sada","ただし(い)、さだ","upright, chastity, constancy, righteousness"],
+["靖","sei, jou","セイ、ジョウ","yasu(njiru)","やす(んじる)","peaceful"],
+["鑑","kan","カン","kanga(miru), kagami","かんが(みる)、かがみ","specimen, take warning from, learn from"],
+["飼","shi","シ","ka(u)","か(う)","domesticate, raise, keep, feed"],
+["陰","in","イン","kage, kage(ru)","かげ、かげ(る)","shade, yin, negative, sex organs, secret, shadow"],
+["銘","mei","メイ","","","inscription, signature (of artisan)"],
+["随","zui","ズイ","manima(ni), shitaga(u)","まにま(に)、したが(う)","follow, though, notwithstanding, while, during, obey, submit to, comply"],
+["烈","retsu","レツ","hage(shii)","はげ(しい)","ardent, violent, vehement, furious, severe, extreme"],
+["尋","jin","ジン","tazu(neru), hiro","たず(ねる)、ひろ","inquire, fathom, look for"],
+["渕","en, kaku, kou","エン、カク、コウ","fuchi, kata(i), hanawa","ふち、かた(い)、はなわ","edge"],
+["稿","kou","コウ","wara, shitagaki","わら、したがき","draft, copy, manuscript, straw"],
+["丹","tan","タン","ni","に","rust-colored, red, red lead, pills, sincerity"],
+["啓","kei","ケイ","hira(ku), sato(su)","ひら(く)、さと(す)","disclose, open, say"],
+["也","ya, e","ヤ、エ","nari, ka, mata","なり、か、また","to be (classical)"],
+["丘","kyuu","キュウ","oka","おか","hill, knoll"],
+["棟","tou","トウ","mune, muna-","むね、むな-","ridgepole, ridge"],
+["壌","jou","ジョウ","tsuchi","つち","lot, earth, soil"],
+["漫","man","マン","midari(ni), sozo(ro)","みだり(に)、そぞ(ろ)","cartoon, involuntarily, unrestrained, in spite of oneself, corrupt"],
+["玄","gen","ゲン","kuro, kuro(i)","くろ、くろ(い)","mysterious, occultness, black, deep, profound"],
+["粘","nen","ネン","neba(ru)","ねば(る)","sticky, glutinous, greasy, persevere"],
+["悟","go","ゴ","sato(ru)","さと(る)","enlightenment, perceive, discern, realize, understand"],
+["舗","ho","ホ","","","shop, store, pave"],
+["妊","nin, jin","ニン、ジン","hara(mu), migomo(ru)","はら(む)、みごも(る)","pregnancy"],
+["熟","juku","ジュク","u(reru)","う(れる)","mellow, ripen, mature, acquire skill"],
+["旭","kyoku","キョク","asahi","あさひ","rising sun, morning sun"],
+["恩","on","オン","","","grace, kindness, goodness, favor, mercy, blessing, benefit"],
+["騰","tou","トウ","aga(ru), nobo(ru)","あが(る)、のぼ(る)","leaping up, jumping up, rising, advancing, going"],
+["往","ou","オウ","i(ku), inishie, saki(ni), yu(ku)","い(く)、いにしえ、さき(に)、ゆ(く)","journey, travel, chase away, let go, going, before, formerly"],
+["豆","tou, zu","トウ、ズ","mame","まめ","beans, pea, midget"],
+["遂","sui","スイ","to(geru), tsui(ni)","と(げる)、つい(に)","consummate, accomplish, attain, commit (suicide)"],
+["狂","kyou","キョウ","kuru(u)","くる(う)","lunatic, insane, crazy, confuse"],
+["栃","","-","tochi","とち","horse chestnut, (kokuji)"],
+["岐","ki, gi","キ、ギ","","","branch off, fork in road, scene, arena, theater"],
+["陛","hei","ヘイ","","","highness, steps (of throne)"],
+["緯","i","イ","yokoito, nuki","よこいと、ぬき","horizontal, woof, left & right, (parallels of) latitude, prediction"],
+["培","bai","バイ","tsuchika(u)","つちか(う)","cultivate, foster"],
+["衰","sui","スイ","otoro(eru)","おとろ(える)","decline, wane, weaken"],
+["艇","tei","テイ","","","rowboat, small boat"],
+["屈","kutsu","クツ","kaga(mu)","かが(む)","yield, bend, flinch, submit"],
+["径","kei","ケイ","michi, komichi, tadachini","みち、こみち、ただちに","diameter, path, method"],
+["淡","tan","タン","awa(i)","あわ(い)","thin, faint, pale, fleeting"],
+["抽","chuu","チュウ","hiki-","ひき-","pluck, pull, extract, excel"],
+["披","hi","ヒ","","","expose, open"],
+["廷","tei","テイ","","","courts, imperial court, government office"],
+["錦","kin","キン","nishiki","にしき","brocade, fine dress, honors"],
+["准","jun","ジュン","","","quasi-, semi-, associate"],
+["暑","sho","ショ","atsu(i)","あつ(い)","sultry, hot, summer heat"],
+["磯","ki","キ","iso","いそ","seashore, beach"],
+["奨","shou, sou","ショウ、ソウ","susu(meru)","すす(める)","exhort, urge, encourage"],
+["浸","shin","シン","hita(su), tsu(karu)","ひた(す)、つ(かる)","immersed, soak, dip, steep, moisten, wet, dunk"],
+["剰","jou","ジョウ","amatsusae, ama(ri)","あまつさえ、あま(り)","surplus, besides"],
+["胆","tan","タン","kimo","きも","gall bladder, courage, pluck, nerve"],
+["繊","sen","セン","","","slender, fine, thin kimono"],
+["駒","ku","ク","koma","こま","pony, horse, colt"],
+["虚","kyo, ko","キョ、コ","muna(shii), utsu(ro)","むな(しい)、うつ(ろ)","void, emptiness, unpreparedness, crack, fissure, untruth"],
+["孜","shi","シ","tsuto(meru)","つと(める)","industriousness"],
+["霊","rei, ryou","レイ、リョウ","tama","たま","spirits, soul"],
+["帳","chou","チョウ","tobari","とばり","notebook, account book, album, curtain, veil, net, tent"],
+["悔","kai","カイ","ku(iru), ku(yamu)","く(いる)、く(やむ)","repent, regret"],
+["諭","yu","ユ","sato(su)","さと(す)","rebuke, admonish, charge, warn, persuade"],
+["惨","san, zan","サン、ザン","miji(me), ita(mu), mugo(i)","みじ(め)、いた(む)、むご(い)","wretched, disaster, cruelty, harsh"],
+["虐","gyaku","ギャク","shiita(geru)","しいた(げる)","tyrannize, oppress"],
+["翻","hon, han","ホン、ハン","hirugae(ru)","ひるがえ(る)","flip, turn over, wave, flutter, change (mind)"],
+["墜","tsui","ツイ","o(chiru), o(tsu)","お(ちる)、お(つ)","crash, fall (down)"],
+["沼","shou","ショウ","numa","ぬま","marsh, lake, bog, swamp, pond"],
+["据","kyo","キョ","su(eru), su(waru)","す(える)、す(わる)","set, lay a foundation, install, equip, squat down, sit down"],
+["肥","hi","ヒ","ko(eru), koe, ko(yasu), futo(ru)","こ(える)、こえ、こ(やす)、ふと(る)","fertilizer, get fat, fertile, manure, pamper"],
+["徐","jo","ジョ","omomu(roni)","おもむ(ろに)","gradually, slowly, deliberately, gently"],
+["糖","tou","トウ","","","sugar"],
+["搭","tou","トウ","","","board, load (a vehicle), ride"],
+["盾","jun","ジュン","tate","たて","shield, escutcheon, pretext"],
+["脈","myaku","ミャク","suji","すじ","vein, pulse, hope"],
+["滝","rou, sou","ロウ、ソウ","taki","たき","waterfall, rapids, cascade"],
+["軌","ki","キ","","","rut, wheel, track, model, way of doing"],
+["俵","hyou","ヒョウ","tawara","たわら","bag, bale, sack, counter for bags"],
+["妨","bou","ボウ","samata(geru)","さまた(げる)","disturb, prevent, hamper, obstruct"],
+["盧","ro","ロ","","","hut"],
+["擦","satsu","サツ","su(ru), kosu(ru)","す(る)、こす(る)","grate, rub, scratch, scrape, chafe, scour"],
+["鯨","gei","ゲイ","kujira","くじら","whale"],
+["荘","sou, shou, chan","ソウ、ショウ、チャン","houki, ogoso(ka)","ほうき、おごそ(か)","villa, inn, cottage, feudal manor, solemn, dignified"],
+["諾","daku","ダク","","","consent, assent, agreement"],
+["雷","rai","ライ","kaminari, ikazuchi","かみなり、いかずち","thunder, lightning bolt"],
+["漂","hyou","ヒョウ","tadayo(u)","ただよ(う)","drift, float (on liquid)"],
+["懐","kai, e","カイ、エ","futokoro, natsu(kashii), ida(ku), omo(u)","ふところ、なつ(かしい)、いだ(く)、おも(う)","feelings, heart, yearn, miss someone, become attached to, bosom, breast, pocket"],
+["勘","kan","カン","","","intuition, perception, check, compare, sixth sense"],
+["栽","sai","サイ","","","plantation, planting"],
+["拐","kai","カイ","","","kidnap, falsify"],
+["笠","ryuu","リュウ","kasa","かさ","bamboo hat, one's influence"],
+["駄","da, ta","ダ、タ","","","burdensome, pack horse, horse load, send by horse, trivial, worthless"],
+["添","ten","テン","so(eru), so(u)","そ(える)、そ(う)","annexed, accompany, marry, suit, meet, satisfy, attach, append, garnish"],
+["冠","kan","カン","kanmuri","かんむり","crown, best, peerless"],
+["斜","sha","シャ","nana(me), hasu","なな(め)、はす","diagonal, slanting, oblique"],
+["鏡","kyou, kei","キョウ、ケイ","kagami","かがみ","mirror, speculum, barrel-head, round rice-cake offering"],
+["聡","sou","ソウ","sato(i), mimizato(i)","さと(い)、みみざと(い)","wise, fast learner"],
+["浪","rou","ロウ","","","wandering, waves, billows, reckless, unrestrained"],
+["亜","a","ア","tsu(gu)","つ(ぐ)","Asia, rank next, come after, -ous"],
+["覧","ran","ラン","mi(ru)","み(る)","perusal, see"],
+["詐","sa","サ","itsuwa(ru)","いつわ(る)","lie, falsehood, deceive, pretend"],
+["壇","dan, tan","ダン、タン","","","podium, stage, rostrum, terrace"],
+["勲","kun","クン","isao","いさお","meritorious deed, merit"],
+["魔","ma","マ","","","witch, demon, evil spirit"],
+["酬","shuu, shu, tou","シュウ、シュ、トウ","muku(iru)","むく(いる)","repay, reward, retribution"],
+["紫","shi","シ","murasaki","むらさき","purple, violet"],
+["曙","sho","ショ","akebono","あけぼの","dawn, daybreak"],
+["紋","mon","モン","","","family crest, figures"],
+["卸","sha","シャ","oro(su), oroshi","おろ(す)、おろし","wholesale"],
+["奮","fun","フン","furu(u)","ふる(う)","stirred up, be invigorated, flourish"],
+["趙","chou, jou, kyou","チョウ、ジョウ、キョウ","","","nimble, late-going"],
+["欄","ran","ラン","tesuri","てすり","column, handrail, blank, space"],
+["逸","itsu","イツ","so(reru), hagu(reru)","そ(れる)、はぐ(れる)","deviate, idleness, leisure, miss the mark, evade, elude, parry, diverge"],
+["涯","gai","ガイ","hate","はて","horizon, shore, limit, bound"],
+["拓","taku","タク","hira(ku)","ひら(く)","clear (the land), open, break up (land)"],
+["眼","gan, gen","ガン、ゲン","manako, me","まなこ、め","eyeball"],
+["獄","goku","ゴク","","","prison, jail"],
+["筑","chiku","チク","","","an ancient musical instrument"],
+["尚","shou","ショウ","nao","なお","esteem, furthermore, still, yet"],
+["阜","fu, fuu","フ、フウ","","","hill, mound, left village radical (no. 170)"],
+["彫","chou","チョウ","ho(ru), -bo(ri)","ほ(る)、-ぼ(り)","carve, engrave, chisel"],
+["穏","on","オン","oda(yaka)","おだ(やか)","calm, quiet, moderation"],
+["顕","ken","ケン","akiraka, arawa(reru)","あきらか、あらわ(れる)","appear, existing"],
+["巧","kou","コウ","taku(mi), uma(i)","たく(み)、うま(い)","adroit, skilled, ingenuity"],
+["矛","mu, bou","ム、ボウ","hoko","ほこ","halberd, arms, festival float"],
+["垣","en","エン","kaki","かき","hedge, fence, wall"],
+["欺","gi","ギ","azamu(ku)","あざむ(く)","deceit, cheat, delude"],
+["釣","chou","チョウ","tsu(ru)","つ(る)","angling, fish, catch, allure, ensnare"],
+["萩","shuu","シュウ","hagi","はぎ","bush clover"],
+["粧","shou","ショウ","","","cosmetics, adorn (one's person)"],
+["葛","katsu, kachi","カツ、カチ","tsudzura, kuzu","つづら、くず","arrowroot, kudzu"],
+["粛","shuku, suku","シュク、スク","tsutsushi(mu)","つつし(む)","solemn, quietly, softly"],
+["栗","ritsu, ri","リツ、リ","kuri, ononoku","くり、おののく","chestnut"],
+["愚","gu","グ","oro(ka)","おろ(か)","foolish, folly, absurdity, stupid"],
+["嘉","ka","カ","yomi(suru), yoi","よみ(する)、よい","applaud, praise, esteem, happy, auspicious"],
+["遭","sou","ソウ","a(u), a(waseru)","あ(う)、あ(わせる)","encounter, meet, party, association, interview, join"],
+["架","ka","カ","ka(keru)","か(ける)","erect, frame, mount, support, shelf, construct"],
+["篠","zou, shou","ゾウ、ショウ","shino, sasa, suzu","しの、ささ、すず","bamboo grass"],
+["鬼","ki","キ","oni","おに","ghost, devil"],
+["庶","sho","ショ","","","commoner, all, bastard"],
+["稚","chi, ji","チ、ジ","itokenai, osanai, okute","いとけない、おさない、おくて","immature, young"],
+["菅","kan, ken","カン、ケン","suge","すげ","sedge"],
+["滋","ji, shi","ジ、シ","","","nourishing, more & more, be luxuriant, planting, turbidity"],
+["幻","gen","ゲン","maboroshi","まぼろし","phantasm, vision, dream, illusion, apparition"],
+["煮","sha","シャ","ni(ru), -ni","に(る)、-に","boil, cook"],
+["姫","ki","キ","hime","ひめ","princess"],
+["誓","sei","セイ","chika(u)","ちか(う)","vow, swear, pledge"],
+["把","ha, wa","ハ、ワ","","","grasp, faggot, bunch, counter for bundles"],
+["践","sen","セン","fu(mu)","ふ(む)","tread, step on, trample, practice, carry through"],
+["呈","tei","テイ","","","display, offer, present, send, exhibit"],
+["疎","so, sho","ソ、ショ","uto(i), maba(ra)","うと(い)、まば(ら)","alienate, rough, neglect, shun, sparse, penetrate"],
+["仰","gyou, kou","ギョウ、コウ","ao(gu), o(ssharu)","あお(ぐ)、お(っしゃる)","face-up, look up, depend, seek, respect, revere, drink, take"],
+["剛","gou","ゴウ","","","sturdy, strength"],
+["疾","shitsu","シツ","haya(i)","はや(い)","rapidly"],
+["征","sei","セイ","","","subjugate, attack the rebellious, collect taxes"],
+["砕","sai","サイ","kuda(ku)","くだ(く)","smash, break, crush, familiar, popular"],
+["謡","you","ヨウ","uta(i)","うた(い)","song, sing, ballad, noh chanting"],
+["嫁","ka","カ","yome, totsu(gu), yu(ku)","よめ、とつ(ぐ)、ゆ(く)","marry into, bride"],
+["謙","ken","ケン","herikuda(ru)","へりくだ(る)","self-effacing, humble oneself, condescend, be modest"],
+["后","kou, go","コウ、ゴ","kisaki","きさき","empress, queen, after, behind, back, later"],
+["嘆","tan","タン","nage(ku), nage(kawashii)","なげ(く)、なげ(かわしい)","sigh, lament, moan, grieve, sigh of admiration"],
+["俣","","-","mata","また","crotch, thigh, groin, fork, junction, (kokuji)"],
+["菌","kin","キン","","","germ, fungus, bacteria"],
+["鎌","ren, ken","レン、ケン","kama","かま","sickle, scythe, trick"],
+["巣","sou","ソウ","su, su(kuu)","す、す(くう)","nest, rookery, hive, cobweb, den"],
+["頻","hin","ヒン","shiki(rini)","しき(りに)","repeatedly, recur"],
+["琴","kin, gon","キン、ゴン","koto","こと","harp, koto"],
+["班","han","ハン","","","squad, corps, unit, group"],
+["淵","en, kaku, kou","エン、カク、コウ","fuchi, kata(i), hanawa","ふち、かた(い)、はなわ","abyss, edge, deep pool, the depths"],
+["棚","hou","ホウ","tana, -dana","たな、-だな","shelf, ledge, rack, mount, mantle, trellis"],
+["潔","ketsu","ケツ","isagiyo(i)","いさぎよ(い)","undefiled, pure, clean, righteous, gallant"],
+["酷","koku","コク","hido(i)","ひど(い)","cruel, severe, atrocious, unjust"],
+["宰","sai","サイ","","","superintend, manager, rule"],
+["廊","rou","ロウ","","","corridor, hall, tower"],
+["寂","jaku, seki","ジャク、セキ","sabi, sabi(shii), sami(shii)","さび、さび(しい)、さみ(しい)","loneliness, quietly, mellow, mature, death of a priest"],
+["辰","shin, jin","シン、ジン","tatsu","たつ","sign of the dragon, 7-9AM, fifth sign of Chinese zodiac"],
+["霞","ka, ge","カ、ゲ","kasumi, kasu(mu)","かすみ、かす(む)","be hazy, grow dim, blurred"],
+["伏","fuku","フク","fu(seru), fu(su)","ふ(せる)、ふ(す)","prostrated, bend down, bow, cover, lay (pipes)"],
+["柏","haku, hyaku, byaku","ハク、ヒャク、ビャク","kashiwa","かしわ","oak, cypress"],
+["碁","go","ゴ","","","Go"],
+["俗","zoku","ゾク","","","vulgar, customs, manners, worldliness, mundane things"],
+["漠","baku","バク","","","vague, obscure, desert, wide"],
+["邪","ja","ジャ","yokoshi(ma)","よこし(ま)","wicked, injustice, wrong"],
+["晶","shou","ショウ","","","sparkle, clear, crystal"],
+["辻","","-","tsuji","つじ","crossing, crossroad, street corners, (kokuji)"],
+["墨","boku","ボク","sumi","すみ","black ink, India ink, ink stick, Mexico"],
+["鎮","chin","チン","shizu(meru), osae","しず(める)、おさえ","tranquilize, ancient peace-preservation centers"],
+["洞","dou","ドウ","hora","ほら","den, cave, excavation"],
+["履","ri","リ","ha(ku)","は(く)","perform, complete, footgear, shoes, boots, put on (the feet)"],
+["劣","retsu","レツ","oto(ru)","おと(る)","inferiority, be inferior to, be worse"],
+["那","na, da","ナ、ダ","nani, nanzo, ikan","なに、なんぞ、いかん","what?"],
+["殴","ou","オウ","nagu(ru)","なぐ(る)","assault, hit, beat, thrash"],
+["娠","shin","シン","","","with child, pregnancy"],
+["奉","hou, bu","ホウ、ブ","tatematsu(ru), matsu(ru)","たてまつ(る)、まつ(る)","observance, offer, present, dedicate"],
+["憂","yuu","ユウ","ure(eru), ure(i), u(i)","うれ(える)、うれ(い)、う(い)","melancholy, grieve, lament, be anxious, sad, unhappy"],
+["朴","boku","ボク","hou, hoo, enoki","ほう、ほお、えのき","crude, simple, plain, docile"],
+["亭","tei, chin","テイ、チン","","","pavilion, restaurant, mansion, arbor, cottage, vaudeville, music hall, stage name"],
+["淳","jun, shun","ジュン、シュン","atsu(i)","あつ(い)","pure"],
+["荻","teki","テキ","ogi","おぎ","reed, rush"],
+["嶋","tou","トウ","shima","しま","island"],
+["怪","kai, ke","カイ、ケ","aya(shii), aya(shimu)","あや(しい)、あや(しむ)","suspicious, mystery, apparition"],
+["鳩","kyuu, ku","キュウ、ク","hato, atsu(meru)","はと、あつ(める)","pigeon, dove"],
+["柴","sai, shi","サイ、シ","shiba","しば","brush, firewood"],
+["酔","sui","スイ","yo(u), yo(i)","よ(う)、よ(い)","drunk, feel sick, poisoned, elated, spellbound"],
+["惜","seki","セキ","o(shii), o(shimu)","お(しい)、お(しむ)","pity, be sparing of, frugal, stingy, regret"],
+["穫","kaku","カク","","","harvest, reap"],
+["佳","ka","カ","","","excellent, beautiful, good, pleasing, skilled"],
+["潤","jun","ジュン","uruo(u), uru(mu)","うるお(う)、うる(む)","wet, be watered, profit by, receive benefits, favor, charm, steep"],
+["悼","tou","トウ","ita(mu)","いた(む)","lament, grieve over"],
+["乏","bou","ボウ","tobo(shii), tomo(shii)","とぼ(しい)、とも(しい)","destitution, scarce, limited"],
+["該","gai","ガイ","","","above-stated, the said, that specific"],
+["赴","fu","フ","omomu(ku)","おもむ(く)","proceed, get, become, tend"],
+["桑","sou","ソウ","kuwa","くわ","mulberry"],
+["桂","kei","ケイ","katsura","かつら","Japanese Judas-tree, cinnamon tree"],
+["髄","zui","ズイ","","","marrow, pith, essence"],
+["虎","ko","コ","tora","とら","tiger, drunkard"],
+["盆","bon","ボン","","","basin, lantern festival, tray"],
+["晋","shin","シン","susu(mu)","すす(む)","advance"],
+["穂","sui","スイ","ho","ほ","ear, ear (grain), head, crest (wave)"],
+["壮","sou","ソウ","sakan","さかん","robust, manhood, prosperity"],
+["堤","tei","テイ","tsutsumi","つつみ","dike, bank, embankment"],
+["飢","ki","キ","u(eru)","う(える)","hungry, starve"],
+["傍","bou","ボウ","katawa(ra), waki, hata, soba","かたわ(ら)、わき、はた、そば","bystander, side, besides, while, nearby, third person"],
+["疫","eki, yaku","エキ、ヤク","","","epidemic"],
+["累","rui","ルイ","","","accumulate, involvement, trouble, tie up, continually"],
+["痴","chi","チ","shi(reru), oroka","し(れる)、おろか","stupid, foolish"],
+["搬","han","ハン","","","conveyor, carry, transport"],
+["晃","kou","コウ","akiraka","あきらか","clear"],
+["癒","yu","ユ","i(eru), iya(su)","い(える)、いや(す)","healing, cure, quench (thirst), wreak"],
+["桐","tou, dou","トウ、ドウ","kiri","きり","paulownia"],
+["寸","sun","スン","","","measurement, tenth of a shaku, a little, small"],
+["郭","kaku","カク","kuruwa","くるわ","enclosure, quarters, fortification, red-light district"],
+["尿","nyou","ニョウ","yubari, ibari, shito","ゆばり、いばり、しと","urine"],
+["凶","kyou","キョウ","","","villain, evil, bad luck, disaster"],
+["吐","to","ト","ha(ku), tsu(ku)","は(く)、つ(く)","spit, vomit, belch, confess, tell (lies)"],
+["宴","en","エン","utage","うたげ","banquet, feast, party"],
+["鷹","you, ou","ヨウ、オウ","taka","たか","hawk"],
+["賓","hin","ヒン","maroudo, shitagau","まろうど、したがう","V.I.P., guest"],
+["虜","ryo, ro","リョ、ロ","toriko, toriku","とりこ、とりく","captive, barbarian, low epithet for the enemy"],
+["陶","tou","トウ","sue","すえ","pottery, porcelain"],
+["鐘","shou","ショウ","kane","かね","bell, gong, chimes"],
+["憾","kan","カン","ura(mu)","うら(む)","remorse, regret, be sorry"],
+["畿","ki","キ","miyako","みやこ","capital, suburbs of capital"],
+["猪","cho","チョ","i, inoshishi","い、いのしし","boar"],
+["紘","kou","コウ","oodzuna, tsuna, tsunagu","おおづな、つな、つなぐ","large"],
+["磁","ji","ジ","","","magnet, porcelain"],
+["弥","mi, bi","ミ、ビ","ya, iya, iyo(iyo), wata(ru)","や、いや、いよ(いよ)、わた(る)","all the more, increasingly"],
+["昆","kon","コン","","","descendants, elder brother, insect"],
+["粗","so","ソ","ara(i), ara-","あら(い)、あら-","coarse, rough, rugged"],
+["訂","tei","テイ","tada(su)","ただ(す)","revise, correct, decide"],
+["芽","ga","ガ","me","め","bud, sprout, spear, germ"],
+["尻","kou","コウ","shiri","しり","buttocks, hips, butt, rear"],
+["庄","shou, so, sou, hou","ショウ、ソ、ソウ、ホウ","","","level, in the country, manor, village, hamlet"],
+["傘","san","サン","kasa","かさ","umbrella"],
+["敦","ton, tai, dan, chou","トン、タイ、ダン、チョウ","atsu(i)","あつ(い)","industry, kindliness"],
+["騎","ki","キ","","","equestrian, riding on horses, counter for equestrians"],
+["寧","nei","ネイ","mushi(ro)","むし(ろ)","rather, preferably, peaceful, quiet, tranquility"],
+["循","jun","ジュン","","","sequential, follow"],
+["忍","nin","ニン","shino(bu), shino(baseru)","しの(ぶ)、しの(ばせる)","endure, bear, put up with, conceal, secrete, spy, sneak"],
+["磐","ban, han","バン、ハン","iwa","いわ","rock, crag, cliff, wall (in a mine)"],
+["怠","tai","タイ","okota(ru), nama(keru)","おこた(る)、なま(ける)","neglect, laziness"],
+["如","jo, nyo","ジョ、ニョ","goto(shi)","ごと(し)","likeness, like, such as, as if, better, best, equal"],
+["寮","ryou","リョウ","","","dormitory, hostel, villa, tea pavillion"],
+["祐","yuu, u","ユウ、ウ","tasu(keru)","たす(ける)","help"],
+["鵬","hou","ホウ","ootori","おおとり","phoenix"],
+["鉛","en","エン","namari","なまり","lead"],
+["珠","shu","シュ","tama","たま","pearl, gem, jewel"],
+["凝","gyou","ギョウ","ko(ru), kogo(rasu)","こ(る)、こご(らす)","congeal, freeze, stiff, be absorbed in"],
+["苗","byou, myou","ビョウ、ミョウ","nae, nawa-","なえ、なわ-","seedling, sapling, shoot"],
+["獣","juu","ジュウ","kemono, kedamono","けもの、けだもの","animal, beast"],
+["哀","ai","アイ","awa(re), kana(shii)","あわ(れ)、かな(しい)","pathetic, grief, sorrow, pathos, pity, sympathize"],
+["跳","chou","チョウ","ha(neru), to(bu)","は(ねる)、と(ぶ)","hop, leap up, spring, jerk, prance, buck, splash, sputter, snap"],
+["匠","shou","ショウ","takumi","たくみ","artisan, workman, carpenter"],
+["垂","sui","スイ","ta(reru), nannanto(su)","た(れる)、なんなんと(す)","droop, suspend, hang, slouch"],
+["蛇","ja, da, i, ya","ジャ、ダ、イ、ヤ","hebi","へび","snake, serpent, hard drinker"],
+["澄","chou","チョウ","su(mu), su(masu)","す(む)、す(ます)","lucidity, be clear, clear, clarify, settle, strain, look grave"],
+["縫","hou","ホウ","nu(u)","ぬ(う)","sew, stitch, embroider"],
+["僧","sou","ソウ","","","Buddhist priest, monk"],
+["眺","chou","チョウ","naga(meru)","なが(める)","stare, watch, look at, see, scrutinize"],
+["唐","tou","トウ","kara","から","T'ang, China, foreign"],
+["亘","kou, kan, sen","コウ、カン、セン","wata(ru), moto(meru)","わた(る)、もと(める)","span, range, extend over"],
+["呉","go","ゴ","ku(reru)","く(れる)","give, do something for, kingdom of Wu"],
+["凡","bon, han","ボン、ハン","oyo(so), sube(te)","およ(そ)、すべ(て)","commonplace, ordinary, mediocre"],
+["憩","kei","ケイ","iko(i), iko(u)","いこ(い)、いこ(う)","recess, rest, relax, repose"],
+["鄭","tei, jou","テイ、ジョウ","","","an ancient Chinese province"],
+["芦","ro","ロ","ashi, yoshi","あし、よし","reed, bullrush"],
+["龍","ryuu, ryou, rou","リュウ、リョウ、ロウ","tatsu","たつ","dragon, imperial"],
+["媛","en","エン","hime","ひめ","beautiful woman, princess"],
+["溝","kou","コウ","mizo","みぞ","gutter, ditch, sewer, drain"],
+["恭","kyou","キョウ","uyauya(shii)","うやうや(しい)","respect, reverent"],
+["刈","gai, kai","ガイ、カイ","ka(ru)","か(る)","reap, cut, clip, trim, prune"],
+["睡","sui","スイ","nemu(ru), nemu(i)","ねむ(る)、ねむ(い)","drowsy, sleep, die"],
+["錯","saku, shaku","サク、シャク","","","confused, mix, be in disorder"],
+["伯","haku","ハク","","","chief, count, earl, uncle, Brazil"],
+["笹","","-","sasa","ささ","bamboo grass, (kokuji)"],
+["穀","koku","コク","","","cereals, grain"],
+["柿","shi","シ","kaki","かき","persimmon"],
+["陵","ryou","リョウ","misasagi","みささぎ","mausoleum, imperial tomb, mound, hill"],
+["霧","mu, bou, bu","ム、ボウ、ブ","kiri","きり","fog, mist"],
+["魂","kon","コン","tamashii, tama","たましい、たま","soul, spirit"],
+["弊","hei","ヘイ","","","abuse, evil, vice, breakage"],
+["釧","sen","セン","kushiro, udewa","くしろ、うでわ","bracelet"],
+["妃","hi","ヒ","kisaki","きさき","queen, princess"],
+["舶","haku","ハク","","","liner, ship"],
+["餓","ga","ガ","u(eru)","う(える)","starve, hungry, thirst"],
+["腎","jin","ジン","","","kidney"],
+["窮","kyuu, kyou","キュウ、キョウ","kiwa(meru)","きわ(める)","hard up, destitute, suffer, perplexed, cornered"],
+["掌","shou","ショウ","tenohira, tanagokoro","てのひら、たなごころ","manipulate, rule, administer, conduct, palm of hand"],
+["麗","rei","レイ","uruwa(shii), ura(raka)","うるわ(しい)、うら(らか)","lovely, beautiful, graceful, resplendent"],
+["綾","rin","リン","aya","あや","design, figured cloth, twill"],
+["臭","shuu","シュウ","kusa(i), nio(u)","くさ(い)、にお(う)","stinking, ill-smelling, suspicious looking, odor, savor, fragrance"],
+["釜","fu","フ","kama","かま","kettle, cauldron, iron pot"],
+["悦","etsu","エツ","yoroko(bu)","よろこ(ぶ)","ecstasy, joy, rapture"],
+["刃","jin, nin","ジン、ニン","ha, yaiba, ki(ru)","は、やいば、き(る)","blade, sword, edge"],
+["縛","baku","バク","shiba(ru)","しば(る)","truss, arrest, bind, tie, restrain"],
+["暦","reki, ryaku","レキ、リャク","koyomi","こよみ","calendar, almanac"],
+["宜","gi","ギ","yoro(shii)","よろ(しい)","best regards, good"],
+["盲","mou","モウ","mekura","めくら","blind, blind man, ignoramus"],
+["粋","sui","スイ","iki","いき","chic, style, purity, essence, pith, cream, elite, choice"],
+["辱","joku","ジョク","hazukashi(meru)","はずかし(める)","embarrass, humiliate, shame"],
+["毅","ki, gi","キ、ギ","tsuyo(i)","つよ(い)","strong"],
+["轄","katsu","カツ","kusabi","くさび","control, wedge"],
+["猿","en","エン","saru","さる","monkey"],
+["弦","gen","ゲン","tsuru","つる","bowstring, chord, hypotenuse"],
+["嶌","tou","トウ","shima","しま","island"],
+["稔","nen, jin, nin","ネン、ジン、ニン","mino(ru), minori","みの(る)、みのり","harvest, ripen"],
+["窒","chitsu","チツ","","","plug up, obstruct"],
+["炊","sui","スイ","ta(ku), -da(ki)","た(く)、-だ(き)","cook, boil"],
+["洪","kou","コウ","","","deluge, flood, vast"],
+["摂","setsu, shou","セツ、ショウ","osa(meru), kane(ru), to(ru)","おさ(める)、かね(る)、と(る)","vicarious, surrogate, act in addition to, take in, absorb"],
+["飽","hou","ホウ","a(kiru), a(kasu), a(ku)","あ(きる)、あ(かす)、あ(く)","sated, tired of, bored, satiate"],
+["函","kan","カン","hako, i(reru)","はこ、い(れる)","box (archaic)"],
+["冗","jou","ジョウ","","","superfluous, uselessness"],
+["桃","tou","トウ","momo","もも","peach"],
+["狩","shu","シュ","ka(ru), ka(ri), -ga(ri)","か(る)、か(り)、-が(り)","hunt, raid, gather"],
+["朱","shu","シュ","ake","あけ","vermilion, cinnabar, scarlet, red, bloody"],
+["渦","ka","カ","uzu","うず","whirlpool, eddy, vortex"],
+["紳","shin","シン","","","sire, good belt, gentleman"],
+["枢","suu, shu","スウ、シュ","toboso, karakuri","とぼそ、からくり","hinge, pivot, door, center of things"],
+["碑","hi","ヒ","ishibumi","いしぶみ","tombstone, monument"],
+["鍛","tan","タン","kita(eru)","きた(える)","forge, discipline, train"],
+["刀","tou","トウ","katana, sori","かたな、そり","sword, saber, knife"],
+["鼓","ko","コ","tsudzumi","つづみ","drum, beat, rouse, muster"],
+["裸","ra","ラ","hadaka","はだか","naked, nude, uncovered, partially clothed"],
+["鴨","ou","オウ","kamo, ahiru","かも、あひる","wild duck, easy mark"],
+["猶","yuu, yu","ユウ、ユ","nao","なお","furthermore, still, yet"],
+["塊","kai, ke","カイ、ケ","katamari, tsuchikure","かたまり、つちくれ","clod, lump, chunk, clot, mass"],
+["旋","sen","セン","me(guru), ibari","め(ぐる)、いばり","rotation, go around"],
+["弓","kyuu","キュウ","yumi","ゆみ","bow, bow (archery, violin)"],
+["幣","hei","ヘイ","nusa","ぬさ","cash, bad habit, humble prefix, gift"],
+["膜","maku","マク","","","membrane"],
+["扇","sen","セン","ougi","おうぎ","fan, folding fan"],
+["脇","kyou","キョウ","waki, wake","わき、わけ","armpit, the other way, another place, flank, supporting role"],
+["腸","chou","チョウ","harawata, wata","はらわた、わた","intestines, guts, bowels, viscera"],
+["槽","sou","ソウ","fune","ふね","vat, tub, tank"],
+["鍋","ka","カ","nabe","なべ","pot, pan, kettle"],
+["慈","ji","ジ","itsuku(shimu)","いつく(しむ)","mercy"],
+["樋","tou","トウ","hi, toi","ひ、とい","water pipe, gutter, downspout, conduit"],
+["楊","you","ヨウ","yanagi","やなぎ","willow"],
+["伐","batsu, hatsu, ka, bochi","バツ、ハツ、カ、ボチ","ki(ru), somu(ku), u(tsu)","き(る)、そむ(く)、う(つ)","fell, strike, attack, punish"],
+["駿","shun, sun","シュン、スン","sugu(reru)","すぐ(れる)","a good horse, speed, a fast person"],
+["漬","shi","シ","tsu(keru), -dzuke","つ(ける)、-づけ","pickling, soak, moisten, steep"],
+["糾","kyuu","キュウ","tada(su)","ただ(す)","twist, ask, investigate, verify"],
+["亮","ryou","リョウ","akiraka","あきらか","clear, help"],
+["墳","fun","フン","","","tomb, mound"],
+["坪","hei","ヘイ","tsubo","つぼ","two-mat area, approx. thirty-six sq ft"],
+["紺","kon","コン","","","dark blue, navy"],
+["慌","kou","コウ","awa(teru), awa(tadashii)","あわ(てる)、あわ(ただしい)","disconcerted, be confused, lose one's head"],
+["娯","go","ゴ","","","recreation, pleasure"],
+["吾","go","ゴ","ware, waga-, a-","われ、わが-、あ-","I, my, our, one's own"],
+["椿","chin, chun","チン、チュン","tsubaki","つばき","camellia"],
+["舌","zetsu","ゼツ","shita","した","tongue, reed, clapper"],
+["羅","ra","ラ","usumono","うすもの","gauze, thin silk, Rome, arrange, spread out"],
+["峡","kyou, kou","キョウ、コウ","hazama","はざま","gorge, ravine"],
+["俸","hou","ホウ","","","stipend, salary"],
+["厘","rin","リン","","","rin, 1/10 sen, 1/10 bu"],
+["峰","hou","ホウ","mine, ne","みね、ね","summit, peak"],
+["圭","kei, ke","ケイ、ケ","","","square jewel, corner, angle, edge"],
+["醸","jou","ジョウ","kamo(su)","かも(す)","brew, cause"],
+["蓮","ren","レン","hasu, hachisu","はす、はちす","lotus"],
+["弔","chou","チョウ","tomura(u), tobura(u)","とむら(う)、とぶら(う)","condolences, mourning, funeral"],
+["乙","otsu, itsu","オツ、イツ","oto-, kinoto","おと-、きのと","the latter, duplicate, strange, witty, fishhook radical (no. 5)"],
+["倶","gu, ku","グ、ク","tomo(ni)","とも(に)","both, together, alike"],
+["汁","juu","ジュウ","shiru, tsuyu","しる、つゆ","soup, juice, broth, sap, gravy, pus"],
+["尼","ni","ニ","ama","あま","nun"],
+["遍","hen","ヘン","amane(ku)","あまね(く)","everywhere, times, widely, generally"],
+["堺","kai","カイ","sakai","さかい","world"],
+["衡","kou","コウ","","","equilibrium, measuring rod, scale"],
+["呆","hou","ホウ","bo(keru), aki(reru), oroka","ぼ(ける)、あき(れる)、おろか","be amazed, disgusted, shocked"],
+["薫","kun","クン","kao(ru)","かお(る)","send forth fragrance, fragrant, be scented, smoke (tobacco)"],
+["瓦","ga","ガ","kawara, guramu","かわら、ぐらむ","tile, gram"],
+["猟","ryou","リョウ","kari, ka(ru)","かり、か(る)","game-hunting, shooting, game, bag"],
+["羊","you","ヨウ","hitsuji","ひつじ","sheep"],
+["窪","wa, a","ワ、ア","kubo(mu)","くぼ(む)","depression, cave in, sink, become hollow"],
+["款","kan","カン","","","goodwill, article, section, friendship, collusion"],
+["閲","etsu","エツ","kemi(suru)","けみ(する)","review, inspection, revision"],
+["雀","jaku, jan, saku, shaku","ジャク、ジャン、サク、シャク","suzume","すずめ","sparrow"],
+["偵","tei","テイ","","","spy"],
+["喝","katsu","カツ","","","hoarse, scold"],
+["敢","kan","カン","a(ete)","あ(えて)","daring, brave, bold, sad, tragic, pitiful"],
+["畠","","-","hatake, hata","はたけ、はた","field, farm, garden, (kokuji)"],
+["胎","tai","タイ","","","womb, uterus"],
+["酵","kou","コウ","","","fermentation"],
+["憤","fun","フン","ikidoo(ru)","いきどお(る)","aroused, resent, be indignant, anger"],
+["豚","ton","トン","buta","ぶた","pork, pig"],
+["遮","sha","シャ","saegi(ru)","さえぎ(る)","intercept, interrupt, obstruct"],
+["扉","hi","ヒ","tobira","とびら","front door, title page, front page"],
+["硫","ryuu","リュウ","","","sulphur"],
+["赦","sha","シャ","yuru(su)","ゆる(す)","pardon, forgiveness"],
+["挫","za, sa","ザ、サ","kuji(ku)","くじ(く)","crush, break, sprain, discourage"],
+["窃","setsu","セツ","nusu(mu), hiso(ka)","ぬす(む)、ひそ(か)","stealth, steal, secret, private, hushed"],
+["泡","hou","ホウ","awa","あわ","bubbles, foam, suds, froth"],
+["瑞","zui, sui","ズイ、スイ","mizu-, shirushi","みず-、しるし","congratulations"],
+["又","yuu","ユウ","mata","また","or again, furthermore, on the other hand"],
+["慨","gai","ガイ","nage(ku)","なげ(く)","rue, be sad, sigh, lament"],
+["紡","bou","ボウ","tsumu(gu)","つむ(ぐ)","spinning"],
+["恨","kon","コン","ura(mu), ura(meshii)","うら(む)、うら(めしい)","regret, bear a grudge, resentment, malice, hatred"],
+["肪","bou","ボウ","","","obese, fat"],
+["扶","fu","フ","tasu(keru)","たす(ける)","aid, help, assist"],
+["戯","gi, ge","ギ、ゲ","tawamu(reru), za(reru), ja(reru)","たわむ(れる)、ざ(れる)、じゃ(れる)","frolic, play, sport"],
+["伍","go","ゴ","itsutsu","いつつ","five, five-man squad, file, line"],
+["忌","ki","キ","i(mu), i(mi), i(mawashii)","い(む)、い(み)、い(まわしい)","mourning, abhor, detestable, death anniversary"],
+["濁","daku, joku","ダク、ジョク","nigo(ru)","にご(る)","voiced, uncleanness, wrong, nigori, impurity"],
+["奔","hon","ホン","hashi(ru)","はし(る)","run, bustle"],
+["斗","to, tou","ト、トウ","","","Big Dipper, ten sho (vol), sake dipper, dots and cross radical (no. 68)"],
+["蘭","ran, ra","ラン、ラ","","","orchid, Holland"],
+["蒲","ho, bo, fu, bu","ホ、ボ、フ、ブ","gama, kaba, kama","がま、かば、かま","bullrush, flag, cattail"],
+["迅","jin","ジン","","","swift, fast"],
+["肖","shou","ショウ","ayaka(ru)","あやか(る)","resemblance"],
+["鉢","hachi, hatsu","ハチ、ハツ","","","bowl, rice tub, pot, crown"],
+["朽","kyuu","キュウ","ku(chiru)","く(ちる)","decay, rot, remain in seclusion"],
+["殻","kaku, koku, bai","カク、コク、バイ","kara, gara","から、がら","husk, nut shell"],
+["享","kyou, kou","キョウ、コウ","u(keru)","う(ける)","enjoy, receive, undergo, answer (phone), take, get, catch"],
+["秦","shin","シン","hata","はた","Manchu dynasty, name given to naturalized foreigners"],
+["茅","bou, myou","ボウ、ミョウ","kaya, chigaya","かや、ちがや","miscanthus reed"],
+["藩","han","ハン","","","clan, enclosure"],
+["沙","sa, sha","サ、シャ","suna, yonageru","すな、よなげる","sand"],
+["輔","ho, fu","ホ、フ","tasu(keru)","たす(ける)","help"],
+["媒","bai","バイ","nakoudo","なこうど","mediator, go-between"],
+["鶏","kei","ケイ","niwatori, tori","にわとり、とり","chicken"],
+["禅","zen, sen","ゼン、セン","shizuka, yuzu(ru)","しずか、ゆず(る)","Zen, silent meditation"],
+["嘱","shoku","ショク","shoku(suru), tano(mu)","しょく(する)、たの(む)","entrust, request, send a message"],
+["胴","dou","ドウ","","","trunk, torso, hull (ship), hub of wheel"],
+["粕","haku","ハク","kasu","かす","scrap, waste"],
+["冨","fu, fuu","フ、フウ","to(mu), tomi","と(む)、とみ","enrich, wealthy, abundant"],
+["迭","tetsu","テツ","","","transfer, alternation"],
+["挿","sou","ソウ","sa(su), hasa(mu)","さ(す)、はさ(む)","insert, put in, graft, wear (sword)"],
+["湘","shou","ショウ","","","name of Chinese river, the Sagami river"],
+["嵐","ran","ラン","arashi","あらし","storm, tempest"],
+["椎","tsui, sui","ツイ、スイ","tsuchi, u(tsu)","つち、う(つ)","chinquapin, mallet, spine"],
+["灘","tan, dan","タン、ダン","nada, se","なだ、せ","open sea"],
+["堰","en","エン","seki, se(ku)","せき、せ(く)","dam, prevent, stop up"],
+["獅","shi","シ","shishi","しし","lion"],
+["姜","kyou, ga","キョウ、ガ","kou","こう","Chinese surname, ginger"],
+["絹","ken","ケン","kinu","きぬ","silk"],
+["陪","bai","バイ","","","obeisance, follow, accompany, attend on"],
+["剖","bou","ボウ","","","divide"],
+["譜","fu","フ","","","musical score, music, note, staff, table, genealogy"],
+["郁","iku","イク","","","cultural progress, perfume"],
+["悠","yuu","ユウ","","","permanence, distant, long time, leisure"],
+["淑","shuku","シュク","shito(yaka)","しと(やか)","graceful, gentle, pure"],
+["帆","han","ハン","ho","ほ","sail"],
+["暁","gyou, kyou","ギョウ、キョウ","akatsuki, sato(ru)","あかつき、さと(る)","daybreak, dawn, in the event"],
+["鷲","shuu, ju","シュウ、ジュ","washi","わし","eagle"],
+["傑","ketsu","ケツ","sugu(reru)","すぐ(れる)","greatness, excellence"],
+["楠","nan, dan, zen, nen","ナン、ダン、ゼン、ネン","kusu, kusunoki","くす、くすのき","camphor tree"],
+["笛","teki","テキ","fue","ふえ","flute, clarinet, pipe, whistle, bagpipe, piccolo"],
+["芥","kai, ke","カイ、ケ","karashi, gomi, akuta","からし、ごみ、あくた","mustard, rape, dust, trash, rubbish"],
+["其","ki, gi, go","キ、ギ、ゴ","sore, sono","それ、その","that"],
+["玲","rei","レイ","","","sound of jewels"],
+["奴","do","ド","yatsu, yakko","やつ、やっこ","guy, slave, manservant, fellow"],
+["錠","jou","ジョウ","","","lock, fetters, shackles"],
+["拳","ken, gen","ケン、ゲン","kobushi","こぶし","fist"],
+["翔","shou","ショウ","kake(ru), to(bu)","かけ(る)、と(ぶ)","soar, fly"],
+["遷","sen","セン","utsu(ru), miyakogae","うつ(る)、みやこがえ","transition, move, change"],
+["拙","setsu","セツ","tsutana(i)","つたな(い)","bungling, clumsy, unskillful"],
+["侍","ji, shi","ジ、シ","samu(rai), habe(ru)","さむらい、はべ(る)","waiter, samurai, wait upon, serve"],
+["尺","shaku, seki","シャク、セキ","sashi","さし","shaku, Japanese foot, measure, scale, rule"],
+["峠","","-","touge","とうげ","mountain peak, mountain pass, climax, crest, (kokuji)"],
+["篤","toku","トク","atsu(i)","あつ(い)","fervent, kind, cordial, serious, deliberate"],
+["肇","chou, jou, tou","チョウ、ジョウ、トウ","haji(meru), hajime","はじ(める)、はじめ","beginning"],
+["渇","katsu","カツ","kawa(ku)","かわ(く)","thirst, dry up, parch"],
+["榎","ka","カ","enoki","えのき","lotus tree, nettle tree, hackberry"],
+["劉","ryuu, ru","リュウ、ル","koro(su)","ころ(す)","weapon of war, logging axe, kill en masse, peeling, sparse, faded"],
+["幡","man, han, ban, hon","マン、ハン、バン、ホン","hata","はた","flag"],
+["諏","shu, su","シュ、ス","sou, haka(ru)","そう、はか(る)","consult"],
+["叔","shuku","シュク","","","uncle, youth"],
+["雌","shi","シ","me-, mesu, men","め-、めす、めん","feminine, female"],
+["亨","kou, kyou, hou","コウ、キョウ、ホウ","too(ru)","とお(る)","pass through, go smoothly"],
+["堪","kan, tan","カン、タン","ta(eru), tama(ru), kora(eru)","た(える)、たま(る)、こら(える)","withstand, endure, support, resist"],
+["叙","jo","ジョ","tsui(zu), tsuide","つい(ず)、ついで","confer, relate, narrate, describe"],
+["酢","saku","サク","su","す","vinegar, sour, acid, tart"],
+["吟","gin","ギン","","","versify, singing, recital"],
+["逓","tei","テイ","kawa(ru), tagaini","かわ(る)、たがいに","relay, in turn, sending"],
+["痕","kon","コン","ato","あと","mark, foot print"],
+["嶺","rei, ryou","レイ、リョウ","mine","みね","peak, summit"],
+["袖","shuu","シュウ","sode","そで","sleeve, wing (building), extension, give cold shoulder"],
+["甚","jin","ジン","hanaha(da), hanaha(dashii)","はなは(だ)、はなは(だしい)","tremendously, very, great, exceedingly"],
+["喬","kyou","キョウ","taka(i)","たか(い)","high, boasting"],
+["崔","gai, sai, sui","ガイ、サイ、スイ","gake","がけ","cliff, bluff, precipice"],
+["妖","you","ヨウ","aya(shii), nama(meku), wazawa(i)","あや(しい)、なま(めく)、わざわ(い)","attractive, bewitching, calamity"],
+["琵","bi, hi","ビ、ヒ","","","glissando on strings, lute"],
+["琶","ha, be, wa","ハ、ベ、ワ","","","lute"],
+["聯","ren","レン","tsura(naru), tsura(neru)","つら(なる)、つら(ねる)","party, gang, clique"],
+["蘇","so, su","ソ、ス","yomigae(ru)","よみがえ(る)","be resuscitated, revived, perilla, shiso"],
+["闇","an, on","アン、オン","yami, kura(i)","やみ、くら(い)","get dark, gloom, disorder"],
+["崇","suu","スウ","aga(meru)","あが(める)","adore, respect, revere, worship"],
+["漆","shitsu","シツ","urushi","うるし","lacquer, varnish, seven"],
+["岬","kou","コウ","misaki","みさき","headland, cape, spit, promontory"],
+["癖","heki","ヘキ","kuse, kuse(ni)","くせ、くせ(に)","mannerism, habit, vice, trait, fault, kink"],
+["愉","yu","ユ","tano(shii), tano(shimu)","たの(しい)、たの(しむ)","pleasure, happy, rejoice"],
+["寅","in","イン","tora","とら","sign of the tiger, 3-5AM, third sign of Chinese zodiac"],
+["捉","soku, saku","ソク、サク","tora(eru)","とら(える)","catch, capture"],
+["礁","shou","ショウ","","","reef, sunken rock"],
+["乃","nai, dai, no, ai","ナイ、ダイ、ノ、アイ","no, sunawa(chi), nanji","の、すなわ(ち)、なんじ","from, possessive particle, whereupon, accordingly"],
+["洲","shuu, su","シュウ、ス","shima","しま","continent, sandbar, island, country"],
+["屯","ton","トン","tamuro","たむろ","barracks, police station, camp, ton"],
+["樽","son","ソン","taru","たる","barrel, cask, keg"],
+["樺","ka","カ","kaba, kanba","かば、かんば","birch, dark red"],
+["槙","ten, shin","テン、シン","maki, kozue","まき、こずえ","twig, ornamental evergreen"],
+["薩","satsu, sachi","サツ、サチ","","","salvation, Buddha"],
+["姻","in","イン","","","matrimony, marry"],
+["巌","gan","ガン","iwa, iwao, kewa(shii)","いわ、いわお、けわ(しい)","rock, crag, boulder"],
+["淀","ten, den","テン、デン","yodo(mu)","よど(む)","pool, eddy"],
+["麹","kiku","キク","kouji","こうじ","malt, yeast"],
+["賭","to","ト","ka(keru), kake","か(ける)、かけ","gamble, wager, bet"],
+["擬","gi","ギ","maga(i), modo(ki)","まが(い)、もど(き)","mimic, aim (a gun) at, nominate, imitate"],
+["塀","hei, bei","ヘイ、ベイ","","","fence, wall, (kokuji)"],
+["唇","shin","シン","kuchibiru","くちびる","lips"],
+["睦","boku, moku","ボク、モク","mutsu(majii), mutsu(mu)","むつ(まじい)、むつ(む)","intimate, friendly, harmonious"],
+["閑","kan","カン","","","leisure"],
+["胡","u, ko, go","ウ、コ、ゴ","nanzo","なんぞ","barbarian, foreign"],
+["幽","yuu","ユウ","fuka(i), kasu(ka), kura(i)","ふか(い)、かす(か)、くら(い)","seclude, confine to a room, deep, profound, secluded, faint, dark, tranquil"],
+["峻","shun","シュン","kewa(shii), taka(i)","けわ(しい)、たか(い)","high, steep"],
+["曹","sou, zou","ソウ、ゾウ","","","office, official, comrade, fellow"],
+["哨","shou","ショウ","mihari","みはり","scout, sentinel"],
+["詠","ei","エイ","yo(mu), uta(u)","よ(む)、うた(う)","recitation, poem, song, composing"],
+["炒","sou, shou","ソウ、ショウ","i(ru), ita(meru)","い(る)、いた(める)","broil, parch, roast, fry"],
+["屏","hei, byou","ヘイ、ビョウ","oo(u), shirizo(ku)","おお(う)、しりぞ(く)","wall, fence"],
+["卑","hi","ヒ","iya(shii)","いや(しい)","lowly, base, vile, vulgar, despise"],
+["侮","bu","ブ","anado(ru)","あなど(る)","scorn, despise, make light of, contempt"],
+["鋳","chuu, i, shu, shuu","チュウ、イ、シュ、シュウ","i(ru)","い(る)","casting, mint"],
+["抹","matsu","マツ","","","rub, paint, erase"],
+["尉","i, jou","イ、ジョウ","","","military officer, jailer, old man, rank"],
+["槻","ki","キ","tsuki","つき","Zelkova tree"],
+["隷","rei","レイ","shitaga(u), shimobe","したが(う)、しもべ","slave, servant, prisoner, criminal, follower"],
+["禍","ka","カ","wazawai","わざわい","calamity, misfortune, evil, curse"],
+["蝶","chou","チョウ","","","butterfly"],
+["酪","raku","ラク","","","dairy products, whey, broth, fruit juice"],
+["茎","kei, kyou","ケイ、キョウ","kuki","くき","stalk, stem"],
+["汎","han, bu, fuu, hou, hon","ハン、ブ、フウ、ホウ、ホン","tadayo(u), hiro(i)","ただよ(う)、ひろ(い)","pan-"],
+["頃","kei, kyou","ケイ、キョウ","koro, goro, shibara(ku)","ころ、ごろ、しばら(く)","time, about, toward"],
+["帥","sui","スイ","","","commander, leading troops, governor"],
+["梁","ryou","リョウ","hari, utsubari, yana, hashi","はり、うつばり、やな、はし","weir, fish trap, beam, girder"],
+["逝","sei","セイ","yu(ku), i(ku)","ゆ(く)、い(く)","departed, die"],
+["汽","ki","キ","","","vapor, steam"],
+["謎","mei, bei","メイ、ベイ","nazo","なぞ","riddle, puzzle, enigma, hint, tip"],
+["琢","taku","タク","miga(ku)","みが(く)","polish"],
+["箕","ki","キ","mi","み","winnowing"],
+["匿","toku","トク","kakuma(u)","かくま(う)","hide, shelter, shield"],
+["爪","sou","ソウ","tsume, tsuma-","つめ、つま-","claw, nail, talon"],
+["芭","ba, ha","バ、ハ","","","banana"],
+["逗","tou, zu","トウ、ズ","todo(maru)","とど(まる)","stop"],
+["苫","sen","セン","toma","とま","rush matting"],
+["鍵","ken","ケン","kagi","かぎ","key"],
+["襟","kin","キン","eri","えり","collar, neck, lapel, one's inner feelings"],
+["蛍","kei","ケイ","hotaru","ほたる","lightning-bug, firefly"],
+["楢","shuu, yuu","シュウ、ユウ","nara","なら","oak"],
+["蕉","shou","ショウ","","","banana, plantain"],
+["兜","tou, to","トウ、ト","kabuto","かぶと","helmet, head piece"],
+["寡","ka","カ","","","widow, minority, few"],
+["琉","ryuu, ru","リュウ、ル","","","precious stone, gem, lapis lazuli"],
+["痢","ri","リ","","","diarrhea"],
+["庸","you","ヨウ","","","commonplace, ordinary, employment"],
+["朋","hou","ホウ","tomo","とも","companion, friend"],
+["坑","kou","コウ","","","pit, hole"],
+["姑","ko","コ","shuutome, shuuto, oba","しゅうとめ、しゅうと、おば","mother-in-law"],
+["烏","u, o","ウ、オ","karasu, izukunzo, nanzo","からす、いずくんぞ、なんぞ","crow, raven"],
+["藍","ran","ラン","ai","あい","indigo"],
+["僑","kyou","キョウ","","","expatriate, person living abroad, temporary home"],
+["賊","zoku","ゾク","","","burglar, rebel, traitor, robber"],
+["搾","saku","サク","shibo(ru)","しぼ(る)","squeeze"],
+["奄","en","エン","oo(u), tachimachi","おお(う)、たちまち","cover, suffocate, obstruct"],
+["臼","kyuu, gu","キュウ、グ","usu, usudzu(ku)","うす、うすづ(く)","mortar"],
+["畔","han","ハン","aze, kuro, hotori","あぜ、くろ、ほとり","paddy ridge, levee"],
+["遼","ryou","リョウ","","","distant"],
+["唄","bai","バイ","uta, uta(u)","うた、うた(う)","song, ballad"],
+["孔","kou, ku","コウ、ク","ana","あな","cavity, hole, slit, very, great, exceedingly"],
+["橘","kitsu","キツ","tachibana","たちばな","mandarin orange"],
+["漱","sou, shuu, su","ソウ、シュウ、ス","kuchisusu(gu), ugai, susu(gu)","くちすす(ぐ)、うがい、すす(ぐ)","gargle, rinse mouth"],
+["呂","ro, ryo","ロ、リョ","sebone","せぼね","spine, backbone"],
+["桧","kai","カイ","hinoki, hi","ひのき、ひ","Japanese cypress"],
+["拷","gou","ゴウ","","","torture, beat"],
+["宋","sou","ソウ","","","dwell, Sung dynasty"],
+["嬢","jou","ジョウ","musume","むすめ","lass, girl, Miss, daughter"],
+["苑","en, on","エン、オン","sono, u(tsu)","その、う(つ)","garden, farm, park"],
+["巽","son","ソン","tatsumi","たつみ","southeast"],
+["杜","to, tou, zu","ト、トウ、ズ","mori, fusa(gu), yamanashi","もり、ふさ(ぐ)、やまなし","woods, grove"],
+["渓","kei","ケイ","tani, tanigawa","たに、たにがわ","mountain stream, valley"],
+["翁","ou","オウ","okina","おきな","venerable old man"],
+["藝","gei, un","ゲイ、ウン","u(eru), nori, waza","う(える)、のり、わざ","art, craft, performance, acting, trick, stunt"],
+["廉","ren","レン","","","bargain, reason, charge, suspicion, point, account, purity"],
+["牙","ga, ge","ガ、ゲ","kiba, ha","きば、は","tusk, fang, tusk radical (no. 92)"],
+["謹","kin","キン","tsutsushi(mu)","つつし(む)","discreet, reverently, humbly"],
+["瞳","dou, tou","ドウ、トウ","hitomi","ひとみ","pupil (of eye)"],
+["湧","yuu, you, yu","ユウ、ヨウ、ユ","wa(ku)","わ(く)","boil, ferment, seethe, uproar, breed"],
+["欣","kin, gon, kon","キン、ゴン、コン","yoroko(bu)","よろこ(ぶ)","take pleasure in, rejoice"],
+["窯","you","ヨウ","kama","かま","kiln, oven, furnace"],
+["褒","hou","ホウ","ho(meru)","ほ(める)","praise, extol"],
+["醜","shuu","シュウ","miniku(i), shiko","みにく(い)、しこ","ugly, unclean, shame, bad looking"],
+["魏","gi","ギ","taka(i)","たか(い)","high, large, Kingdom of Wei"],
+["篇","hen","ヘン","","","volume, chapter, book, editing, compilation"],
+["升","shou","ショウ","masu","ます","measuring box, 1.8 liter"],
+["此","shi","シ","kore, kono, koko","これ、この、ここ","this, current, next, coming, last, past"],
+["峯","hou","ホウ","mine, ne","みね、ね","peak, summit"],
+["殉","jun","ジュン","","","martyrdom, follow by resigning"],
+["煩","han, bon","ハン、ボン","wazura(u), urusa(garu)","わずら(う)、うるさ(がる)","anxiety, trouble, worry, pain, ill, annoy, nuisance, irksome"],
+["巴","ha","ハ","tomoe, uzumaki","ともえ、うずまき","comma-design"],
+["禎","tei","テイ","saiwa(i)","さいわ(い)","happiness, blessed, good fortune, auspicious"],
+["枕","chin, shin","チン、シン","makura","まくら","pillow"],
+["劾","gai","ガイ","","","censure, criminal investigation"],
+["菩","bo","ボ","","","kind of grass, sacred tree"],
+["堕","da","ダ","o(chiru), kuzu(su)","お(ちる)、くず(す)","degenerate, descend to, lapse into"],
+["丼","ton, tan, shou, sei","トン、タン、ショウ、セイ","donburi","どんぶり","bowl, bowl of food"],
+["租","so","ソ","","","tariff, crop tax, borrowing"],
+["檜","kai","カイ","hinoki, hi","ひのき、ひ","Japanese cypress"],
+["稜","ryou, rou","リョウ、ロウ","itsu, kado","いつ、かど","angle, edge, corner, power, majesty"],
+["牟","bou, mu","ボウ、ム","","","pupil (eye), moo (cow sound)"],
+["桟","san, sen","サン、セン","kakehashi","かけはし","scaffold, cleat, frame, jetty, bolt (door)"],
+["榊","","-","sakaki","さかき","sacred Shinto tree, (kokuji)"],
+["錫","seki, shaku","セキ、シャク","suzu, tama(u)","すず、たま(う)","copper, tin"],
+["荏","jin, nin","ジン、ニン","","","bean, perilla, herb, soft, pliable"],
+["惧","ku, gu","ク、グ","oso(reru)","おそ(れる)","fear, be afraid of, dread"],
+["倭","wa, i","ワ、イ","yamato, shitaga(u)","やまと、したが(う)","Yamato, ancient Japan"],
+["婿","sei","セイ","muko","むこ","bridegroom, son-in-law"],
+["慕","bo","ボ","shita(u)","した(う)","pining, yearn for, love dearly, adore"],
+["廟","byou, myou","ビョウ、ミョウ","tamaya, mitamaya, yashiro","たまや、みたまや、やしろ","mausoleum, shrine, palace"],
+["銚","chou, you","チョウ、ヨウ","nabe","なべ","sake bottle"],
+["斐","hi, i","ヒ、イ","","","beautiful, patterned"],
+["罷","hi","ヒ","maka(ri-), ya(meru)","まか(り-)、や(める)","quit, stop, leave, withdraw, go"],
+["矯","kyou","キョウ","ta(meru)","た(める)","rectify, straighten, correct, reform, cure, control, pretend, falsify"],
+["某","bou","ボウ","soregashi, nanigashi","それがし、なにがし","so-and-so, one, a certain, that person"],
+["囚","shuu","シュウ","tora(wareru)","とら(われる)","captured, criminal, arrest, catch"],
+["魁","kai","カイ","sakigake, kashira","さきがけ、かしら","charging ahead of others"],
+["薮","sou","ソウ","yabu","やぶ","thicket, bush, underbrush, grove"],
+["虹","kou","コウ","niji","にじ","rainbow"],
+["鴻","kou, gou","コウ、ゴウ","ootori, hishikui, oogari","おおとり、ひしくい、おおがり","large bird, wild goose, large, great, powerful, prosperous"],
+["泌","hitsu, hi","ヒツ、ヒ","","","ooze, flow, soak in, penetrate, secrete"],
+["於","o, yo","オ、ヨ","oi(te), o(keru), yori","おい(て)、お(ける)、より","at, in, on, as for"],
+["赳","kyuu","キュウ","","","strong and brave"],
+["漸","zen","ゼン","youya(ku), yaya, susu(mu)","ようや(く)、やや、すす(む)","steadily, gradually advancing, finally, barely"],
+["逢","hou","ホウ","a(u), muka(eru)","あ(う)、むか(える)","meeting, tryst, date, rendezvous"],
+["凧","","-","ikanobori, tako","いかのぼり、たこ","kite, (kokuji)"],
+["鵜","tei, dai","テイ、ダイ","u","う","cormorant"],
+["庵","an","アン","iori, io","いおり、いお","hermitage, retreat"],
+["膳","zen, sen","ゼン、セン","kashiwa, susu(meru), sona(eru)","かしわ、すす(める)、そな(える)","small low table, tray"],
+["蚊","bun","ブン","ka","か","mosquito"],
+["葵","ki","キ","aoi","あおい","hollyhock"],
+["厄","yaku","ヤク","","","unlucky, misfortune, bad luck, disaster"],
+["藻","sou","ソウ","mo","も","seaweed, duckweed"],
+["萬","man, ban","マン、バン","yorozu","よろず","ten thousand, 10,000"],
+["禄","roku","ロク","saiwa(i), fuchi","さいわ(い)、ふち","fief, allowance, pension, grant, happiness"],
+["孟","mou, bou, myou","モウ、ボウ、ミョウ","kashira","かしら","chief, beginning"],
+["鴈","gan","ガン","kari, karigane","かり、かりがね","wild goose"],
+["狼","rou","ロウ","ookami","おおかみ","wolf"],
+["嫡","chaku, teki","チャク、テキ","","","legitimate wife, direct descent (non-bastard)"],
+["呪","ju, shu, shuu, zu","ジュ、シュ、シュウ、ズ","majina(u), noro(i)","まじな(う)、のろ(い)","spell, curse, charm, malediction"],
+["斬","zan, san, sen, zen","ザン、サン、セン、ゼン","ki(ru)","き(る)","beheading, kill, murder"],
+["尖","sen","セン","toga(ru), saki, surudo(i)","とが(る)、さき、するど(い)","be pointed, sharp, taper, displeased, angry, edgy"],
+["翫","gan","ガン","moteaso(bu)","もてあそ(ぶ)","take pleasure in, play instrument"],
+["嶽","gaku","ガク","take","たけ","peak"],
+["尭","gyou","ギョウ","taka(i)","たか(い)","high, far"],
+["怨","en, on, un","エン、オン、ウン","ura(mu)","うら(む)","grudge, show resentment, be jealous"],
+["卿","kei, kyou","ケイ、キョウ","kimi","きみ","you, lord, secretary, state minister"],
+["串","kan, ken, sen","カン、ケン、セン","kushi, tsuranu(ku)","くし、つらぬ(く)","spit, skewer"],
+["已","i","イ","ya(mu), sude(ni), nomi","や(む)、すで(に)、のみ","stop, halt, previously, already, long ago"],
+["嚇","kaku","カク","odo(su)","おど(す)","menacing, dignity, majesty, threaten"],
+["巳","shi","シ","mi","み","sign of the snake or serpent, 9-11AM, sixth sign of Chinese zodiac"],
+["凸","totsu","トツ","deko","でこ","convex, beetle brow, uneven"],
+["暢","chou","チョウ","nobi(ru)","のび(る)","stretch"],
+["腫","shu, shou","シュ、ショウ","ha(reru), ha(re), haremono","は(れる)、は(れ)、はれもの","tumor, swelling"],
+["粟","zoku, shoku, soku","ゾク、ショク、ソク","awa, momi","あわ、もみ","millet"],
+["燕","en","エン","tsubame, tsubakura","つばめ、つばくら","swallow (bird)"],
+["韻","in","イン","","","rhyme, elegance, tone"],
+["綴","tei, tetsu, techi, getsu","テイ、テツ、テチ、ゲツ","to(jiru), tsudzu(ru), tsudzuri","と(じる)、つづ(る)、つづり","compose, spell, write, bind (books)"],
+["埴","shoku","ショク","hani, hena","はに、へな","clay"],
+["霜","sou","ソウ","shimo","しも","frost"],
+["餅","hei, hyou","ヘイ、ヒョウ","mochi, mochii","もち、もちい","mochi rice cake"],
+["魯","ro","ロ","oroka","おろか","foolish, Russia"],
+["硝","shou","ショウ","","","nitrate, saltpeter"],
+["牡","bo, bou","ボ、ボウ","osu, o-, on-","おす、お-、おん-","male"],
+["箸","cho, chaku","チョ、チャク","hashi","はし","chopsticks"],
+["勅","choku","チョク","imashi(meru), mikotonori","いまし(める)、みことのり","imperial order"],
+["芹","kin","キン","seri","せり","parsley"],
+["杏","kyou, an, kou","キョウ、アン、コウ","anzu","あんず","apricot"],
+["迦","ka, ke","カ、ケ","","","(used phonetically)"],
+["棺","kan","カン","","","coffin, casket"],
+["儒","ju","ジュ","","","Confucian"],
+["鳳","hou, fuu","ホウ、フウ","","","male mythical bird"],
+["馨","kei, kyou","ケイ、キョウ","kao(ru), kaori","かお(る)、かおり","fragrant, balmy, favourable"],
+["斑","han","ハン","fu, madara","ふ、まだら","spot, blemish, speck, patches"],
+["蔭","in, on","イン、オン","kage","かげ","shade, shadow, backing assistance"],
+["焉","en","エン","izuku(nzo), kokoni, kore","いずく(んぞ)、ここに、これ","how, why, then"],
+["慧","kei, e","ケイ、エ","satoi","さとい","wise"],
+["祇","gi, ki, shi","ギ、キ、シ","kunitsukami, tada, masani","くにつかみ、ただ、まさに","national or local god, peaceful, great"],
+["摯","shi","シ","ita(ru), tsuka(mu), nie","いた(る)、つか(む)、にえ","gift, seriousness"],
+["愁","shuu","シュウ","ure(eru), ure(i)","うれ(える)、うれ(い)","distress, grieve, lament, be anxious"],
+["鷺","ro","ロ","sagi","さぎ","heron"],
+["楼","rou","ロウ","takadono","たかどの","watchtower, lookout, high building"],
+["彬","hin, fun","ヒン、フン","uruwa(shii), aki(raka)","うるわ(しい)、あき(らか)","refined, gentle"],
+["袴","ko, ku","コ、ク","hakama, zubon","はかま、ずぼん","men's formal divided skirt"],
+["匡","kyou, ou","キョウ、オウ","suku(u), tada(su)","すく(う)、ただ(す)","correct, save, assist"],
+["眉","bi, mi","ビ、ミ","mayu","まゆ","eyebrow"],
+["苅","gai, kai","ガイ、カイ","ka(ru)","か(る)","cutting (grass)"],
+["讃","san","サン","ho(meru), tata(eru)","ほ(める)、たた(える)","praise, title on a picture"],
+["尹","in","イン","osa, tada(su)","おさ、ただ(す)","an official rank"],
+["欽","kin, kon","キン、コン","tsutsushi(mu)","つつし(む)","respect, revere, long for"],
+["薪","shin","シン","takigi, maki","たきぎ、まき","fuel, firewood, kindling"],
+["湛","tan, chin, jin, sen","タン、チン、ジン、セン","shizu(mu), tata(eru)","しず(む)、たた(える)","fill, wear (a smile), clear, pure, dense, deep"],
+["堆","tai, tsui","タイ、ツイ","uzutaka(i)","うずたか(い)","piled high"],
+["狐","ko","コ","kitsune","きつね","fox"],
+["褐","katsu","カツ","","","brown, woollen kimono"],
+["鴎","ou","オウ","kamome","かもめ","seagull"],
+["瀋","shin","シン","","","juice, broth"],
+["挺","chou, tei","チョウ、テイ","nu(ku)","ぬ(く)","bravely volunteer, counter for guns, inksticks, palanquins"],
+["賜","shi","シ","tamawa(ru), tama(u)","たまわ(る)、たま(う)","grant, gift, boon, results"],
+["嵯","sa, shi","サ、シ","","","steep, craggy, rugged"],
+["雁","gan","ガン","kari, karigane","かり、かりがね","wild goose"],
+["佃","ten, den","テン、デン","tsukuda","つくだ","cultivated rice field"],
+["綜","sou","ソウ","osa(meru), su(beru)","おさ(める)、す(べる)","rule, synthesize"],
+["繕","zen","ゼン","tsukuro(u)","つくろ(う)","darning, repair, mend, trim, tidy up, adjust"],
+["狛","haku","ハク","koma","こま","archaic part of Korea, lion-dog shrine guards"],
+["壷","ko","コ","tsubo","つぼ","jar, pot, hinge knuckle, one's aim"],
+["橿","kyou","キョウ","kashi, mochinoki","かし、もちのき","oak"],
+["栓","sen","セン","","","plug, bolt, cork, bung, stopper"],
+["翠","sui","スイ","kawasemi, midori","かわせみ、みどり","green, kingfisher"],
+["鮎","den, nen","デン、ネン","ayu, namazu","あゆ、なまず","freshwater trout, smelt"],
+["芯","shin","シン","","","wick"],
+["蜜","mitsu, bitsu","ミツ、ビツ","","","honey, nectar, molasses"],
+["播","ha, ban, han","ハ、バン、ハン","ma(ku)","ま(く)","plant, sow"],
+["榛","shin, han","シン、ハン","hashibami, hari","はしばみ、はり","hazelnut, filbert"],
+["凹","ou","オウ","kubo(mu), heko(mu), boko","くぼ(む)、へこ(む)、ぼこ","concave, hollow, sunken"],
+["艶","en","エン","tsuya, nama(mekashii), ade(yaka)","つや、なま(めかしい)、あで(やか)","glossy, luster, glaze, polish, charm, colorful, captivating"],
+["帖","chou, jou","チョウ、ジョウ","kakimono","かきもの","quire (of paper), bundle of seaweed, counter for screens, notebook"],
+["桶","you, tou","ヨウ、トウ","oke","おけ","tub, bucket"],
+["惣","sou","ソウ","sube(te)","すべ(て)","all"],
+["股","ko","コ","mata, momo","また、もも","thigh, crotch"],
+["匂","","-","nio(u), nio(i), nio(waseru)","にお(う)、にお(い)、にお(わせる)","fragrant, stink, glow, insinuate, (kokuji)"],
+["鞍","an","アン","kura","くら","saddle"],
+["蔦","chou","チョウ","tsuta","つた","vine, ivy"],
+["玩","gan","ガン","mochiaso(bu), moteaso(bu)","もちあそ(ぶ)、もてあそ(ぶ)","play, take pleasure in, trifle with, make sport of"],
+["萱","ken","ケン","kaya, kanzou","かや、かんぞう","miscanthus reed"],
+["梯","tei, tai","テイ、タイ","hashigo","はしご","ladder, stairs, insatiable drinking"],
+["雫","da","ダ","shizuku","しずく","drop, trickle, dripping, (kokuji)"],
+["絆","han","ハン","kizuna, hoda(su), tsuna(gu)","きずな、ほだ(す)、つな(ぐ)","bonds, fetters"],
+["錬","ren","レン","ne(ru)","ね(る)","tempering, refine, drill, train, polish"],
+["湊","sou","ソウ","minato, atsu(maru)","みなと、あつ(まる)","port, harbor"],
+["蜂","hou","ホウ","hachi","はち","bee, wasp, hornet"],
+["隼","shun, jun","シュン、ジュン","hayabusa","はやぶさ","falcon"],
+["舵","da, ta","ダ、タ","kaji","かじ","rudder, helm, wheel"],
+["渚","sho","ショ","nagisa","なぎさ","strand, beach, shore"],
+["珂","ka","カ","","","jewel"],
+["煥","kan","カン","akiraka","あきらか","shine"],
+["衷","chuu","チュウ","","","inmost, heart, mind, inside"],
+["逐","chiku","チク","","","pursue, drive away, chase, accomplish, attain, commit"],
+["斥","seki","セキ","shirizo(keru)","しりぞ(ける)","reject, retreat, recede, withdraw, repel, repulse"],
+["稀","ki, ke","キ、ケ","mare, mabara","まれ、まばら","rare, phenomenal, dilute (acid)"],
+["癌","gan","ガン","","","cancer, cancerous evil"],
+["峨","ga","ガ","kewa(shii)","けわ(しい)","high mountain"],
+["嘘","kyo, ko","キョ、コ","uso, fu(ku)","うそ、ふ(く)","lie, falsehood"],
+["旛","hen, han","ヘン、ハン","hata","はた","flag"],
+["篭","rou, ru","ロウ、ル","kago, ko(meru), komo(ru)","かご、こ(める)、こも(る)","seclude oneself, cage, coop, implied"],
+["芙","fu","フ","","","lotus, Mt Fuji"],
+["詔","shou","ショウ","mikotonori","みことのり","imperial edict"],
+["皐","kou","コウ","satsuki","さつき","swamp, shore, fifth month"],
+["雛","suu, su, ju","スウ、ス、ジュ","hina, hiyoko","ひな、ひよこ","chick, squab, duckling, doll"],
+["娼","shou","ショウ","asobime","あそびめ","prostitute"],
+["篆","ten","テン","","","seal-style characters"],
+["鮫","kou","コウ","same, mizuchi","さめ、みずち","shark"],
+["椅","i","イ","","","chair"],
+["惟","i, yui","イ、ユイ","omo(nmiru), kore, omo(uni)","おも(んみる)、これ、おも(うに)","consider, reflect, think"],
+["牌","hai","ハイ","pai, fuda","ぱい、ふだ","label, signboard, medal, mahjong tiles"],
+["宕","tou","トウ","sugiru","すぎる","cave"],
+["喧","ken","ケン","yakama(shii), kamabisu(shii)","やかま(しい)、かまびす(しい)","noisy, boisterous"],
+["佑","yuu, u","ユウ、ウ","tasu(keru)","たす(ける)","help, assist"],
+["蒋","shou, sou","ショウ、ソウ","makomo, hage(masu)","まこも、はげ(ます)","reed"],
+["樟","shou","ショウ","kusu","くす","camphor"],
+["耀","you","ヨウ","kagaya(ku), hikari","かがや(く)、ひかり","shine, sparkle, gleam, twinkle"],
+["黛","tai","タイ","mayuzumi","まゆずみ","blackened eyebrows"],
+["叱","shitsu, shichi, ka","シツ、シチ、カ","shika(ru)","しか(る)","scold, reprove"],
+["櫛","shitsu","シツ","kushi, kushikezu(ru)","くし、くしけず(る)","comb"],
+["渥","aku","アク","atsu(i), uruo(u)","あつ(い)、うるお(う)","kindness, moisten"],
+["挨","ai","アイ","hira(ku)","ひら(く)","approach, draw near, push open"],
+["憧","shou, tou, dou","ショウ、トウ、ドウ","akoga(reru)","あこが(れる)","yearn after, long for, aspire to, admire, adore"],
+["濡","ju, nyu","ジュ、ニュ","nure(ru), uruo(i)","ぬれ(る)、うるお(い)","get wet, damp, make love"],
+["槍","sou, shou","ソウ、ショウ","yari","やり","spear, lance, javelin"],
+["宵","shou","ショウ","yoi","よい","wee hours, evening, early night"],
+["襄","jou, shou","ジョウ、ショウ","hara(u)","はら(う)","rise, raise"],
+["妄","mou, bou","モウ、ボウ","mida(rini)","みだ(りに)","delusion, unnecessarily, without authority, reckless"],
+["惇","shun, jun, ton","シュン、ジュン、トン","atsu(i)","あつ(い)","sincere, kind, considerate"],
+["蛋","tan","タン","","","barbarian, egg"],
+["脩","shuu","シュウ","osa(meru), naga(i), hojishi","おさ(める)、なが(い)、ほじし","dried meat"],
+["笘","sen, chou","セン、チョウ","","","whip, cane, wooden writing slate"],
+["宍","niku, jiku","ニク、ジク","shishi","しし","muscles, meat"],
+["甫","ho, fu","ホ、フ","haji(mete)","はじ(めて)","for the first time, not until"],
+["酌","shaku","シャク","ku(mu)","く(む)","bar-tending, serving sake, the host, draw (water), ladle, scoop, pump"],
+["蚕","san, ten","サン、テン","kaiko, ko","かいこ、こ","silkworm"],
+["壕","kou, gou","コウ、ゴウ","hori","ほり","trench, dugout, air raid shelter"],
+["嬉","ki","キ","ure(shii), tano(shimu)","うれ(しい)、たの(しむ)","glad, pleased, rejoice"],
+["囃","satsu, sou","サツ、ソウ","haya(su), hayashi","はや(す)、はやし","play (music), accompany, beat time, banter, jeer, applaud"],
+["蒼","sou","ソウ","ao(i)","あお(い)","blue, pale"],
+["餌","ji, ni","ジ、ニ","e, eba, esa, mochi","え、えば、えさ、もち","food, bait, prey, tempting profit"],
+["簗","ryou","リョウ","yana","やな","weir, fish trap, (kokuji)"],
+["峙","ji","ジ","sobada(tsu)","そばだ(つ)","tower, soar"],
+["粥","iku, shuku, juku","イク、シュク、ジュク","kayu, kai, hisa(gu)","かゆ、かい、ひさ(ぐ)","rice gruel"],
+["舘","kan","カン","yakata, tate","やかた、たて","mansion, large building, palace"],
+["銕","tetsu","テツ","kurogane","くろがね","iron, strong, solid, firm"],
+["鄒","suu, shu, shuu","スウ、シュ、シュウ","","","place name"],
+["蜷","ken","ケン","nina","にな","an edible river snail"],
+["暉","ki","キ","kaga(yaku)","かが(やく)","shine, light"],
+["捧","hou","ホウ","sasa(geru)","ささ(げる)","lift up, give, offer, consecrate, sacrifice, dedicate"],
+["頒","han","ハン","wa(katsu), wa(keru)","わ(かつ)、わ(ける)","distribute, disseminate, partition, understand"],
+["只","shi","シ","tada","ただ","only, free, in addition"],
+["肢","shi","シ","","","limb, arms & legs"],
+["箏","sou, shou","ソウ、ショウ","koto","こと","a koto"],
+["檀","dan, tan","ダン、タン","mayumi","まゆみ","cedar, sandalwood, spindle tree"],
+["鵠","koku, kou","コク、コウ","kugui, mato","くぐい、まと","swan"],
+["凱","gai, kai","ガイ、カイ","kachidoki, yawaragu","かちどき、やわらぐ","victory song"],
+["彗","sui, e, kei, sei","スイ、エ、ケイ、セイ","houki","ほうき","comet"],
+["謄","tou","トウ","","","mimeograph, copy"],
+["諌","kan","カン","isa(me)","いさ(め)","admonish, dissuade"],
+["樫","","-","kashi","かし","evergreen oak, (kokuji)"],
+["噂","son","ソン","uwasa","うわさ","rumor, gossip, hearsay"],
+["脊","seki","セキ","se, sei","せ、せい","stature, height, spine"],
+["牝","hin","ヒン","mesu, me-, men","めす、め-、めん","female"],
+["梓","shi","シ","azusa","あずさ","catalpa tree, woodblock printing"],
+["洛","raku","ラク","","","Kyoto, the capital"],
+["醍","dai, tai, tei","ダイ、タイ、テイ","","","whey, good Buddhist teaching"],
+["砦","sai","サイ","toride","とりで","fort, stronghold, entrenchments"],
+["丑","chuu","チュウ","ushi","うし","sign of the ox or cow, 1-3AM, second sign of Chinese zodiac"],
+["笏","kotsu","コツ","shaku","しゃく","mace, baton, scepter"],
+["蕨","ketsu","ケツ","warabi","わらび","bracken, fernbrake"],
+["噺","","-","hanashi","はなし","talk, (kokuji)"],
+["抒","jo, sho","ジョ、ショ","ku(mu), no(beru)","く(む)、の(べる)","tell"],
+["嗣","shi","シ","","","heir, succeed"],
+["隈","wai, e","ワイ、エ","kuma, sumi","くま、すみ","corner, nook, recess"],
+["叶","kyou","キョウ","kana(eru), kana(u)","かな(える)、かな(う)","grant, answer"],
+["凄","sei, sai","セイ、サイ","samu(i), sugo(i), susa(majii)","さむ(い)、すご(い)、すさ(まじい)","uncanny, weird, threatening, horrible"],
+["汐","seki","セキ","shio, ushio, sei","しお、うしお、せい","eventide, tide, salt water, opportunity"],
+["絢","ken","ケン","","","brilliant fabric design"],
+["叩","kou","コウ","tata(ku), hata(ku), sugi","たた(く)、はた(く)、すぎ","strike, beat, kow tow, hit, thrash, criticize"],
+["嫉","shitsu","シツ","sone(mu), neta(mu), niku(mu)","そね(む)、ねた(む)、にく(む)","jealous, envy"],
+["朔","saku","サク","tsuitachi","ついたち","conjunction (astronomy), first day of month, north"],
+["蔡","sai","サイ","","","type of tortoise used for divination"],
+["膝","shitsu","シツ","hiza","ひざ","knee, lap"],
+["鍾","shou, shu","ショウ、シュ","atsu(meru), sakazuki, kane","あつ(める)、さかずき、かね","spindle, gather, collect"],
+["仇","kyuu, gu","キュウ、グ","ada, ata, kataki, tsureai","あだ、あた、かたき、つれあい","foe, enemy, revenge, grudge, feud"],
+["伽","ka, ga, kya, gya","カ、ガ、キャ、ギャ","togi","とぎ","nursing, attending, entertainer"],
+["夷","i","イ","ebisu, emishi, koro(su)","えびす、えみし、ころ(す)","barbarian, savage, Ainu"],
+["恣","shi","シ","hoshiimama","ほしいまま","selfish, arbitrary"],
+["瞑","mei, ben, myou, min, men","メイ、ベン、ミョウ、ミン、メン","mei(suru), tsubu(ru), kura(i)","めい(する)、つぶ(る)、くら(い)","sleep, dark, close eyes"],
+["畝","bou, ho, mo, mu","ボウ、ホ、モ、ム","se, une","せ、うね","furrow, thirty tsubo, ridge, rib"],
+["抄","shou","ショウ","","","extract, selection, summary, copy, spread thin"],
+["杭","kou","コウ","kui","くい","stake, post, picket"],
+["寓","guu, gu, dou","グウ、グ、ドウ","guu(suru), kakotsu(keru), karizumai","ぐう(する)、かこつ(ける)、かりずまい","temporary abode, imply, suggest"],
+["麺","men, ben","メン、ベン","mugiko","むぎこ","noodles, wheat flour"],
+["戴","tai","タイ","itada(ku)","いただ(く)","be crowned with, live under (a ruler), receive"],
+["爽","sou","ソウ","aki(raka), sawa(yaka)","あき(らか)、さわ(やか)","refreshing, bracing, resonant, sweet, clear"],
+["裾","kyo, ko","キョ、コ","suso","すそ","cuff, hem, foot of mountain"],
+["黎","rei, ri","レイ、リ","kuro(i)","くろ(い)","dark, black, many"],
+["惰","da","ダ","","","lazy, laziness"],
+["坐","za, sa","ザ、サ","suwa(ru), owasu, mashimasu","すわ(る)、おわす、まします","sit"],
+["鍼","shin","シン","hari, sa(su)","はり、さ(す)","needle"],
+["蛮","ban","バン","ebisu","えびす","barbarian"],
+["塙","kaku, kou","カク、コウ","hanawa, kata(i)","はなわ、かた(い)","projecting tableland or mountain"],
+["冴","go, ko","ゴ、コ","sa(eru), koo(ru), hi(eru)","さ(える)、こお(る)、ひ(える)","be clear, serene, cold, skilful"],
+["旺","ou, kyou, gou","オウ、キョウ、ゴウ","kagaya(ki), utsukushi(i), sakan","かがや(き)、うつくし(い)、さかん","flourishing, successful, beautiful, vigorous"],
+["葦","i","イ","ashi, yoshi, shio(reru), shibo(mu)","あし、よし、しお(れる)、しぼ(む)","reed, bullrush"],
+["礒","gi, ga","ギ、ガ","iso, iwao","いそ、いわお","rock, beach, shore"],
+["咸","kan, gen","カン、ゲン","","","all, same"],
+["萌","hou","ホウ","mo(eru), kiza(su), mebae","も(える)、きざ(す)、めばえ","show symptoms of, sprout, bud, malt"],
+["饗","kyou","キョウ","u(keru), motena(su)","う(ける)、もてな(す)","banquet"],
+["歪","wai, e","ワイ、エ","iga(mu), ibitsu, hizu(mu), yuga(mu)","いが(む)、いびつ、ひず(む)、ゆが(む)","warp, bend, strained, distort"],
+["冥","mei, myou","メイ、ミョウ","kura(i)","くら(い)","dark"],
+["偲","sai, shi","サイ、シ","shino(bu)","しの(ぶ)","recollect, remember"],
+["壱","ichi, itsu","イチ、イツ","hitotsu","ひとつ","one (in documents)"],
+["瑠","ru, ryuu","ル、リュウ","","","lapis lazuli"],
+["韮","kyuu, ku","キュウ、ク","nira","にら","leek"],
+["漕","sou","ソウ","ko(gu), hako(bu)","こ(ぐ)、はこ(ぶ)","rowing, scull, paddle"],
+["杵","sho, so","ショ、ソ","kine","きね","wooden pestle"],
+["薔","ba, shou, shoku, sou","バ、ショウ、ショク、ソウ","mizutade","みずたで","water pepper"],
+["膠","kou, kyou","コウ、キョウ","nikawa, nibe","にかわ、にべ","glue, isinglass"],
+["允","in","イン","jou, makoto(ni), yurusu","じょう、まこと(に)、ゆるす","license, sincerity, permit"],
+["眞","shin","シン","ma, makoto","ま、まこと","truth, reality, Buddhist sect"],
+["蒙","mou, bou","モウ、ボウ","koumu(ru), oo(u), kura(i)","こうむ(る)、おお(う)、くら(い)","ignorance, darkness, get, receive, be subjected to, sustain, Mongolia"],
+["蕃","ban, han","バン、ハン","","","grow luxuriously"],
+["呑","ton, don","トン、ドン","no(mu)","の(む)","drink"],
+["侯","kou","コウ","","","marquis, lord, daimyo"],
+["碓","kaku, tai","カク、タイ","tashi(ka), kaku(taru)","たし(か)、かく(たる)","pestle"],
+["茗","myou, mei","ミョウ、メイ","cha","ちゃ","tea"],
+["麓","roku","ロク","fumoto","ふもと","foot of a mountain"],
+["瀕","hin","ヒン","hotori","ほとり","shore, brink, verge"],
+["蒔","shi, ji","シ、ジ","u(eru), ma(ku)","う(える)、ま(く)","sow (seeds)"],
+["鯉","ri","リ","koi","こい","carp"],
+["竪","ju","ジュ","tate, ta(teru), kodomo","たて、た(てる)、こども","length, height, warp"],
+["弧","ko","コ","","","arc, arch, bow"],
+["稽","kei","ケイ","kanga(eru), todo(meru)","かんが(える)、とど(める)","think, consider"],
+["瘤","ryuu, ru","リュウ、ル","kobu","こぶ","lump, swelling"],
+["澤","taku","タク","sawa, uruo(i), tsuya","さわ、うるお(い)、つや","swamp"],
+["溥","fu, haku","フ、ハク","amaneshi","あまねし","far and wide"],
+["遥","you","ヨウ","haru(ka)","はる(か)","far off, distant, long ago"],
+["蹴","shuku, shuu","シュク、シュウ","ke(ru)","け(る)","kick"],
+["或","waku, koku, iki","ワク、コク、イキ","a(ru), arui, aruiwa","あ(る)、あるい、あるいは","some, one, or, possibly, a certain"],
+["訃","fu","フ","shirase","しらせ","obituary"],
+["矩","ku","ク","kane, kanezashi, sashigane","かね、かねざし、さしがね","ruler, carpenter's square"],
+["厦","ka, sa","カ、サ","ie","いえ","house"],
+["冤","en","エン","","","false charge, hatred"],
+["剥","haku, hoku","ハク、ホク","he(gu), mu(ku), ha(gareru)","へ(ぐ)、む(く)、は(がれる)","come off, peel, fade, discolor"],
+["舜","shun","シュン","","","type of morning glory, rose of Sharon, althea"],
+["侠","kyou","キョウ","kyan, otokodate","きゃん、おとこだて","tomboy, chivalry"],
+["贅","zei, sei","ゼイ、セイ","ibo","いぼ","luxury"],
+["杖","jou","ジョウ","tsue","つえ","staff, cane"],
+["蓋","gai, kai, kou","ガイ、カイ、コウ","futa, keda(shi), oo(u), kasa","ふた、けだ(し)、おお(う)、かさ","cover, lid, flap"],
+["畏","i","イ","oso(reru), kashikoma(ru), kashiko","おそ(れる)、かしこま(る)、かしこ","fear, majestic, graciously, be apprehensive"],
+["喉","kou","コウ","nodo","のど","throat, voice"],
+["汪","ou","オウ","","","flowing full, expanse of water, wide, deep"],
+["猷","yuu, you","ユウ、ヨウ","hakarigoto, haka(ru)","はかりごと、はか(る)","plan, scheme, plot, way"],
+["瑛","ei","エイ","","","sparkle of jewelry, crystal"],
+["搜","sou, shu, shuu","ソウ、シュ、シュウ","saga(su)","さが(す)","search, seek, investigate"],
+["曼","man, ban","マン、バン","naga(i)","なが(い)","wide, beautiful"],
+["附","fu","フ","tsu(keru), tsu(ku)","つ(ける)、つ(く)","affixed, attach, refer to, append"],
+["彪","hyou, hyuu","ヒョウ、ヒュウ","aya","あや","spotted, mottled, patterned, small tiger"],
+["撚","nen","ネン","yo(ru), yo(reru), yori, hine(ru)","よ(る)、よ(れる)、より、ひね(る)","twist, twine, kinky"],
+["噛","kou, gou","コウ、ゴウ","ka(mu), ka(jiru)","か(む)、か(じる)","chew, bite, gnaw"],
+["卯","bou, mou","ボウ、モウ","u","う","sign of the hare or rabbit, fourth sign of Chinese zodiac, 5-7AM, east"],
+["桝","","-","masu","ます","measuring box, (kokuji)"],
+["撫","bu, fu","ブ、フ","na(deru)","な(でる)","stroke, pat, smooth down"],
+["喋","chou, tou","チョウ、トウ","shabe(ru), tsuiba(mu)","しゃべ(る)、ついば(む)","talk, chat, chatter"],
+["但","tan","タン","tada(shi)","ただ(し)","however, but"],
+["溢","itsu","イツ","kobo(reru), afu(reru), mi(chiru)","こぼ(れる)、あふ(れる)、み(ちる)","overflow, inundate, spill"],
+["闊","katsu","カツ","hiro(i)","ひろ(い)","wide"],
+["藏","zou, sou","ゾウ、ソウ","kura, osa(meru), kaku(reru)","くら、おさ(める)、かく(れる)","hide, own, have, possess"],
+["浙","setsu","セツ","","","name of a Chinese river"],
+["彭","hou","ホウ","","","swelling, sound of drum"],
+["淘","tou","トウ","yona(geru)","よな(げる)","select"],
+["剃","tei","テイ","so(ru), su(ru)","そ(る)、す(る)","shave"],
+["揃","sen","セン","soro(eru), ki(ru)","そろ(える)、き(る)","be complete, uniform, all present"],
+["綺","ki","キ","aya","あや","figured cloth, beautiful"],
+["徘","hai","ハイ","samayo(u)","さまよ(う)","wander"],
+["巷","kou","コウ","chimata","ちまた","fork in road, scene, arena, theater"],
+["竿","kan","カン","sao","さお","pole, rod, scale beam, violin neck"],
+["蟹","kai","カイ","kani","かに","crab"],
+["芋","u","ウ","imo","いも","potato"],
+["袁","en, on","エン、オン","","","long kimono"],
+["舩","sen","セン","fune, funa-","ふね、ふな-","boat, ship, vessel"],
+["拭","shoku, shiki","ショク、シキ","nugu(u), fu(ku)","ぬぐ(う)、ふ(く)","wipe, mop, swab"],
+["茜","sen","セン","akane","あかね","madder, red dye, Turkey red"],
+["凌","ryou","リョウ","shino(gu)","しの(ぐ)","endure, keep (rain) out, stave off, tide over, defy, slight, surpass"],
+["頬","kyou","キョウ","hoo, hoho","ほお、ほほ","cheeks, jaw"],
+["厨","shuu, zu, chu, chuu","シュウ、ズ、チュ、チュウ","kuriya","くりや","kitchen"],
+["犀","sai, sei","サイ、セイ","","","rhinoceros"],
+["簑","sa, sai","サ、サイ","mino","みの","a coat raincoat"],
+["皓","kou","コウ","shiro(i), hika(ru)","しろ(い)、ひか(る)","white, clear"],
+["甦","so, kou","ソ、コウ","yomigae(ru)","よみがえ(る)","be resuscitated, revived"],
+["洸","kou","コウ","","","sparkling water"],
+["毬","kyuu","キュウ","iga, mari","いが、まり","burr, ball"],
+["檄","keki","ケキ","geki(suru), furebumi","げき(する)、ふれぶみ","written appeal, manifesto"],
+["姚","you, chou","ヨウ、チョウ","utsuku(shii)","うつく(しい)","beautiful"],
+["蛭","shitsu, chitsu","シツ、チツ","hiru","ひる","leech"],
+["婆","ba","バ","baba, baa","ばば、ばあ","old woman, grandma, wet nurse"],
+["叢","sou, su","ソウ、ス","kusamura, mura(garu), mura","くさむら、むら(がる)、むら","plexus, clump of bushes, thicket"],
+["椙","","-","sugi","すぎ","Japanese cedar, cryptomeria, (kokuji)"],
+["轟","gou, kou","ゴウ、コウ","todoro(kasu), todoro(ku)","とどろ(かす)、とどろ(く)","roar, thunder, boom resound"],
+["贋","gan","ガン","nise","にせ","counterfeit, forgery"],
+["洒","sha, son, sai, sen, sei","シャ、ソン、サイ、セン、セイ","susu(gu), ara(u)","すす(ぐ)、あら(う)","wash, sprinkle"],
+["貰","sei, sha","セイ、シャ","mora(u)","もら(う)","get, have, obtain"],
+["儲","cho","チョ","mou(keru), mou(karu), takuwa(eru)","もう(ける)、もう(かる)、たくわ(える)","be profitable, yield profit"],
+["緋","hi","ヒ","ake, aka","あけ、あか","scarlet, cardinal"],
+["諜","chou","チョウ","chou(zuru), ukaga(u), shime(su)","ちょう(ずる)、うかが(う)、しめ(す)","spy out, reconnoiter"],
+["鯛","chou","チョウ","tai","たい","sea bream, red snapper"],
+["蓼","shin, riku, ryou","シン、リク、リョウ","tade","たで","luxurious grass, a smartweed"],
+["甕","ou","オウ","kame, mika","かめ、みか","jar, jug, vat"],
+["喘","zen, sen","ゼン、セン","ae(gu), seki","あえ(ぐ)、せき","pant, gasp, breathe hard"],
+["怜","rei, ren, ryou","レイ、レン、リョウ","awa(remu), sato(i)","あわ(れむ)、さと(い)","wise"],
+["溜","ryuu","リュウ","ta(maru), tama(ru), shitata(ru)","た(まる)、たま(る)、したた(る)","collect, gather, be in arrears"],
+["邑","yuu","ユウ","mura","むら","village, rural community, right village radical (no. 163)"],
+["鉾","bou, mu","ボウ、ム","hoko","ほこ","halberd, arms, festival float"],
+["倣","hou","ホウ","nara(u)","なら(う)","emulate, imitate"],
+["碧","heki, hyaku","ヘキ、ヒャク","","","blue, green"],
+["燈","tou","トウ","hi, tomoshibi, tomo(su), akari","ひ、ともしび、とも(す)、あかり","lamp, light, counter for lights"],
+["諦","tei, tai","テイ、タイ","akira(meru), tsumabiraka, makoto","あきら(める)、つまびらか、まこと","truth, clarity, abandon, give up"],
+["煎","sen","セン","sen(jiru), i(ru), ni(ru)","せん(じる)、い(る)、に(る)","broil, parch, roast, boil"],
+["瓜","ka, ke","カ、ケ","uri","うり","melon"],
+["緻","chi","チ","komaka(i)","こまか(い)","fine (i.e. not coarse)"],
+["哺","ho","ホ","haguku(mu), fuku(mu)","はぐく(む)、ふく(む)","nurse, suckle"],
+["槌","tsui","ツイ","tsuchi","つち","hammer, mallet"],
+["啄","taku, tsuku, toku","タク、ツク、トク","tsuiba(mu), tsutsu(ku)","ついば(む)、つつ(く)","peck, pick up"],
+["穣","jou","ジョウ","wara, yutaka","わら、ゆたか","good crops, prosperity"],
+["嗜","shi","シ","tashina(mu), kono(mu)","たしな(む)、この(む)","like, taste, modest"],
+["偕","kai","カイ","tomoni","ともに","together"],
+["罵","ba","バ","nonoshi(ru)","ののし(る)","abuse, insult"],
+["酉","yuu","ユウ","tori","とり","west, bird, sign of the bird, 5-7PM, tenth sign of Chinese zodiac"],
+["蹄","tei","テイ","hidzume","ひづめ","hoof"],
+["頚","kei","ケイ","kubi","くび","neck, head"],
+["胚","hai","ハイ","harami, hara(mu)","はらみ、はら(む)","embryo"],
+["牢","rou","ロウ","kata(i), hitoya","かた(い)、ひとや","prison, jail, hardness"],
+["糞","fun","フン","kuso","くそ","feces, excrement"],
+["悌","tei, dai","テイ、ダイ","","","serving our elders"],
+["吊","chou","チョウ","tsu(ru), tsuru(su)","つ(る)、つる(す)","suspend, hang, wear (sword)"],
+["楕","da, ta","ダ、タ","","","ellipse"],
+["鮭","kai, kei","カイ、ケイ","sake, shake, fugu","さけ、しゃけ、ふぐ","salmon"],
+["乞","kotsu, kitsu, ki","コツ、キツ、キ","ko(u)","こ(う)","beg, invite, ask"],
+["倹","ken","ケン","tsuma(shii), tsudzumayaka","つま(しい)、つづまやか","frugal, economy, thrifty"],
+["嗅","kyuu","キュウ","ka(gu)","か(ぐ)","smell, sniff, scent"],
+["詫","ta","タ","wabi, wabi(shii), wa(biru)","わび、わび(しい)、わ(びる)","apologize"],
+["鱒","son, sen, zan","ソン、セン、ザン","masu","ます","salmon trout"],
+["蔑","betsu","ベツ","naigashiro, nami(suru), sagesu(mu)","ないがしろ、なみ(する)、さげす(む)","ignore, despise, neglect, ridicule"],
+["轍","tetsu","テツ","wadachi","わだち","rut, wheel track"],
+["醤","shou","ショウ","hishio","ひしお","a kind of miso"],
+["惚","kotsu","コツ","hoke(ru), bo(keru), ho(reru)","ほけ(る)、ぼ(ける)、ほ(れる)","fall in love with, admire, grow senile"],
+["廣","kou","コウ","hiro(i)","ひろ(い)","broad, wide, spacious"],
+["藁","kou","コウ","wara","わら","straw"],
+["柚","yu, yuu, jiku","ユ、ユウ、ジク","yuzu","ゆず","citron"],
+["舛","bu, sen","ブ、セン","mai, somu(ku)","まい、そむ(く)","dancing radical (no. 136)"],
+["縞","kou","コウ","shima, shiroginu","しま、しろぎぬ","stripe"],
+["謳","ou, u","オウ、ウ","uta(u)","うた(う)","extol, declare, express"],
+["杞","ko, ki","コ、キ","","","river willow"],
+["鱗","rin","リン","uroko, koke, kokera","うろこ、こけ、こけら","scales (fish)"],
+["繭","ken","ケン","mayu, kinu","まゆ、きぬ","cocoon"],
+["釘","tei, chou","テイ、チョウ","kugi","くぎ","nail, tack, peg"],
+["弛","chi, shi","チ、シ","taru(mu), tayu(mu), yuru(mu)","たる(む)、たゆ(む)、ゆる(む)","slacken, relax"],
+["狸","ri, rai","リ、ライ","tanuki","たぬき","tanuki, raccoon dog"],
+["壬","nin, jin, i","ニン、ジン、イ","mizunoe","みずのえ","9th calendar sign"],
+["硯","ken, gen","ケン、ゲン","suzuri","すずり","inkstone"]
+];
+const TOTAL = K.length;
+const kanjiOf=i=>K[i][0], onR=i=>K[i][1], onK=i=>K[i][2], kunR=i=>K[i][3], kunK=i=>K[i][4], meanOf=i=>K[i][5];
+const readingKana=i=>[onK(i),kunK(i)].filter(Boolean).join(' / ');
+const readingRomaji=i=>[onR(i),kunR(i)].filter(Boolean).join(' / ');
+
+/* ---------------- storage (works without localStorage too) ---------------- */
+const KEY='n1kanji.v1';
+let mem=null, canPersist=true;
+function load(){
+  const blank={cards:{},stars:{},dir:'mix',newPerDay:15,setFilter:'all',night:false,last:0,day:'',doneToday:0,newToday:0};
+  try{
+    const raw=localStorage.getItem(KEY);
+    return raw?Object.assign(blank,JSON.parse(raw)):blank;
+  }catch(e){ canPersist=false; return blank; }
+}
+let S=load();
+function save(){
+  if(!canPersist){mem=S;return;}
+  try{ localStorage.setItem(KEY,JSON.stringify(S)); }
+  catch(e){ canPersist=false; mem=S; }
+}
+const today=()=>new Date().toISOString().slice(0,10);
+if(S.day!==today()){S.day=today();S.doneToday=0;S.newToday=0;save();}
+
+/* ---------------- scheduling (SM-2, trimmed) ---------------- */
+const DAY=864e5;
+const card=i=>S.cards[i];
+const isDue=i=>{const c=card(i);return !!c&&c.due<=Date.now();};
+const status=i=>{const c=card(i);if(!c)return 'new';return c.iv>=21?'mastered':'learning';};
+function rate(i,r){
+  let c=S.cards[i]||{reps:0,ef:2.5,iv:0,lapses:0};
+  if(r===0){c.reps=0;c.lapses++;c.ef=Math.max(1.3,c.ef-0.2);c.iv=0;c.due=Date.now()+6e5;}
+  else{
+    if(r===1){c.iv=c.reps===0?1:Math.max(1,c.iv*1.2);c.ef=Math.max(1.3,c.ef-0.15);}
+    else if(r===2){c.iv=c.reps===0?1:c.reps===1?3:c.iv*c.ef;}
+    else{c.iv=c.reps===0?2:c.reps===1?5:c.iv*c.ef*1.3;c.ef=Math.min(3.2,c.ef+0.1);}
+    c.reps++;
+    c.due=Date.now()+Math.round(c.iv*DAY);
+  }
+  c.seen=Date.now();
+  S.cards[i]=c;S.doneToday++;save();
+}
+function markKnown(i){S.cards[i]={reps:3,ef:2.6,iv:30,lapses:0,due:Date.now()+30*DAY,seen:Date.now()};save();}
+function markRelearn(i){S.cards[i]={reps:0,ef:2.3,iv:0,lapses:(card(i)?.lapses||0),due:Date.now(),seen:Date.now()};save();}
+
+/* ---------------- sets of 100 ---------------- */
+const SETS=[];
+for(let a=0;a<TOTAL;a+=100)SETS.push([a,Math.min(a+100,TOTAL)-1]);
+function fillSetSelects(){
+  const html='<option value="all">All 1,504</option>'+SETS.map((s,n)=>
+    `<option value="${n}">${s[0]+1}–${s[1]+1}</option>`).join('');
+  fSet.innerHTML='<option value="all">Any set</option>'+SETS.map((s,n)=>`<option value="${n}">${s[0]+1}–${s[1]+1}</option>`).join('');
+  rvSet.innerHTML=html;
+  rvSet.value=S.setFilter;
+}
+const inSet=(i,v)=>v==='all'||(i>=SETS[+v][0]&&i<=SETS[+v][1]);
+
+/* ---------------- tabs ---------------- */
+const views={};
+document.querySelectorAll('.view').forEach(v=>views[v.id.slice(2)]=v);
+function show(name){
+  document.querySelectorAll('nav.tabs button').forEach(b=>b.setAttribute('aria-selected',String(b.dataset.view===name)));
+  Object.entries(views).forEach(([k,v])=>v.classList.toggle('on',k===name));
+  if(name==='progress')renderProgress();
+  if(name==='review')renderReview();
+  window.scrollTo({top:0});
+}
+document.querySelectorAll('nav.tabs button').forEach(b=>b.onclick=()=>show(b.dataset.view));
+
+nightBtn.onclick=()=>{S.night=!S.night;document.body.classList.toggle('night',S.night);nightBtn.textContent=S.night?'Day':'Night';save();};
+if(S.night){document.body.classList.add('night');nightBtn.textContent='Day';}
+
+/* ============================================================
+   Stroke data — KanjiVG-derived, via hanzi-writer's Japanese set.
+   Cached per character; falls back to the Chinese set, then to a
+   font outline the learner can trace freehand.
+   ============================================================ */
+const SRC=['https://cdn.jsdelivr.net/npm/hanzi-writer-data-jp@2.0.1/',
+           'https://cdn.jsdelivr.net/npm/hanzi-writer-data@2.0.1/'];
+const cache=new Map();
+async function strokeData(ch){
+  if(cache.has(ch))return cache.get(ch);
+  for(const base of SRC){
+    try{
+      const r=await fetch(base+encodeURIComponent(ch)+'.json');
+      if(r.ok){const d=await r.json();cache.set(ch,d);return d;}
+    }catch(e){/* try next */}
+  }
+  cache.set(ch,null);return null;
+}
+
+/* ---------------- practice view ---------------- */
+let idx=Math.min(Math.max(0,S.last|0),TOTAL-1);
+let mode='watch', slowOn=false, guideOn=true, writer=null, padCtx=null, drawing=false;
+
+function setMode(m){
+  mode=m;
+  document.body.classList.toggle('mode-draw',m==='draw');
+  mWatch.setAttribute('aria-pressed',String(m==='watch'));
+  mTrace.setAttribute('aria-pressed',String(m==='trace'));
+  mDraw.setAttribute('aria-pressed',String(m==='draw'));
+  pad.style.pointerEvents=m==='draw'?'auto':'none';
+  hw.style.display=m==='draw'?'none':'block';
+  clearPad();
+  if(m==='watch')startWatch();
+  if(m==='trace')startTrace();
+  if(m==='draw')hint.textContent='Write it from memory. The faint outline is a guide — hide it with Guide off.';
+}
+mWatch.onclick=()=>setMode('watch');
+mTrace.onclick=()=>setMode('trace');
+mDraw.onclick=()=>setMode('draw');
+slow.onclick=()=>{slowOn=!slowOn;slow.setAttribute('aria-pressed',String(slowOn));setMode(mode);};
+guide.onclick=()=>{guideOn=!guideOn;guide.setAttribute('aria-pressed',String(guideOn));ghost.classList.toggle('showghost',guideOn);if(writer)writer.updateColor('outlineColor',guideOn?css('--rule'):'transparent');};
+replay.onclick=()=>setMode(mode);
+
+const css=n=>getComputedStyle(document.body).getPropertyValue(n).trim();
+
+function makeWriter(){
+  hw.innerHTML='';
+  const ch=kanjiOf(idx);
+  return HanziWriter.create(hw,ch,{
+    width:hw.clientWidth||300,height:hw.clientHeight||300,padding:12,
+    charDataLoader:(c,onC,onErr)=>{strokeData(c).then(d=>d?onC(d):onErr(new Error('no data')));},
+    onLoadCharDataError:()=>{noStrokes();},
+    strokeColor:css('--ink'),
+    radicalColor:css('--ai'),
+    outlineColor:guideOn?css('--rule'):'transparent',
+    drawingColor:css('--shu'),
+    highlightColor:css('--shu'),
+    strokeAnimationSpeed:slowOn?0.4:1,
+    delayBetweenStrokes:slowOn?700:280,
+    showOutline:true,showCharacter:false
+  });
+}
+function noStrokes(){
+  hint.innerHTML='<b>No stroke data for this character.</b> Use Draw mode and trace the outline.';
+  setTimeout(()=>{if(mode!=='draw')setMode('draw');},0);
+}
+function startWatch(){
+  const d=cache.get(kanjiOf(idx));
+  if(d===null){noStrokes();return;}
+  writer=makeWriter();
+  writer.animateCharacter();
+  hint.textContent=slowOn?'Watching slowly. Trace mode next.':'Watch once, then switch to Trace.';
+}
+function startTrace(){
+  const d=cache.get(kanjiOf(idx));
+  if(d===null){noStrokes();return;}
+  writer=makeWriter();
+  let miss=0;
+  writer.quiz({
+    leniency:1.05,
+    onMistake:s=>{miss++;hint.innerHTML=`Stroke <b>${s.strokeNum+1}</b> — direction or start point is off. Watch it again if you need to.`;},
+    onCorrectStroke:s=>{hint.textContent=`Stroke ${s.strokeNum+1} of ${s.strokesRemaining+s.strokeNum+1} — good.`;},
+    onComplete:()=>{
+      hint.innerHTML=miss===0?'Clean run, no misses. <b>Good.</b>':`Done with ${miss} miss${miss>1?'es':''}. Run it again.`;
+      if(miss===0&&status(idx)==='new')rate(idx,2);
+    }
+  });
+  hint.textContent='Draw each stroke in order, straight onto the square.';
+}
+
+/* free drawing pad */
+function sizePad(){
+  const r=pad.getBoundingClientRect(), dpr=devicePixelRatio||1;
+  pad.width=r.width*dpr;pad.height=r.height*dpr;
+  padCtx=pad.getContext('2d');padCtx.scale(dpr,dpr);
+  padCtx.lineWidth=Math.max(5,r.width/38);padCtx.lineCap='round';padCtx.lineJoin='round';
+  padCtx.strokeStyle=css('--ink');
+}
+function clearPad(){if(padCtx)padCtx.clearRect(0,0,pad.width,pad.height);}
+function padPos(e){const r=pad.getBoundingClientRect();return[e.clientX-r.left,e.clientY-r.top];}
+pad.addEventListener('pointerdown',e=>{if(mode!=='draw')return;drawing=true;pad.setPointerCapture(e.pointerId);const[x,y]=padPos(e);padCtx.beginPath();padCtx.moveTo(x,y);});
+pad.addEventListener('pointermove',e=>{if(!drawing)return;const[x,y]=padPos(e);padCtx.lineTo(x,y);padCtx.stroke();});
+pad.addEventListener('pointerup',()=>drawing=false);
+pad.addEventListener('dblclick',()=>{if(mode==='draw')clearPad();});
+addEventListener('resize',()=>{sizePad();});
+
+/* static stroke-order strip */
+async function renderStrip(){
+  strip.innerHTML='';stepnote.textContent='Loading stroke data…';
+  const ch=kanjiOf(idx), d=await strokeData(ch);
+  if(!d){strip.innerHTML='';stepnote.textContent='No stroke-order data available for this character.';pStrokes.textContent='';return;}
+  pStrokes.textContent=d.strokes.length+' strokes';
+  stepnote.textContent='Each square adds one stroke. The red stroke is the new one.';
+  const t=HanziWriter.getScalingTransform(56,56,3).transform;
+  const frag=document.createDocumentFragment();
+  d.strokes.forEach((_,n)=>{
+    const fig=document.createElement('figure');
+    const paths=d.strokes.slice(0,n+1).map((p,j)=>
+      `<path d="${p}" fill="${j===n?css('--shu'):css('--ink3')}"/>`).join('');
+    fig.innerHTML=`<div class="box"><svg viewBox="0 0 56 56" xmlns="http://www.w3.org/2000/svg"><g transform="${t}">${paths}</g></svg></div><figcaption>${n+1}</figcaption>`;
+    frag.appendChild(fig);
+  });
+  strip.appendChild(frag);
+}
+
+function renderTags(){
+  const st=status(idx), c=card(idx), tags=[];
+  tags.push(`<span class="pill ${st==='mastered'?'mastered':''}">${st==='new'?'Not started':st==='learning'?'Learning':'Mastered'}</span>`);
+  if(isDue(idx))tags.push('<span class="pill due">Due now</span>');
+  else if(c)tags.push(`<span class="pill">Next in ${Math.max(1,Math.round((c.due-Date.now())/DAY))} d</span>`);
+  if(S.stars[idx])tags.push('<span class="pill star">Starred</span>');
+  pTags.innerHTML=tags.join('');
+  starBtn.textContent=S.stars[idx]?'Unstar':'Star';
+}
+function renderPractice(){
+  S.last=idx;save();
+  pNum.textContent='No. '+(idx+1)+' of '+TOTAL;
+  pKanji.textContent=kanjiOf(idx);
+  ghost.textContent=kanjiOf(idx);
+  ghost.classList.toggle('showghost',guideOn);
+  pOnK.textContent=onK(idx)||'—';pOnR.textContent=onR(idx)||'';
+  pKunK.textContent=kunK(idx)||'—';pKunR.textContent=kunR(idx)||'';
+  pMean.textContent=meanOf(idx);
+  pStrokes.textContent='';
+  hint.textContent='';
+  renderTags();
+  sizePad();
+  setMode(mode==='draw'?'draw':mode);
+  renderStrip();
+}
+function go(n){idx=(n+TOTAL)%TOTAL;renderPractice();}
+prev.onclick=()=>go(idx-1);
+next.onclick=()=>go(idx+1);
+rand.onclick=()=>go(Math.floor(Math.random()*TOTAL));
+jump.onchange=()=>{const v=+jump.value;if(v>=1&&v<=TOTAL)go(v-1);jump.value='';};
+starBtn.onclick=()=>{S.stars[idx]?delete S.stars[idx]:S.stars[idx]=1;save();renderTags();renderList();};
+knowBtn.onclick=()=>{markKnown(idx);renderTags();};
+relearnBtn.onclick=()=>{markRelearn(idx);renderTags();};
+
+addEventListener('keydown',e=>{
+  if(/^(INPUT|SELECT|TEXTAREA)$/.test(e.target.tagName))return;
+  const pv=views.practice.classList.contains('on'), rv=views.review.classList.contains('on');
+  if(pv){
+    if(e.key==='ArrowLeft'){go(idx-1);}
+    else if(e.key==='ArrowRight'){go(idx+1);}
+    else if(e.key==='r'||e.key==='R'){setMode(mode);}
+    else if(e.key==='t'||e.key==='T'){setMode('trace');}
+    else if(e.key==='s'||e.key==='S'){starBtn.click();}
+    else return;
+    e.preventDefault();
+  }else if(rv){
+    if(e.key===' '){revealBtn.click();e.preventDefault();}
+    else if(/^[1-4]$/.test(e.key)&&!rvRate.hidden){rvRate.querySelector(`[data-rate="${+e.key-1}"]`).click();e.preventDefault();}
+  }
+});
+
+/* ---------------- browse ---------------- */
+const PAGE=90;let shown=PAGE,matches=[];
+function norm(s){return s.toLowerCase();}
+function filter(){
+  const q=norm(qEl.value.trim()), set=fSet.value, st=fStatus.value;
+  matches=[];
+  for(let i=0;i<TOTAL;i++){
+    if(!inSet(i,set))continue;
+    if(st==='star'){if(!S.stars[i])continue;}
+    else if(st==='due'){if(!isDue(i))continue;}
+    else if(st!=='all'&&status(i)!==st)continue;
+    if(q){
+      const hay=kanjiOf(i)+' '+onK(i)+' '+kunK(i)+' '+norm(onR(i))+' '+norm(kunR(i))+' '+norm(meanOf(i))+' '+(i+1);
+      if(hay.indexOf(q)===-1)continue;
+    }
+    matches.push(i);
+  }
+  shown=PAGE;renderList();
+}
+function renderList(){
+  qCount.textContent=matches.length+(matches.length===1?' kanji':' kanji');
+  qEmpty.hidden=matches.length>0;
+  const part=matches.slice(0,shown);
+  list.innerHTML=part.map(i=>{
+    const st=status(i);
+    return `<button class="card is-${st}" data-i="${i}">
+      <span class="big">${kanjiOf(i)}</span>
+      <span>
+        <span class="n">${i+1}${S.stars[i]?' ★':''}</span>
+        <div class="rd">${readingKana(i)||'—'}</div>
+        <div class="mn">${meanOf(i)}</div>
+      </span></button>`;}).join('');
+  more.hidden=matches.length<=shown;
+  more.textContent=`Show more (${matches.length-shown} left)`;
+}
+const qEl=document.getElementById('q');
+qEl.oninput=filter;fSet.onchange=filter;fStatus.onchange=filter;
+more.onclick=()=>{shown+=PAGE;renderList();};
+list.onclick=e=>{const b=e.target.closest('.card');if(!b)return;go(+b.dataset.i);show('practice');};
+
+/* ---------------- review ---------------- */
+let cur=null,curDir='k2m',revealed=false;
+function queue(){
+  const set=S.setFilter, due=[],fresh=[];
+  for(let i=0;i<TOTAL;i++){
+    if(!inSet(i,set))continue;
+    if(isDue(i))due.push(i);
+    else if(!card(i))fresh.push(i);
+  }
+  const room=Math.max(0,(S.newPerDay|0)-(S.newToday|0));
+  return {due,fresh:fresh.slice(0,room)};
+}
+function pick(){
+  const {due,fresh}=queue();
+  if(due.length){cur=due[Math.floor(Math.random()*Math.min(due.length,12))];return true;}
+  if(fresh.length){cur=fresh[0];S.newToday++;save();return true;}
+  cur=null;return false;
+}
+function dirFor(){
+  if(S.dir!=='mix')return S.dir;
+  return ['k2m','m2k','k2r'][Math.floor(Math.random()*3)];
+}
+function renderReview(){
+  rvDir.value=S.dir;rvNew.value=S.newPerDay;rvSet.value=S.setFilter;
+  const {due,fresh}=queue();
+  rvQueue.textContent=`${due.length} due · ${fresh.length} new available`;
+  rvSession.textContent=`${S.doneToday} reviewed today`;
+  if(!pick()){
+    rvBody.innerHTML=`<div class="done"><div class="big">Nothing due right now.</div>
+      <p>Come back later, raise the new-per-day limit in Progress, or open Practice to work through stroke order.</p>
+      <button class="iconbtn" onclick="location.reload()">Refresh</button></div>`;
+    return;
+  }
+  drawCard();
+}
+function drawCard(){
+  revealed=false;curDir=dirFor();
+  face.classList.remove('revealed');
+  rvReveal.hidden=false;rvRate.hidden=true;
+  if(curDir==='m2k'){
+    rvPrompt.textContent='Which kanji is this?';
+    rvQ.className='qs';rvQ.textContent=meanOf(cur);
+  }else{
+    rvPrompt.textContent=curDir==='k2r'?'Readings?':'Meaning?';
+    rvQ.className='q';rvQ.textContent=kanjiOf(cur);
+  }
+  rvKana.textContent=readingKana(cur)||'—';
+  rvRomaji.textContent=readingRomaji(cur)||'';
+  rvMean.textContent=curDir==='m2k'?kanjiOf(cur)+' — '+meanOf(cur):meanOf(cur);
+  rvNo.textContent='No. '+(cur+1);
+}
+revealBtn.onclick=()=>{revealed=true;face.classList.add('revealed');rvReveal.hidden=true;rvRate.hidden=false;};
+rvRate.querySelectorAll('button').forEach(b=>b.onclick=()=>{
+  rate(cur,+b.dataset.rate);
+  const {due,fresh}=queue();
+  rvQueue.textContent=`${due.length} due · ${fresh.length} new available`;
+  rvSession.textContent=`${S.doneToday} reviewed today`;
+  if(pick())drawCard();else renderReview();
+});
+rvDir.onchange=()=>{S.dir=rvDir.value;save();drawCard();};
+rvNew.onchange=()=>{S.newPerDay=Math.max(0,+rvNew.value||0);save();renderReview();};
+rvSet.onchange=()=>{S.setFilter=rvSet.value;save();renderReview();};
+rvPractice.onclick=()=>{if(cur!=null){go(cur);show('practice');}};
+
+/* ---------------- progress ---------------- */
+function renderProgress(){
+  let m=0,l=0,due=0,star=0;
+  for(let i=0;i<TOTAL;i++){
+    const st=status(i);
+    if(st==='mastered')m++;else if(st==='learning')l++;
+    if(isDue(i))due++;
+    if(S.stars[i])star++;
+  }
+  stats.innerHTML=[
+    [m,'Mastered (21+ day interval)'],[l,'Learning'],[TOTAL-m-l,'Not started'],
+    [due,'Due right now'],[S.doneToday,'Reviewed today'],[star,'Starred']
+  ].map(([v,t])=>`<div class="stat"><div class="v">${v}</div><div class="l">${t}</div></div>`).join('');
+  sets.innerHTML=SETS.map((s,n)=>{
+    let mm=0,ll=0;
+    for(let i=s[0];i<=s[1];i++){const st=status(i);if(st==='mastered')mm++;else if(st==='learning')ll++;}
+    const size=s[1]-s[0]+1;
+    return `<div class="setrow"><span>${s[0]+1}–${s[1]+1}</span>
+      <span class="bar"><i class="m" style="width:${mm/size*100}%"></i><i class="l" style="width:${ll/size*100}%"></i></span>
+      <span style="color:var(--ink3)">${Math.round((mm+ll)/size*100)}%</span></div>`;
+  }).join('');
+  showCached();
+  storeNote.textContent=canPersist
+    ? 'Progress is saved in this browser only. Export a copy before clearing site data or switching devices.'
+    : 'This browser is blocking local storage, so progress will only last until you close the tab. Export it if you want to keep it.';
+}
+expBtn.onclick=()=>{
+  const blob=new Blob([JSON.stringify(S,null,1)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='n1-kanji-progress-'+today()+'.json';
+  document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href),4000);
+};
+impFile.onchange=async e=>{
+  const f=e.target.files[0];if(!f)return;
+  try{
+    const d=JSON.parse(await f.text());
+    if(!d||typeof d!=='object'||!d.cards)throw 0;
+    S=Object.assign(S,d);save();renderProgress();renderTags();filter();
+    storeNote.textContent='Progress imported.';
+  }catch(err){storeNote.textContent='That file is not a progress export from this app.';}
+  e.target.value='';
+};
+resetBtn.onclick=()=>{
+  if(!confirm('Clear all review history, intervals and stars? This cannot be undone.'))return;
+  S={cards:{},stars:{},dir:S.dir,newPerDay:S.newPerDay,setFilter:S.setFilter,night:S.night,last:idx,day:today(),doneToday:0,newToday:0};
+  save();renderProgress();renderTags();filter();
+};
+
+/* ============================================================
+   Installable + offline
+   ============================================================ */
+const themeMeta=document.getElementById('themeMeta');
+function paintTheme(){themeMeta.setAttribute('content',S.night?'#171A1E':'#23355F');}
+paintTheme();
+const _night=nightBtn.onclick;
+nightBtn.onclick=()=>{_night();paintTheme();if(writer)setMode(mode);};
+
+function banner(html){banner_el.innerHTML=html;banner_el.hidden=false;}
+const banner_el=document.getElementById('banner');
+function closeBanner(){banner_el.hidden=true;}
+
+let swReg=null;
+if('serviceWorker' in navigator && location.protocol!=='file:'){
+  addEventListener('load',()=>{
+    navigator.serviceWorker.register('sw.js').then(r=>{
+      swReg=r;
+      if(r.waiting)offerUpdate(r);
+      r.addEventListener('updatefound',()=>{
+        const nw=r.installing;
+        if(!nw)return;
+        nw.addEventListener('statechange',()=>{
+          if(nw.state==='installed'&&navigator.serviceWorker.controller)offerUpdate(r);
+        });
+      });
+    }).catch(()=>{});
+  });
+}
+function offerUpdate(r){
+  banner('<span>A newer version is ready.</span><button id="doUpd">Reload</button><button class="x" onclick="document.getElementById(\'banner\').hidden=true">Later</button>');
+  document.getElementById('doUpd').onclick=()=>{
+    if(r.waiting)r.waiting.postMessage('skipWaiting');
+    setTimeout(()=>location.reload(),200);
+  };
+}
+
+/* install prompt (Chrome, Edge, Android) + iOS instructions */
+let deferredPrompt=null;
+const standalone=matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
+addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;installBtn.hidden=false;});
+installBtn.onclick=async()=>{
+  if(deferredPrompt){
+    installBtn.hidden=true;
+    deferredPrompt.prompt();
+    await deferredPrompt.userChoice;
+    deferredPrompt=null;
+    return;
+  }
+  banner('<span>On iPhone and iPad: tap the Share button, then <b>Add to Home Screen</b>.</span><button class="x" onclick="document.getElementById(\'banner\').hidden=true">Got it</button>');
+};
+const isIOS=/iP(hone|ad|od)/.test(navigator.platform||'')||(/Mac/.test(navigator.userAgent)&&'ontouchend' in document);
+if(isIOS&&!standalone)installBtn.hidden=false;
+addEventListener('appinstalled',()=>{installBtn.hidden=true;closeBanner();});
+
+/* prefetch stroke data so it is there without a connection */
+function fillDlScope(){
+  dlScope.innerHTML='<option value="all">All 1,504 kanji (~9 MB)</option>'
+    +SETS.map((s,n)=>`<option value="${n}">${s[0]+1}–${s[1]+1} (100 kanji)</option>`).join('');
+}
+async function cachedCount(){
+  if(!('caches' in window))return null;
+  try{const c=await caches.open('n1-strokes');return (await c.keys()).length;}catch(e){return null;}
+}
+async function showCached(){
+  const n=await cachedCount();
+  dlMsg.textContent=n===null?'This browser cannot store data offline.'
+    :n===0?'Nothing downloaded yet.':`${n} of ${TOTAL} characters stored for offline use.`;
+}
+let downloading=false;
+dlBtn.onclick=async()=>{
+  if(downloading)return;
+  const v=dlScope.value;
+  const list=[];
+  for(let i=0;i<TOTAL;i++)if(inSet(i,v))list.push(i);
+  downloading=true;dlBtn.disabled=true;
+  let done=0,ok=0,fail=0,conc=6;
+  const tick=()=>{dlBar.style.width=(done/list.length*100)+'%';
+    dlMsg.textContent=`${done} of ${list.length}… (${ok} stored${fail?', '+fail+' unavailable':''})`;};
+  async function worker(){
+    while(list.length){
+      const i=list.shift();
+      try{ (await strokeData(kanjiOf(i)))?ok++:fail++; }catch(e){fail++;}
+      done++;tick();
+    }
+  }
+  const total=list.length;
+  await Promise.all(Array.from({length:conc},worker));
+  dlBar.style.width='100%';
+  dlMsg.textContent=`Done — ${ok} of ${total} stored${fail?', '+fail+' have no stroke data':''}.`;
+  downloading=false;dlBtn.disabled=false;
+  setTimeout(showCached,2500);
+};
+
+/* swipe between kanji on a phone (not on the writing square) */
+let tx=0,ty=0,tt=0;
+views.practice.addEventListener('touchstart',e=>{
+  if(e.target.closest('#cell'))return;
+  const t=e.changedTouches[0];tx=t.clientX;ty=t.clientY;tt=Date.now();
+},{passive:true});
+views.practice.addEventListener('touchend',e=>{
+  if(!tt||e.target.closest('#cell'))return;
+  const t=e.changedTouches[0],dx=t.clientX-tx,dy=t.clientY-ty,dt=Date.now()-tt;
+  tt=0;
+  if(dt>900)return;
+  if(Math.abs(dx)>64&&Math.abs(dy)<48)go(idx+(dx<0?1:-1));
+},{passive:true});
+
+/* ---------------- start ---------------- */
+fillDlScope();
+showCached();
+const wantView=new URLSearchParams(location.search).get('view');
+fillSetSelects();
+filter();
+renderPractice();
+if(wantView&&views[wantView])show(wantView);
+</script>
+</body>
+</html>

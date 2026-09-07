@@ -1,0 +1,21 @@
+{
+  "name": "N1 漢字練習帳 — Kanji Reviewer",
+  "short_name": "N1 漢字",
+  "description": "Stroke-order practice and spaced review for 1,504 JLPT N1 kanji.",
+  "lang": "en",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#E4E4DC",
+  "theme_color": "#23355F",
+  "categories": ["education", "productivity"],
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Review due cards", "url": "./?view=review" },
+    { "name": "Practice strokes", "url": "./?view=practice" }
+  ]
+}
