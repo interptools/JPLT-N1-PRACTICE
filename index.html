@@ -3155,7 +3155,7 @@ function qHTML(q,mode){
 }
 
 function blockHTML(b,mode){
-  const first=b.qs[0].n, last=b.qs[b.qs.length-1].n;
+  const [first,last]=b.range||[b.qs[0].n,b.qs[b.qs.length-1].n];
   const head=`<div class="exhead">
     <p class="exmondai">問題${b.m}${b.label?' '+b.label:''} <span>Q${first}–${last}</span></p>
     ${b.instr?`<p class="exinstr">${b.instr}</p>`:''}
@@ -3290,7 +3290,7 @@ function renderResult(){
     el('exReview').innerHTML=BLOCKS.map(b=>{
       const qs=w?b.qs.filter(q=>E.ans[q.n]!==q.a):b.qs;
       if(!qs.length)return '';
-      return `<section class="exblock">${blockHTML({...b,qs},'review')}</section>`;
+      return `<section class="exblock">${blockHTML({...b,qs,range:[b.qs[0].n,b.qs[b.qs.length-1].n]},'review')}</section>`;
     }).join('')||`<p class="exempty">Every question correct. Nothing to review.</p>`;
   };
   only.onchange=paint; paint();
