@@ -50,6 +50,7 @@ header.top{
   position:sticky;top:0;z-index:40;background:var(--paper);
   border-bottom:1px solid var(--rule);
 }
+body.mode-write header.top{position:static}
 .mast{max-width:1080px;margin:0 auto;padding:12px 18px 0;display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
 .mast h1{
   font-family:var(--mincho);font-weight:800;font-size:1.32rem;margin:0;letter-spacing:.06em;
@@ -86,6 +87,7 @@ nav.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(-
   background-repeat:no-repeat;
   touch-action:none;
 }
+.cell{scroll-margin-top:104px;scroll-margin-bottom:104px}
 .cell.plain{background-image:linear-gradient(var(--rule-soft),var(--rule-soft)),linear-gradient(var(--rule-soft),var(--rule-soft));background-size:100% 1px,1px 100%;background-position:50% 50%,50% 50%}
 #hw{position:absolute;inset:0;width:100%;height:100%}
 #pad{position:absolute;inset:0;width:100%;height:100%;touch-action:none}
@@ -2357,15 +2359,23 @@ function setMode(m,temporary){
   mode=m;
   if(!temporary)userMode=m;
   document.body.classList.toggle('mode-draw',m==='draw');
+  document.body.classList.toggle('mode-write',m!=='watch');
   mWatch.setAttribute('aria-pressed',String(m==='watch'));
   mTrace.setAttribute('aria-pressed',String(m==='trace'));
   mDraw.setAttribute('aria-pressed',String(m==='draw'));
   pad.style.pointerEvents=m==='draw'?'auto':'none';
   hw.style.display=m==='draw'?'none':'block';
   clearPad();
+  if(m!=='watch')nudgeCellIntoView();
   if(m==='watch')startWatch();
   if(m==='trace')startTrace();
   if(m==='draw')hint.textContent='Write it from memory. The faint outline is a guide — hide it with Guide off.';
+}
+function nudgeCellIntoView(){
+  const head=document.querySelector('header.top');
+  const hb=head?head.getBoundingClientRect().bottom:0;
+  const r=cell.getBoundingClientRect();
+  if(r.top<hb+4||r.bottom>innerHeight-4)cell.scrollIntoView({block:'start',behavior:'smooth'});
 }
 mWatch.onclick=()=>setMode('watch');
 mTrace.onclick=()=>setMode('trace');
@@ -2376,12 +2386,16 @@ replay.onclick=()=>setMode(mode,true);
 
 const css=n=>getComputedStyle(document.body).getPropertyValue(n).trim();
 
+let writerSize=0;
 function makeWriter(){
   if(typeof HanziWriter==='undefined'){noStrokes();return null;}
   hw.innerHTML='';
   const ch=kanjiOf(idx);
+  const rc=hw.getBoundingClientRect(), rcell=cell.getBoundingClientRect();
+  const box=Math.round(rc.width)||Math.round(rcell.width)||300;
+  writerSize=box;
   return HanziWriter.create(hw,ch,{
-    width:hw.clientWidth||300,height:hw.clientHeight||300,padding:12,
+    width:box,height:box,padding:12,
     charDataLoader:(c,onC,onErr)=>{strokeData(c).then(d=>d?onC(d):onErr(new Error('no data')));},
     onLoadCharDataError:()=>{noStrokes();},
     strokeColor:css('--ink'),
@@ -2427,20 +2441,78 @@ function startTrace(){
 }
 
 /* free drawing pad */
-function sizePad(){
+let padW=0, padH=0, lastPt=null;
+function sizePad(keep){
   const r=pad.getBoundingClientRect(), dpr=devicePixelRatio||1;
-  pad.width=r.width*dpr;pad.height=r.height*dpr;
-  padCtx=pad.getContext('2d');padCtx.scale(dpr,dpr);
-  padCtx.lineWidth=Math.max(5,r.width/38);padCtx.lineCap='round';padCtx.lineJoin='round';
+  const w=Math.max(1,Math.round(r.width)), h=Math.max(1,Math.round(r.height));
+  let old=null;
+  if(keep&&pad.width>0&&pad.height>0&&padW>0){
+    old=document.createElement('canvas');old.width=pad.width;old.height=pad.height;
+    old.getContext('2d').drawImage(pad,0,0);
+  }
+  pad.width=Math.round(w*dpr);pad.height=Math.round(h*dpr);
+  padW=w;padH=h;
+  padCtx=pad.getContext('2d');
+  padCtx.setTransform(dpr,0,0,dpr,0,0);
+  padCtx.lineWidth=Math.max(5,w/38);padCtx.lineCap='round';padCtx.lineJoin='round';
   padCtx.strokeStyle=css('--ink');
+  if(old)padCtx.drawImage(old,0,0,old.width,old.height,0,0,w,h);
 }
-function clearPad(){if(padCtx)padCtx.clearRect(0,0,pad.width,pad.height);}
+/* true when the pixels behind the square no longer match the square on screen */
+function padStale(){
+  const r=pad.getBoundingClientRect(), dpr=devicePixelRatio||1;
+  if(!r.width||!r.height)return false;
+  return Math.abs(pad.width-Math.round(r.width*dpr))>1||Math.abs(pad.height-Math.round(r.height*dpr))>1;
+}
+function clearPad(){if(padCtx)padCtx.clearRect(0,0,padW||pad.width,padH||pad.height);}
 function padPos(e){const r=pad.getBoundingClientRect();return[e.clientX-r.left,e.clientY-r.top];}
-pad.addEventListener('pointerdown',e=>{if(mode!=='draw')return;drawing=true;pad.setPointerCapture(e.pointerId);const[x,y]=padPos(e);padCtx.beginPath();padCtx.moveTo(x,y);});
-pad.addEventListener('pointermove',e=>{if(!drawing)return;const[x,y]=padPos(e);padCtx.lineTo(x,y);padCtx.stroke();});
-pad.addEventListener('pointerup',()=>drawing=false);
+function beginStroke(e){
+  if(padStale())sizePad(true);
+  drawing=true;
+  try{pad.setPointerCapture(e.pointerId);}catch(err){}
+  const[x,y]=padPos(e);lastPt=[x,y];
+  padCtx.beginPath();padCtx.moveTo(x,y);padCtx.lineTo(x+0.01,y);padCtx.stroke();
+}
+function extendStroke(e){
+  let list=[e];
+  if(e.getCoalescedEvents){const co=e.getCoalescedEvents();if(co&&co.length)list=co;}
+  for(const ev of list){
+    const[x,y]=padPos(ev);
+    if(!lastPt){lastPt=[x,y];continue;}
+    const[px,py]=lastPt;
+    padCtx.quadraticCurveTo(px,py,(px+x)/2,(py+y)/2);
+    lastPt=[x,y];
+  }
+  padCtx.stroke();
+}
+function endStroke(e){
+  if(!drawing)return;
+  drawing=false;
+  let end=lastPt;
+  if(e&&typeof e.clientX==='number')end=padPos(e);
+  if(end){padCtx.lineTo(end[0],end[1]);padCtx.stroke();}
+  lastPt=null;
+}
+pad.addEventListener('pointerdown',e=>{if(mode!=='draw')return;e.preventDefault();beginStroke(e);});
+pad.addEventListener('pointermove',e=>{if(!drawing)return;e.preventDefault();extendStroke(e);});
+pad.addEventListener('pointerup',e=>endStroke(e));
+pad.addEventListener('pointercancel',()=>endStroke());
+pad.addEventListener('lostpointercapture',()=>endStroke());
 pad.addEventListener('dblclick',()=>{if(mode==='draw')clearPad();});
-addEventListener('resize',()=>{sizePad();});
+
+/* the stroke-order writer is built for one square size; rebuild it if that changes */
+let syncTimer=null;
+function syncCell(){
+  if(padStale())sizePad(true);
+  const box=Math.round(hw.getBoundingClientRect().width);
+  if(box&&writerSize&&Math.abs(box-writerSize)>1&&mode!=='draw'&&!drawing)setMode(mode,true);
+}
+function syncCellSoon(){clearTimeout(syncTimer);syncTimer=setTimeout(syncCell,150);}
+addEventListener('resize',syncCellSoon);
+addEventListener('orientationchange',()=>setTimeout(syncCell,350));
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)syncCellSoon();});
+if(window.ResizeObserver)new ResizeObserver(syncCellSoon).observe(cell);
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(syncCellSoon).catch(()=>{});
 
 /* static stroke-order strip */
 async function renderStrip(){

@@ -48,7 +48,9 @@ After that, everything runs with no signal: practice, tracing, search and review
 
 ## Using it
 
-- **Practice** — *Watch* the animated stroke order, *Trace* it (every stroke is checked
+- **Practice** — the writing square re-measures itself whenever its size changes, so ink lands
+  under the finger; the header steps out of the way while you are writing. *Watch* the animated
+  stroke order, *Trace* it (every stroke is checked
   for direction and start point, and misses are named by stroke number), or *Draw* it
   from memory over a faint guide you can switch off. Underneath, the character is broken
   into numbered squares, one stroke added each time, new stroke in red. Swipe left and
