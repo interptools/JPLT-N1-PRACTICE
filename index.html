@@ -408,6 +408,33 @@ body.night .exactions .exgo{color:#171A1E}
 .expager .issub{flex:0 0 auto;border-color:var(--shu);color:var(--shu)}
 .expager .issub:hover{background:var(--shu);color:#F5F4EF}
 
+/* ---------- English layer ---------- */
+.engloss{
+  font-family:var(--sans);font-size:.8rem;line-height:1.6;color:var(--ink2);
+  border-left:2px solid var(--ai2);padding-left:10px;margin:7px 0 0;text-align:left;
+}
+.expassage .engloss{margin:8px 0 1em}
+.expassage p:last-child+.engloss{margin-bottom:0}
+.exstem .engloss{font-size:.78rem;margin-top:6px}
+.exchoice .enc{display:block;font-family:var(--sans);font-size:.74rem;line-height:1.5;color:var(--ink3);margin-top:4px}
+.exwhy .exvocab{font-size:.8rem;color:var(--ink2);margin-top:7px;padding-top:7px;border-top:1px solid var(--rule-soft)}
+.exwhy .exvocab b{font-family:var(--mincho);font-weight:600;color:var(--shu);font-size:.78rem;margin-right:5px}
+.exsheetbtn.on{border-color:var(--ai);background:var(--ai-wash);color:var(--ai);font-weight:500}
+.exhist{margin-top:16px;border-top:1px solid var(--rule-soft);padding-top:10px}
+.exhistt{font-family:var(--mincho);font-size:.86rem;margin:0 0 6px}
+.exhist ol{list-style:none;margin:0;padding:0}
+.exhist li{display:flex;gap:10px;align-items:baseline;font-size:.8rem;color:var(--ink2);padding:3px 0;border-bottom:1px solid var(--rule-soft)}
+.exhist li span{flex:1}
+.exhist li b{font-family:var(--mincho);font-size:.95rem;color:var(--ink)}
+.exhist li i{font-style:normal;color:var(--ink3);font-size:.74rem;min-width:5.5em;text-align:right}
+@media(max-width:760px){
+  .engloss{font-size:.78rem;padding-left:8px}
+  .exchoice .enc{font-size:.72rem}
+}
+.exchoice .encn{color:var(--shu);font-size:.72rem}
+.rjgloss{border-left-color:var(--kin);color:var(--ink2);font-style:italic}
+.exchoice .rjc{color:var(--ink2);font-style:italic}
+
 /* ---------- in-app dialogs ---------- */
 dialog.mdl{
   border:0;padding:0;background:transparent;max-width:min(420px,calc(100vw - 28px));width:100%;
@@ -2785,6 +2812,536 @@ if(wantView&&views[wantView])show(wantView);
 </script>
 <script>
 /* ============================================================
+   English renderings of the reading passages.
+   One string per translatable chunk, in document order
+   (every <p> that is not a source line or an A/B label, and
+   every <dd> in the competition notice). Counts must match
+   the Japanese exactly: 6,2,1,1,3,4,5,3,4,9,10.
+   ============================================================ */
+window.EXAM_EN = { p: {
+
+m7: [
+"Today I want to ask something of the advertisers — not about what is inside their commercials, but about the way they are dropped into a programme.",
+"A commercial [41] partway through a programme. The trouble is the timing of the break. Take a show where contestants compete at singing or impressions: right as the judges' scores are about to appear, bang, a commercial cuts in. Or on a quiz show, at the very instant the answer is about to be given, the picture whips over to an advert. That sort of sly little trick [42].",
+"Presumably it is not the advertisers doing this; it will be the idea of the television people who make the programme. In that case I would like the advertisers to have a word with the station: please don't put our commercials in as distastefully as that.",
+"[43-a], if you drop a commercial in at the moment everyone is leaning towards the screen, [43-b] it will be watched. But deliberately cutting the flow of a programme, and going so far as to kill the viewer's interest, in order to force a commercial in front of them — isn't that grasping? Isn't it graceless?",
+"The taste of a commercial is an expression of the taste of the company. That is true not only of the content but of the manner of delivery. You can make a fine commercial, but if it is delivered like that, viewers end up thinking what a company this is, treating us like fools. That way of doing things, which [44] whether we like it or not, is at the extreme a kind of violence, and not the act of a company that holds its customers dear.",
+"To borrow a word that is fashionable at the moment, this is a matter of a company's “dignity”. And it is not only [45-a]: [45-b] have been angry for a good while now, muttering that these people have no class."
+],
+
+m8a: [
+"The sheer variety of the vessels is, I think, one of the distinguishing features of Japanese ceramics. And you might say that the feeling and attachment the Japanese have towards ceramics shows itself not in the vessels alone but in the richness of their kinds.",
+"At every meal we are of course eating the food, but without knowing it we are eating the vessels with our eyes as well. So to say you have no interest in them is merely inattention. The groundwork is already laid; take one step further in and your interest in ceramics is bound to deepen sharply."
+],
+
+m8b: [
+"Adults press honesty on children, telling them that a liar today is a thief tomorrow; but the weak will tell even a painful lie in order to protect their own dignity. If we call what is logically correct “reason”, then it is the strong who can afford to stand on reason. The strong therefore try to reproach the weak for their faults in reasoned terms — yet from where the weak stand that reproach often carries no meaning at all. An apology made by the weak is no more than a procedure, a ritual, for dissolving their disadvantage for a moment."
+],
+
+m8c: [
+"That children who have reached adolescence lately are poor at withstanding stress has much to do with their not having passed through enough experience of moderate stress in their development up to then. And that amounts to the same thing as their not having been socialised sufficiently — for it is precisely while grappling with the task of how to realise themselves in a wider social context, having left the world they had lived in until then, that children up to their early teens taste stress most strongly."
+],
+
+m9a: [
+"Once, while out viewing the blossom, I said “a cherry flower really is a beautiful regular pentagon”, and was laughed at as a man with no feeling for the moment. Cherry petals do indeed have their subtle shades and shapes, and their scent, and on top of that the beauty of falling. The waka and haiku that delight in flowers are beyond counting, yet in all of them the words “regular pentagon” have most likely never once appeared. The sense of beauty peculiar to scientists, I realised, is of quite a different substance from refined taste.",
+"To cut away everything but the essence in science, bold abstraction and idealisation are needed. Out of the many features of a cherry petal, taking out the single form “regular pentagon” — this is abstraction. In reality few petals show a mathematically perfect regular pentagon, but one does not dwell on that. This is idealisation.",
+"For nature to display a symmetry like the regular pentagon there must be some regular law behind it. With flowers, since there is no doubt that the rotational symmetry of the petals is settled genetically according to variety, if that gene can be pinned down then a universal law governing the shape of flowers is sure to be found. In this way abstraction and idealisation let natural phenomena be ordered simply, and help us to find universal laws."
+],
+
+m9b: [
+"When people set out to buy a home, most give the greatest weight to its value as an asset. For an ordinary person it is the sort of purchase you make once in a lifetime, and a large sum has to be spent, so this is only natural. If circumstances later force you to sell and the value has fallen, the loss is heavy.",
+"But what matters more in a home is its usefulness. Ease of living is needed, of course, yet whether the layout suits your own way of life, and whether it stands in surroundings that are easy to live in and well provided for, are important factors too. These do not necessarily coincide with the value standards of the world at large. You need, therefore, to judge by your own thinking and your own patterns of behaviour, measuring the house against them.",
+"When you are considering it as the house you will end your life in especially, you have to see clearly how you mean to live, and choose and decide from that standpoint. As you grow older, naturally enough, your capacity to get about weakens, and the range you move around in narrows.",
+"Give thought to what your remaining years will be like, and with imagination on top of the planning, put together a prediction of high certainty. Following that picture of the future, work out roughly where you ought to live, and settle the size and structure of the house. It goes without saying that, against large changes in future economic conditions, it is also necessary to hold your outlay well below your budget."
+],
+
+m9c: [
+"A human being is, when all is said and done, a child of an age and a child of an environment. Our perception is greatly swayed by the age and the surroundings we have lived through — shut inside them, in a sense. The “world” we are able to perceive is extremely limited, and because the constraints of age and environment cast a mould for that perception, we may in some cases come to see only a badly distorted image of the “world”. We carry ①such a fate on our backs.",
+"And so, while speaking of “knowing the world”, what in fact sometimes happens is that we are merely cutting the “world” out with a narrow mould of perception. As long as the mould stays the same, no amount of fragmentary information gathered will change our perception of the “world” in the slightest. To hold a hardened view of the world is extremely dangerous at a time when the “world” is changing greatly.",
+"At the same time, for all the development of the information environment, the number of people who feel that ②“knowing the world” has become harder and harder is rising. This is because the “world” — spreading out endlessly and vaguely, and forever in violent motion — has become quite invisible through the perception they have to hand. It is true that merely gazing idly at what the media offers will leave you swallowed by the torrent.",
+"Now if ever, surely, is the moment when raising our “power to know the world”, over and above the constraints of age and environment, is keenly called for.",
+"Of course we shall never be wholly free of those constraints. But we can loosen the mould of perception that has set hard, widen our view of the world as flexibly as we can, and take a firm fresh hold on where the limits of the outlook we carry actually lie."
+],
+
+m10: [
+"What one may hope for and come to know in a lifetime is small — travel the whole world, do whatever you please, and it stays small. Absurdly small; and unless you can bear that smallness, learning becomes nothing but big talk. The cloth of words can be spread as wide as you like, and while you are spreading it you are caught by ①the illusion that you are thinking on a world scale, that the whole world can be wrapped up inside it. The carpenter who builds a good house out of timber, the farmer who raises fine rice and vegetables, never come to that. Since one cannot plane wood globally or grow a world-standard rice plant, every one of them is wise in their own work. They know inside out what can be done with the ability of one single self. To learn, to study from books, is really not the least bit different from ②this. For all of these are one single self living firmly in the space between heaven and earth.",
+"A person cannot think on a world scale. That is illusion, fantasy, foolish conceit. What one can do is to keep oneself open towards heaven and earth. Anyone who thinks and makes things with their own single self knows perfectly well what that means. Everyone is born carrying their own temperament. For a person who studies, this temperament is like the soil a farmer is given. Unless the soil is open to heaven and earth it dries out and turns barren.",
+"You till this soil you have been given, draw water to it, plant the seedling. Each day you help the seedling to grow of itself, feeling, as it grows, that something is growing inside you too. Surely learning and thought can only grow like a seedling planted in a person's temperament. A child studies, and so tills the soil of its own temperament, draws water, and plants the seedling it has been handed — the words of books. That is something the child has to attempt for itself, and only in that way can a child grow together with the books it learns. A child studies in order to raise, out of the soil of its own temperament, a crop of the spirit that will one day ripen. “Cultivation” originally meant this crop, and not the big talk of people who merely know a great deal."
+],
+
+m11: [
+"Infants and small children build human relationships and grow in mind and body by accumulating real experience — dealings with the people close to them, and play. A life steeped in media from infancy, however, robs them of chances to play outdoors and brings on a shortage of experience with other people. In practice it produces lack of exercise, lack of sleep and a decline in the ability to communicate, and cases where delay and distortion in physical and mental development followed have been reported from clinical practice. We regard harm of this kind not as the problem of a few individually susceptible children, but as a warning of how enormous the effect of media on children as a whole is. Early and prolonged exposure to the television screen is particularly harmful for children under two, whose symbolic function is still immature, and for children with developmental difficulties: it robs parent and child of time spent face to face in play, and impedes the development of language and of the mind.",
+"Specialists are heard to say “turn off the television and get out and play”, “play in nature” — but I do not think mothers are showing their children television willingly. There is also the problem that there are no children of the same age even if you go out into the neighbourhood, and that nature has disappeared compared with the past. (passage omitted)",
+"Most parents are aware that watching television for hours is not good, and take care over the content they let their children see. Unless we think about what lies behind a parent who shows a child television for six or seven hours a day, rather than simply removing television from their lives, we shall not arrive at a fundamental solution.",
+"So should we not be pressing on with this examination while striking a balance between our own style of living and the kind of television viewing that is desirable for a child?"
+],
+
+m12: [
+"Lately I have come to think a good deal about the ways in which thought is expressed. Writing, for instance, is one way of expressing thought, and within writing there are all sorts of forms. When I first began studying philosophy I believed that of all those forms only the academic paper was fit for expressing thought.",
+"Later, though, I had to correct that view. It is by no means the case that the paper is the only means of expressing thought. We often learn thought through fine essays, novels and poems. If so, the shape of the writing that expresses thought may as well be left free.",
+"Yet even thinking that way, a problem remains. For the form in which thought is expressed is not confined to writing at all. With pictures, with sculpture, with music — with all manner of things, in fact — expressing thought must be possible. And among those ways there are also some that “take no form”.",
+"Among the people living in my village, for instance, there is not one who lacks a deep body of thought about nature. In this village, where forest and river take up ninety-six per cent of the land, a person could not live without thought about nature. And yet the villagers write no paper called “On Nature”, nor any prose at all. Nor, for that matter, does it occur to them to express their own philosophy of nature in pictures or music.",
+"Looking at it that way, the villagers hold deep thought not only about nature but about farming, and about what a village is — and again they never express any of it in any form.",
+"So by what means, then, do the villagers express their thought? My feeling is that they do it through 〈manners〉 — the proper way of doing things.",
+"(passage omitted)",
+"Come to think of it, manners were originally handed down bound up with thought. In the old days, for example, one was strictly trained in the manners of eating. Leaving food was out of the question, and eating while making a racket was never allowed either. That was because a solemn thought lay behind it: that a meal is receiving life. Looking only at the rice in a bowl, a human being must receive perhaps tens of thousands of lives. And so, thinking of what a human being is, you give thanks for the life that is now passing into your own body. This thought is what created the manners of eating.",
+"The thought of the modern and contemporary age, however, ignored thought of this kind, which lived alongside daily life. As a result thought took on writing as its form of expression and became the property of thinkers who write. And somewhere along the way it came to reign over people, and turned into a means of ruling reality."
+],
+
+m13: [
+"Categories: painting, photography.",
+"Entries accepted: 1 November – 30 November 2010.",
+"Judges: Taro Yamada (chairman, Japan Art Association), Hanako Yamamoto (painter), Jiro Kawakami (photographer).",
+"Rules: 1. The subject must be autumn within Kiyomori City. 2. Work entered for the painting category may be illustration, watercolour or oils; photographs entered for the photography category may be film or digital. • One work per person per category. • The year the work was made does not matter, but it must be previously unpublished — it must not have won a prize in another competition, or have appeared in a publication, an exhibition or the like.",
+"How to enter: by post or in person; the city accepts no responsibility for accidents in the post. The designated entry form must be attached to the back of the work. Entry forms are available at the city hall counter or from the city website.",
+"Where to send: Tourism Section, Commerce and Tourism Division, Kiyomori City (951-0022, Kiyomori 2-8, Kiyomori City; tel. 084-874-8524).",
+"Prizes: Grand Prize, one per category — certificate and a digital SLR camera. Excellence Prize, two per category — certificate and a night for two at the Kiyomori Hotel. Kiyomori Prize, up to twenty per category — certificate and a 5,000-yen book token.",
+"Results: announced on the Kiyomori City website on 15 January. Winners will be sent the result by post during January. Enquiries by telephone or at the counter cannot be answered.",
+"Award ceremony: late February 2011 (provisional). Grand Prize and Excellence Prize winners will be handed their certificate and prize at the ceremony.",
+"Notes: prize-winning work will be held by the organisers for up to a year for use in publicity and returned after a year. Where the rules above have not been kept, a prize may be withdrawn."
+]
+
+}};
+
+/* ============================================================
+   English for every question: s = the stem, c = the four
+   choices (null where the choices are only kana readings),
+   v = key vocabulary worth carrying away.
+   ============================================================ */
+window.EXAM_EN.q = {
+
+/* 問題1 — readings */
+1:{s:'Profits rose slightly compared with last year.', c:null,
+   v:'利益 rieki = profit. The decoys are all real words: 利子 rishi and 利息 risoku = interest, 利潤 rijun = profit margin.'},
+2:{s:'Thanks to Hashimoto’s fine play, they somehow got out of a tight spot.', c:null,
+   v:'逃れる nogareru = to escape, get out of. 免れる manugareru = to be spared; 離れる hanareru = to leave; 逸れる soreru = to stray off.'},
+3:{s:'I make a point of choosing children’s toys with safety taken into account.', c:null,
+   v:'考慮 kōryo = consideration. 慮 is リョ with a short vowel.'},
+4:{s:'Around here there is nothing to block the view.', c:null,
+   v:'遮る saegiru = to block, to cut off (light, sound, a view).'},
+5:{s:'This theory is short on scientific grounds.', c:null,
+   v:'根拠 konkyo = grounds, basis. 乏しい toboshii = scarce, wanting.'},
+6:{s:'In anything at all, the beginning is what counts.', c:null,
+   v:'肝心 kanjin = vital, crucial. 心 is read じん here.'},
+
+/* 問題2 — the right word for the context */
+7:{s:'In the corner of the shed I found an old doll ( ) with dust.',
+   c:['whole, the entire thing included','roughly, thereabouts (of age)','covered in, smeared with','dressed entirely in'],
+   v:'ほこりまみれ = covered in dust. Also 血まみれ, 泥まみれ.'},
+8:{s:'Kimura and I share hobbies, so the conversation always ( ).',
+   c:['dances','bounces along, is lively','rolls','leaps'],
+   v:'会話／話が弾む = the talk flows and lifts. Also 心が弾む.'},
+9:{s:'A medical system suited to the ( ) of the area is being called for.',
+   c:['actual conditions on the ground','live coverage','real power','actual existence']},
+10:{s:'That player is said to be a ( ) who appears once in ten years.',
+   c:['seasoned hand, a pro rather than an amateur','a recognised authority in a field','a master, a great artist','an outstanding talent']},
+11:{s:'Where there is any ( ) in the documents, the application will not be accepted.',
+   c:['unrest, instability','injustice, unreasonableness','deficiency, something missing','irregularity (as in 天候不順)'],
+   v:'不備 fubi is the standard officialese for incomplete paperwork.'},
+12:{s:'The ( ) of the roughly 300-year-old painting is finished, and it goes on show from next month.',
+   c:['recovery (of health, of business)','restoration (of art, of buildings)','getting a service running again after a failure','rebuilding after a disaster']},
+13:{s:'Being well versed in law as well as economics is his ( ).',
+   c:['depth','strong point','height, a higher level','weight, gravity']},
+
+/* 問題3 — closest in meaning */
+14:{s:'This film was produced using a 画期的な technique.',
+   c:['widely known','rare these days','extremely time-consuming','new in a way nothing has been before'],
+   v:'画期的 kakkiteki = epoch-making: it marks off a new period.'},
+15:{s:'That company もくろんでいる an advance into overseas markets.',
+   c:['is planning','has carried out','has begun','has given up'],
+   v:'もくろむ = to plan, to have designs on — a faint whiff of scheming.'},
+16:{s:'To solve the problem I would like a few more 手がかり.',
+   c:['image','support','chance','hint'],
+   v:'手がかり = a clue, a lead: something you can take hold of.'},
+17:{s:'I cannot にわかには believe what that person says.',
+   c:['straight away','completely','meekly, at face value','easily'],
+   v:'にわかに = suddenly, at once. The word is about time, not effort — which is why 簡単には is wrong.'},
+18:{s:'This pot I 重宝している.',
+   c:['has gone up in price since before','I like the shape of it','its reputation is rising','it is handy and earns its keep'],
+   v:'重宝する = to find something handy and use it constantly.'},
+19:{s:'Nakamura is always シビアだ about work.',
+   c:['timid','strict, unsparing','flexible','careful, cautious'],
+   v:'シビア (from “severe”) is used of people who are strict and give no quarter.'},
+
+/* 問題4 — correct usage */
+20:{s:'連携 — to work in partnership',
+   c:['The school 連携 with the local community to keep its students safe.','Several staff 連携 one printer between them.','Share prices lately 連携 with the exchange rate, moving up and down.','When you go climbing, always 連携 a map.'],
+   cn:[null,'wants 共有 (to share)','wants 連動 (to move in step)','wants 携帯 (to carry with you)'],
+   v:'連携 = two parties cooperating towards a shared aim.'},
+21:{s:'不服 — objection to a ruling',
+   c:['His rude manner earned the 不服 of those present.','Sing your heart out at karaoke and clear away your everyday 不服.','You cannot 不服を唱える against the referee’s decision.','This department takes customers’ 不服.'],
+   cn:['wants 反感 (antipathy)','wants 不満 (discontent)',null,'wants 苦情 (complaints)'],
+   v:'不服を唱える／申し立てる = to dispute a ruling formally.'},
+22:{s:'かなう — (a wish) comes true',
+   c:['His hardships かない, he went on to succeed as an actor.','The forecast かない, it stayed fine all day.','The event we had prepared for かなった without trouble.','The dream of having a shop of my own has finally かなった.'],
+   cn:['wants 実って (bore fruit)','wants 外れて (was wrong)','wants 終わった (ended)',null],
+   v:'かなう takes a wish or a dream as its subject: 夢／願いがかなう.'},
+23:{s:'目覚ましい — remarkable, striking',
+   c:['That new player is showing 目覚ましい growth.','There was a 目覚ましい loud noise upstairs.','This red is a very 目覚ましい colour, it catches the eye.','I went to bed early, so this morning I am very 目覚ましい.'],
+   cn:[null,'wants 目が覚めるような (loud enough to wake you)','wants 鮮やかな (vivid)','wants 目覚めがいい (well rested)'],
+   v:'目覚ましい goes with progress, growth and results, despite the “waking” kanji.'},
+24:{s:'ほどける — (a knot) comes undone',
+   c:['A screw has ほどけて and the chair is wobbly.','I tied my shoelaces firmly so they would not ほどける.','A shirt button is ほどけて, you had better do it up.','The ice floating in the glass ほどけた before our eyes.'],
+   cn:['wants ゆるんで (worked loose)',null,'wants 外れて (come off)','wants 溶けた (melted)'],
+   v:'ほどける is only for knots and ties coming apart.'},
+25:{s:'赴任 — to leave for a new post',
+   c:['I must 赴任 to Tokyo for three days from tomorrow.','In new-staff training we have them 赴任 to the shop floor too.','The department head is going to 赴任 at an overseas branch, so we all held a farewell party.','It was announced that Mr Tanaka will 赴任 as the new president.'],
+   cn:['three days away is a 出張 (business trip)','wants 出て (go out onto)',null,'wants 就任 (to take office)'],
+   v:'赴任 means going off to a post somewhere else — hence the farewell party.'},
+
+/* 問題5 — grammar */
+26:{s:'The talk by the popular writer A being free of charge ( ), a great many fans crowded in.',
+   c:['making it into','being at, in the midst of','as, in the capacity of','given that it was'],
+   v:'〜とあって introduces a noteworthy circumstance and its result.'},
+27:{s:'( ) I hear the story of someone who has moved from the city to the country, I feel keenly that “the country has the power to heal people”.',
+   c:['every time, whenever','as soon as; in the manner of','as for (topic, with surprise)','if I actually try it'],
+   v:'〜につけ = each time, and it pairs naturally with つくづく感じる.'},
+28:{s:'This pot is handy — for stir-fries, for deep-frying ( ) you can use it for anything.',
+   c:['(topic marker)','and (listing)','or, and suchlike','or (question)'],
+   v:'The pattern is 「Aに、Bに、と」: と rounds off the enumeration.'},
+29:{s:'The printer started going wrong, so I phoned the maker, and after being ( ) all manner of questions by the person there, I was told they could not help.',
+   c:['made someone answer (past)','being made to answer (non-past)','make someone answer','was made to answer (past)'],
+   v:'The speaker is the one put upon, so 答えさせられた; 〜あげく needs the past form before it.'},
+30:{s:'That day I jumped onto a train that had pulled into the platform. But the train started off in the opposite direction ( ). I regretted not having checked where it was going.',
+   c:['is not (〜ではない)','is it not (〜ではないか)','it is not that (〜のではない)','isn’t it that (〜のではないか)'],
+   v:'〜たではないか reports a surprise already witnessed; のではないか would be a guess.'},
+31:{s:'(In an interview) A: “What do you take most care over in the shop?” B: “Hygiene. ( ) meals to our customers, we are more careful over hygiene than over anything else.”',
+   c:['since you (honorific) serve','on top of your (honorific) serving','since we serve — humble','on top of our serving — humble'],
+   v:'Own action → humble お出しする. 〜以上（は）sets up the obligation that follows.'},
+32:{s:'Until I studied abroad I thought the world I could see was all there was. In fact I had not noticed that it ( ) the tiniest part of the world.',
+   c:['…でない／ことに／しか — only to its not being','…でしか／ない／ことに — to its being nothing but','…にない／ことで／しか — only by its not being in','…にしか／ない／ことで — by its being only in'],
+   v:'〜でしかない = is nothing but; 〜ことに気付く takes に.'},
+33:{s:'(At the computer) A: “Did you try that calculation function I showed you?” B: “Yes. It came out so easily ( ) all the time I used to spend on it seems absurd.” A: “There you are. Leave computers to me.”',
+   c:['feeling foolish, and so','seeming foolish, and so (reason)','so much that I feel foolish','so much that it seems absurd'],
+   v:'〜くらい = to the point that. 思える is the involuntary “it strikes me as”.'},
+34:{s:'(On the telephone) Yamanaka: “Is that Professor Kimura? Yamanaka of AB Publishing here. Might I come over now to collect the manuscript?” Kimura: “I am sorry, it is not finished. Another three days ( ).”',
+   c:['you will (honorific) come and wait','I am waiting for you (humble)','shall I have you let me keep you waiting','could I not ask you to wait?'],
+   v:'Kimura is asking the favour, so the humble 〜ていただく with a negative question.'},
+35:{s:'(Interview with the astronaut Taro Yamada) Yamada: “In fact, ( ) I meant to be an astronaut from the start — no, I did not. When I left university I was going to be a doctor.” Reporter: “Then what set you on wanting to be an astronaut?”',
+   c:['as to whether I meant to','if I am asked whether I mean to','if I am asked whether I did not mean to','as to whether I had no intention'],
+   v:'「〜かっていうと、そうじゃない」= as to whether …, no.'},
+
+/* 問題6 — sentence assembly, ★ is the third slot in all five */
+36:{s:'Before the slots: “in university entrance exams, going to the university for the first time on the day of the exam and ending up lost”. After: “it is a good idea to have a look round beforehand.”',
+   c:['not','saying that; the fact that','so as to','the fact of (nominaliser)'],
+   v:'Order 2-4-1-3: 迷ってしまった／という／ことの／★ない／ように. “A good idea to look round beforehand so as not to end up lost, arriving at the university for the first time on the day.”'},
+37:{s:'Before the slots: “taking up a hobby is a good thing, I think, but sacrificing your family”. After: “, that is rather a problem.”',
+   c:['it becomes','even to the point of','and once (conditional と)','doing (て-form of する)'],
+   v:'Order 4-2-1-3: 犠牲／にして／まで／★となる／と. “Once it comes to sacrificing your family for it, that is rather a problem.”'},
+38:{s:'Before the slots: “once you are in a management post, even if …”. After: “you need to be prepared to take on your staff’s failures as well.”',
+   c:['taking it as','even though there is none','the responsibility is not mine','my own responsibility'],
+   v:'Order 3-2-4-1: たとえ／自分には責任／がなくても／★自分の責任／だとして. “Even where the fault is not yours, be ready to take your staff’s failures on as your own responsibility.”'},
+39:{s:'Nothing precedes the slots. After them: “… was a small back-street workshop.”',
+   c:['originally','our company, but','only now, at this point','spoken of as a first-class firm'],
+   v:'Order 3-4-2-1: 今でこそ／一流企業と言われる／★我が社だが／もともとは. “Our company, spoken of as first class only now, was originally a small back-street workshop.”'},
+40:{s:'Before the slots: “the actor Aki Ueda, playing a role unlike any before in the new programme — he is agonising over building the character”. After: “, they say.”',
+   c:['(quotative と)','not particularly so','when I thought','I wonder whether (のか)'],
+   v:'Order 4-1-3-2: 悩んでいる／のか／と／★思いきや／そうでもない. “You would think he was agonising over the part — but apparently not.” 〜と思いきや = contrary to what one expected.'},
+
+/* 問題7 — cloze in the newspaper column */
+41:{s:'Blank 41 — “a commercial ( ) partway through a programme”.',
+   c:['good for one to come in','is it good that one comes in?','a commercial coming in is fine, as such','is it all right for one to come in?'],
+   v:'は marks the concession that the が in the next sentence needs.'},
+42:{s:'Blank 42 — “that sort of cheap trick ( )”.',
+   c:['I think I will stop','I want them to stop it','I wonder whether they will stop','it is not something that can be stopped']},
+43:{s:'Blanks 43-a and 43-b.',
+   c:['a: as expected / b: was on the point of','a: what on earth / b: (question)','a: that said / b: it is not necessarily that','a: certainly / b: there is no doubt that']},
+44:{s:'Blank 44 — “that way of doing things, which ( ) whether we like it or not”.',
+   c:['makes us watch','makes us lean forward','ends up being seen','is leant forward at']},
+45:{s:'Blanks 45-a and 45-b.',
+   c:['a: me / b: everyone','a: the advertisers / b: everyone','a: the advertisers / b: me too','a: me / b: the advertisers too']},
+
+/* 問題8 — three short texts */
+46:{s:'Which matches the writer’s view?',
+   c:['Gazing at the vessels at every meal deepens your attachment to ceramics.','Turning your attention to the vessels you use daily raises your interest in ceramics.','Taking an interest in ceramics through tableware raises your interest in art as a whole.','Bringing a variety of vessels into the home deepens attachment to ceramics.']},
+47:{s:'How does the writer see the weak?',
+   c:['The weak try to protect their dignity by being honest.','The weak use reason to apologise for their own faults.','The weak lean on sound argument to undo their disadvantage.','The weak try to protect themselves by apologising.']},
+48:{s:'What sort of experience does the writer think a child needs before adolescence?',
+   c:['Tackling many social problems in the society outside the home','Experience of facing themselves in the setting of daily life','Experience that lets them toughen themselves in the wider society','Taking on a role suited to the individual’s stage of development in daily life']},
+
+/* 問題9 — three medium texts */
+49:{s:'Where does the writer think the reason he was laughed at lies?',
+   c:['He praised the blossom in a tasteful phrase unlike a scientist.','He had not understood the beauty of the blossom.','The blossom was not the shape he described.','He expressed the beauty of the blossom from a scientist’s point of view.']},
+50:{s:'What is 理想化 (idealisation) here?',
+   c:['Taking every cherry flower to be a regular pentagon','Taking cherry flowers to have features in common','Holding that cherry flowers have a mathematical beauty','Holding that cherry flowers come closer to a regular pentagon than any other flower']},
+51:{s:'On the writer’s view, what is to be hoped for from abstraction and idealisation in the case of flowers?',
+   c:['That common ground across varieties will come to light','That universality will be found in the beauty of flowers in nature','That the mechanism deciding the shape of a flower will be explained','That the symmetry of a flower will be proved to be genetic']},
+52:{s:'What does the writer give in the text as the value standard of the world at large?',
+   c:['That the property can be lived in over the long term','That the property will be advantageous when sold in future too','That the property suits the buyer’s way of life','That the outlay at the time of purchase is kept down']},
+53:{s:'On the writer’s view, what matters most when choosing a house to live in once you are old?',
+   c:['Judging whether it fits how you will live and how far you will get about in old age','Giving priority to the structure of the house, since strength declines in old age','Choosing something at about the budget set from a prediction of the future','Weighing asset value, with a future sale in mind']},
+54:{s:'What does the writer most want to say about choosing a home?',
+   c:['What sort of home you live in matters greatly, and general standards are worth consulting as well.','Even if your thinking differs from other people’s, decide your future home with your own way of living to the fore.','Guard against future economic change by choosing a home whose asset value is unlikely to fall.','Since taste in housing shifts as you age, choose according to how you think at the time.']},
+55:{s:'What does ①そういう宿命 (that fate) mean?',
+   c:['People today have their thinking distorted by age and environment, so their view of the “world” never settles.','People today are subject to the constraints of age and environment, and sometimes cannot see the “world” correctly.','Human beings have their outlook bound by age and environment, and sometimes cannot see the “world” correctly.','Human beings are greatly affected in how they live by age and environment, so their view of the “world” never settles.']},
+56:{s:'Why has ②“knowing the world” become harder and harder?',
+   c:['Because individual perception narrows, making the changes of the age hard to grasp','Because individual perception will not settle, so people are led astray by information','Because individual perception cannot cope with the dizzying change and the volume of information in the real world','Because individual perception cannot keep up with the highly developed information environment of the real world']},
+57:{s:'What does the writer think can be done to raise the “power to know the world”?',
+   c:['Revise the perception you have held and gather as much information as you can','Overcome the constraints of age and environment and pass beyond the limits of your perception','Avoid being swallowed by the torrent of information and get free of the frame of your perception','Give your perception as much flexibility as you can, and be conscious of its range']},
+
+/* 問題10 — the long text */
+58:{s:'What does ①そんな錯覚に捕らえられる (being caught by that illusion) mean?',
+   c:['Thinking you know everything and can take on the world','Feeling that anything at all can be conveyed in words','Feeling that there is no limit to what learning can yield','Thinking how great the things a person can learn from the world are']},
+59:{s:'What does ②これ (this) refer to?',
+   c:['Working with a grasp of what you yourself can do','Working hard with thought for what you can do for the world','Getting as much knowledge as you can and turning it to use in your work','Working after considering what you can do for other people']},
+60:{s:'What example does this text use to explain what it is to learn?',
+   c:['Tilling the soil you are given and planting a good seedling you have picked out','Tilling the soil you are given and rearing the seedling so that it makes a good crop','Tilling on and on in order to improve the soil you are given','Raising a world-standard crop while improving the soil you are given']},
+61:{s:'What does the writer take “cultivation” to be?',
+   c:['Learning and thought that can uncover a new temperament','Learning and thought reared within each person’s own temperament','Specialist knowledge needed to get through life','A great deal of knowledge gained from books and study']},
+
+/* 問題11 — the A/B pair */
+62:{s:'What are the standpoints of A and B on letting children watch television for long stretches?',
+   c:['A states future tasks with a solution in mind; B reports the present state critically.','A raises the problem with a solution in mind; B points out that the cause lies in social background.','A shows the scale of the effect and sounds a warning; B states future tasks with a solution in mind.','A points out that the cause lies in social background; B shows the scale of the effect and sounds a warning.']},
+63:{s:'What do A and B say about children and television?',
+   c:['A says contact between parent and child matters more than contact with media; B says outdoor play should be valued above television.','A says contact with media is a factor that impedes children’s development; B says the circumstances surrounding child-rearing can bring on too much television.','A says the shortage of real experience is more of a problem than long contact with media; B says simply removing television from life will not solve the problem.','A says long exposure to media often affects children’s growth; B says what matters is that parents show children television appropriately.']},
+
+/* 問題12 — the long text */
+64:{s:'Which does the writer give as something that かたちにならない (takes no form)?',
+   c:['Nature','Life','Gratitude','Manners, the proper way of doing things']},
+65:{s:'What thought does the writer say the people of his village hold?',
+   c:['Thought for living within nature, and about farming and what a village should be','Thought about how farming and villagers should be so as to live without spoiling nature','Thought about what a villager should do in order to show gratitude to nature','Thought for winning nature back, and about a farming that makes use of nature']},
+66:{s:'The manners of eating are bound up with which way of thinking?',
+   c:['How precious food made with much labour is','How sinful the human condition is, unable to live without eating something','That a meal is receiving what farming produced, so gratitude to the villagers who farm is called for','That a meal takes other lives into your own body, and those lives must be thanked']},
+67:{s:'Which does the writer state in this text?',
+   c:['The expression of thought does not necessarily take the form of writing or of a work, and some of it takes no form at all.','Thought has been held to be something expressed in forms such as pictures and music, but deep thought takes no form.','Thought can be expressed in pictures and music, and some takes no form, but what is expressed in writing is the highest of all.','Thought that has taken the form of writing or of a work is respected, but the deep thought bound up with daily life takes no form.']},
+
+/* 問題13 — the competition notice */
+68:{s:'Which of the works Takagi has made can be entered?',
+   c:['An autumn landscape that won a prize while they were at Kiyomori High School','An oil painting and an illustration of the autumn leaves at Kiyomori Hot Spring in Kiyomori City','A photograph of spring trees taken in Kiyomori Park in Kiyomori City','A photograph and a watercolour of last year’s autumn festival held in Kiyomori City']},
+69:{s:'What should Takagi do to find out whether they have won a prize?',
+   c:['Look at the Kiyomori City website in mid-January','Ring the tourism section directly in mid-January','Enquire at the city hall counter in late February','Wait for the notice due to arrive in late February']}
+
+};
+
+/* ============================================================
+   Romaji (Hepburn, macrons for long vowels, particles written
+   separately as wa / o / e) for every question stem and choice.
+   The reading passages are deliberately not romanised — a
+   500-character block of romaji is unreadable.
+   ============================================================ */
+window.EXAM_RJ = { q: {
+
+/* 問題1 */
+1:{s:'Kyonen yori rieki ga wazuka ni fueta.', c:['rishi','risoku','rieki','rijun']},
+2:{s:'Hashimoto senshu no katsuyaku de, nantoka pinchi o nogareta.', c:['nogareta','hanareta','soreta','manugareta']},
+3:{s:'Kodomo no omocha wa, anzensei o kōryo shite erabu yō ni shite iru.', c:['kōro','kōryo','kōrō','kōryō']},
+4:{s:'Kono atari wa shikai o saegiru mono ga nani mo nai.', c:['samatageru','saegiru','sebameru','hedateru']},
+5:{s:'Kono setsu wa kagakuteki na konkyo ni toboshii.', c:['konsho','konjo','konkyo','kongyo']},
+6:{s:'Nanigoto mo hajime ga kanjin da.', c:['tanshin','kanshin','tanjin','kanjin']},
+
+/* 問題2 */
+7:{s:'Monooki no sumi de, hokori (   ) ni natte iru furui ningyō o mitsuketa.', c:['gurumi','garami','mamire','zukume']},
+8:{s:'Kimura-san to wa kyōtsū no shumi ga aru node, itsumo kaiwa ga (   ).', c:['mau','hazumu','korogaru','haneru']},
+9:{s:'Chiiki no (   ) ni atta iryō no shisutemu ga motomerarete iru.', c:['jitsujō','jikkyō','jikken','jitsuzai']},
+10:{s:'Sono senshu wa, jū-nen ni hitori no (   ) da to iwarete iru.', c:['kurōto','taika','kyoshō','itsuzai']},
+11:{s:'Shorui ni (   ) ga atta baai, shinsei wa juri saremasen.', c:['fuon','futō','fubi','fujun']},
+12:{s:'Yaku sanbyaku-nen mae no kaiga no (   ) ga owari, raigetsu kara kōkai sareru yotei da.', c:['kaifuku','shūfuku','fukkyū','fukkō']},
+13:{s:'Keizai dake de naku, hōritsu ni mo kuwashii no ga kare no (   ) da.', c:['fukami','tsuyomi','takami','omomi']},
+
+/* 問題3 */
+14:{s:'Kono eiga wa kakkiteki na shuhō de seisaku sareta.', c:['hiroku shirarete iru','saikin de wa mezurashii','hijō ni jikan ga kakaru','ima made ni naku atarashii']},
+15:{s:'Ano kigyō wa kaigai shijō e no shinshutsu o mokuronde iru.', c:['keikaku shite','hatashite','kaishi shite','akiramete']},
+16:{s:'Mondai o kaiketsu suru tame ni, mō sukoshi tegakari ga hoshii.', c:['imēji','sapōto','chansu','hinto']},
+17:{s:'Ano hito no hanashi wa niwaka ni wa shinjirarenai.', c:['sugu ni wa','kanzen ni wa','sunao ni wa','kantan ni wa']},
+18:{s:'Kono nabe wa chōhō shite iru.', c:['izen yori neagari shite iru','katachi ga ki ni itte iru','hyōka ga takamatte iru','benri de yaku ni tatte iru']},
+19:{s:'Nakamura-san wa shigoto ni taishite itsumo shibia da.', c:['yowaki da','kibishii','jūnan da','chūibukai']},
+
+/* 問題4 */
+20:{s:'renkei', c:[
+ 'Gakkō wa chiiki to renkei shite seito no anzen o mamotte iru.',
+ 'Fukusū no shain de ichi-dai no purintā o renkei shite tsukatte iru.',
+ 'Saikin no kabuka wa, kawase rēto to renkei shite jōge shite iru.',
+ 'Tozan no toki ni wa, kanarazu chizu o renkei shite kudasai.']},
+21:{s:'fufuku', c:[
+ 'Kare no shitsurei na taido wa, soko ni ita hitobito no fufuku o katta.',
+ 'Karaoke de omoikiri utatte, higoro no fufuku o harasō.',
+ 'Shinpan no hantei ni fufuku o tonaeru koto wa dekinai.',
+ 'Kono busho de, okyakusama kara no fufuku o uketsukete imasu.']},
+22:{s:'kanau', c:[
+ 'Kurō ga kanai, kare wa haiyū to shite seikō o osameta.',
+ 'Tenki yohō ga kanai, kyō wa ichinichijū kaisei datta.',
+ 'Junbi o kasanete kita ibento ga buji kanatta.',
+ 'Jibun no mise o motsu to iu yume ga, tōtō kanatta.']},
+23:{s:'mezamashii', c:[
+ 'Ano shinjin senshu wa mezamashii seichō o misete iru.',
+ 'Ue no kai de mezamashii hodo no ōkina monooto ga shita.',
+ 'Kono aka wa totemo mezamashii iro de hitome o hiku ne.',
+ 'Yūbe hayaku neta node, kesa wa totemo mezamashii.']},
+24:{s:'hodokeru', c:[
+ 'Neji ga hodokete, isu ga guragura shite iru.',
+ 'Kutsu no himo ga hodokenai yō ni shikkari to musunda.',
+ 'Shatsu no botan ga hodokete iru kara, tometa hō ga ii yo.',
+ 'Gurasu ni ukabu kōri ga mirumiru uchi ni hodoketa.']},
+25:{s:'funin', c:[
+ 'Ashita kara mikkakan Tōkyō e funin shinakereba naranai.',
+ 'Shinnyū shain no kenshū de wa, jissai ni uriba ni mo funin shite morau.',
+ 'Buchō ga kaigai no shisha ni funin suru node, minna de sōbetsukai o hiraita.',
+ 'Tanaka-shi ga atarashii shachō ni funin suru koto ga happyō sareta.']},
+
+/* 問題5 */
+26:{s:'Ninki sakka Ē-shi no kōenkai ga muryō (   ), ōku no fan ga tsumekaketa.', c:['ni shite','ni atte','to shite','to atte']},
+27:{s:'Tokai kara inaka ni utsurisunda hito no hanashi o kiku (   ), “inaka wa hito o iyasu chikara o motte iru” to tsukuzuku kanjiru.', c:['ni tsuke','nari','to wa','ni shite miru to']},
+28:{s:'Kono nabe wa, itamemono ni, agemono ni (   ) nan ni demo tsukaete benri desu.', c:['wa','to','ya','ka']},
+29:{s:'Purintā no chōshi ga waruku nari, seizō gaisha ni denwa de toiawasetara, mukō no tantōsha ni, arekore shitsumon ni kotae (   ) ageku, taiō dekinai to iwareta.', c:['saseta','saserareru','saseru','saserareta']},
+30:{s:'Sono hi, watashi wa hōmu ni haitte kita densha ni tobinotta. Tokoro ga, densha wa hantai hōkō ni hashirihajimeta (   ). Watashi wa densha no ikisaki o tashikamenakatta koto o kōkai shita.', c:['de wa nai','de wa nai ka','no de wa nai','no de wa nai ka']},
+31:{s:'A: “Omise de ichiban ki o tsukete iru koto wa nan desu ka.” B: “Eisei kanri desu. Okyakusama ni shokuji o (   ), eiseimen no kanri ni wa, nani yori mo chūi shite orimasu.”', c:['o-dashi ni naru ijō','o-dashi ni naru ue','o-dashi suru ijō','o-dashi suru ue']},
+32:{s:'Ryūgaku suru made, watashi wa jibun ga mite iru sekai ga subete da to omotte ita. Jitsu wa sore ga sekai no honno chiisana ichibubun (   ) kizuite inakatta.', c:['de nai koto ni shika','de shika nai koto ni','ni nai koto de shika','ni shika nai koto de']},
+33:{s:'A: “Nē, kono mae oshieta keisan kinō, tsukatte mita?” B: “Un. Ima made anna ni jikan o kakete ta no ga (   ) kantan ni keisan dekita yo.” A: “Desho. Pasokon no koto nara makasete yo.”', c:['bakabakashii omoi o suru mono de','bakabakashiku omoeru mono de','bakabakashii omoi o suru kurai','bakabakashiku omoeru kurai']},
+34:{s:'Yamanaka: “A, Kimura-sensei de irasshaimasu ka. Ē-Bī Shuppan no Yamanaka de gozaimasu ga, ima kara genkō o itadaki ni agatte mo yoroshii deshō ka.” Kimura: “Sumimasen. Mada dekite inai n desu. Ato mikka (   ).”', c:['matte oide ni narimasu','omachi mōshiagete orimasu','matasete itadaku koto ni shimashō ka','matte itadaku wake ni wa ikimasen ka']},
+35:{s:'Yamada: “Jitsu wa, hajime kara uchū hikōshi ni naru (   ), sō ja nai n desu. Daigaku o detara, isha ni narō to omotte imashita kara.” Kisha: “De wa, nani ga kikkake de, uchū hikōshi ni naritai to omotta n desu ka.”', c:['tsumori datta ka tte iu to','tsumori na no ka tte iwaretara','tsumori ja nakatta no ka tte iwaretara','tsumori ga nakatta ka tte iu to']},
+
+/* 問題6 */
+36:{s:'Daigaku nyūshi de wa, shiken tōjitsu hajimete sono daigaku ni iki, mayotte shimatta ___ ___ ★ ___ jizen ni kengaku shite oku to yoi.', c:['nai','to iu','yō ni','koto no']},
+37:{s:'Shumi o motsu no wa yoi koto da to omoimasu ga, katei o gisei ___ ___ ★ ___ , sore wa chotto mondai desu.', c:['to naru','made','to','ni shite']},
+38:{s:'Kanrishoku ni nattara, tatoe ___ ___ ★ ___ buka no shippai mo hikiukeru to iu kurai no kakugo ga nakute wa naranai.', c:['da to shite','ga nakute mo','jibun ni wa sekinin','jibun no sekinin']},
+39:{s:'___ ___ ★ ___ chiisana machi-kōjō datta.', c:['motomoto wa','wagasha da ga','ima de koso','ichiryū kigyō to iwareru']},
+40:{s:'Shin-bangumi de kore made ni nai yakugara o enjiru haiyū no Ueda Aki-san. Yakuzukuri ni nayande iru ___ ___ ★ ___ to iu.', c:['to','sō de mo nai','omoikiya','no ka']},
+
+/* 問題7 */
+41:{s:'Bangumi no tochū ni CM ga (41).', c:['hairu no ni ii','hairu no ga ii no ka','hairu no wa ii','hairu no de ii no ka']},
+42:{s:'Ā iu sekoi koto wa (42).', c:['yameyō to omou','yamete hoshii no da','yameru no darō ka','yamerareru mono de wa nai']},
+43:{s:'(43-a), minna ga terebi no mae de mi o noridashite iru shunkan ni CM o irereba, mirareru (43-b).', c:['a yahari / b tokoro datta','a ittai / b no ka','a to itte mo / b wake de mo nai','a tashika ni / b koto wa machigai nai']},
+44:{s:'Iyaōnashi ni (44) ā iu yarikata wa, kyokutan ni ieba bōryoku mitai na mono de atte…', c:['misasete shimau','mi o noridasaseru','mirarete shimau','mi o noridasareru']},
+45:{s:'(45-a) dake ja nai, (45-b) daibu mae kara, “hin ga nē zo” to okotte ru yo.', c:['a boku / b minna','a kōkokushu / b minna','a kōkokushu / b boku mo','a boku / b kōkokushu mo']}
+
+}};
+
+/* Romaji for the reading sections — 問題8 to 問題13. */
+Object.assign(window.EXAM_RJ.q, {
+
+/* 問題8 */
+46:{s:'Hissha no kangae ni au no wa dore ka.', c:[
+ 'Shokuji no tabi ni shokki o nagameru koto de, tōgeihin e no aichaku ga tsuyomaru.',
+ 'Nichijō tsukau shokki ni chūi o mukeru koto de, tōgeihin e no kanshin ga takamaru.',
+ 'Shokki o tōshite tōgeihin ni kyōmi o motsu koto de, geijutsu zenpan e no kanshin ga takamaru.',
+ 'Katei ni iroiro na shokki o toriireru koto de, tōgeihin e no aichaku ga tsuyomaru.']},
+47:{s:'Hissha wa, jakusha o dono yō ni toraete iru ka.', c:[
+ 'Jakusha wa shōjiki de aru koto de mizukara no songen o mamorō to suru.',
+ 'Jakusha wa risei o motte mizukara no ayamachi o wabiyō to suru.',
+ 'Jakusha wa seiron ni tayotte ressei o kaishō shiyō to suru.',
+ 'Jakusha wa shazai suru koto de mizukara o mamorō to suru.']},
+48:{s:'Hissha wa, shishunki o mukaeru mae no kodomo ni totte donna keiken ga hitsuyō da to kangaete iru ka.', c:[
+ 'Katei no soto no shakai de ōku no shakai mondai ni torikumu keiken',
+ 'Hibi no seikatsu no ba de jibun jishin to mukiau yō na keiken',
+ 'Hiroi shakai no naka de jibun o kitaeru koto ga dekiru yō na keiken',
+ 'Nichijō seikatsu no naka de kojin no hattatsu dankai ni ōjita yakuwari o ninau keiken']},
+
+/* 問題9 */
+49:{s:'Hissha wa, jibun ga warawareta gen’in wa doko ni aru to kangaete iru ka.', c:[
+ 'Kagakusha rashikunai omomuki no aru hyōgen de sakura no hana o hometa ten',
+ 'Jibun ga sakura no utsukushisa o rikai dekite inakatta ten',
+ 'Sakura no hana wa jibun ga nobeta katachi o shite inakatta ten',
+ 'Sakura no utsukushisa o kagakushateki na shiten kara hyōgen shita ten']},
+50:{s:'Koko de no risōka to wa nani ka.', c:[
+ 'Sakura no hana wa dore mo seigokakkei de aru to minasu koto',
+ 'Sakura no hana ni wa kyōtsū suru tokuchō ga aru to minasu koto',
+ 'Sakura no hana ni wa sūgakuteki na utsukushisa ga aru to kangaeru koto',
+ 'Sakura no hana wa hoka no dono hana yori mo seigokakkei ni chikai to kangaeru koto']},
+51:{s:'Hissha no kangae ni yoru to, hana no baai, chūshōka to risōka ni yotte nani ga kitai sareru ka.', c:[
+ 'Hana ni wa hinshu o koeta kyōtsūten ga aru koto ga akiraka ni naru koto',
+ 'Shizenkai ni saite iru hana no utsukushisa ni fuhensei ga miidasareru koto',
+ 'Hana no katachi ga dono yō ni kimaru no ka sono shikumi ga kaimei sareru koto',
+ 'Hana no katachi no taishōsei ga idenshi ni yoru mono de aru koto ga shōmei sareru koto']},
+52:{s:'Seken ippan no kachi kijun to shite hissha ga honbun de agete iru no wa nani ka.', c:[
+ 'Chōki ni watatte kyojū dekiru bukken de aru koto',
+ 'Shōrai baikyaku suru toki ni mo yūri na bukken de aru koto',
+ 'Kōnyūsha no seikatsu yōshiki ni atta bukken de aru koto',
+ 'Kōnyūji no hiyō futan ga osaerareru bukken de aru koto']},
+53:{s:'Hissha no kangae de wa, toshi o totte kara sumu ie to shite jūkyo o erabu toki ni mottomo taisetsu na koto wa nani ka.', c:[
+ 'Rōgo no ikikata ya kōdō han’i ni sotte iru ka o handan suru.',
+ 'Rōgo wa kōdō suru nōryoku ga otoroeru tame ie no kōzō o yūsen suru.',
+ 'Mirai no yosoku ni sotte kimeta yosan to onaji kurai no mono o erabu.',
+ 'Itsuka uru toki no koto mo kangaete shisanteki na kachi o jūshi suru.']},
+54:{s:'Jūkyo erabi ni tsuite, hissha ga mottomo iitai koto wa nani ka.', c:[
+ 'Hito ga seikatsu suru ue de donna jūkyo ni sumu ka wa totemo taisetsu de ari, ippanteki na kachi kijun mo sankō ni shita hō ga yoi.',
+ 'Tanin to kangaekata ga kotonatta to shite mo, jibun no seikatsu sutairu o jūshi shite shōrai no jūkyo o kettei shita hō ga yoi.',
+ 'Shōrai no keizai jōsei no henka ni sonaete, dekiru dake shisan kachi no sagarinikusō na jūkyo o eranda hō ga yoi.',
+ 'Toshi o toru ni tsurete jūkyo no konomi mo kawatte kuru tame, sono tokidoki no kangae ni awasete jūkyo o sentaku shita hō ga yoi.']},
+55:{s:'“Sō iu shukumei” to wa dō iu imi ka.', c:[
+ 'Gendai no hitobito wa kangae ga jidai ya kankyō ni yugamerare, “sekai” no mikata ga sadamaranai.',
+ 'Gendai no hitobito wa jidai ya kankyō no seiyaku o ukete ori, “sekai” ga tadashiku mienai koto mo aru.',
+ 'Ningen wa mono no mikata ga jidai ya kankyō ni shibarare, “sekai” ga tadashiku mienai koto mo aru.',
+ 'Ningen wa ikikata ga jidai ya kankyō ni ōkiku eikyō o uke, “sekai” no mikata ga sadamaranai.']},
+56:{s:'“Sekai o shiru” koto ga masumasu konnan ni natta no wa naze ka.', c:[
+ 'Kojin no sekai ninshiki ga sebamari, jissekai no jidai no henka o tsukami nikui kara',
+ 'Kojin no sekai ninshiki ga katamarazu, jissekai no jōhō ni madowasarete shimau kara',
+ 'Kojin no sekai ninshiki ga, jissekai no memagurushii henka ya jōhōryō ni taiō dekinai kara',
+ 'Kojin no sekai ninshiki ga, kōdo ni hattatsu shite iru jissekai no jōhō kankyō ni oitsukenai kara']},
+57:{s:'Hissha wa, “sekai o shiru chikara” o takameru tame ni dekiru koto wa nan da to kangaete iru ka.', c:[
+ 'Ima made no sekai ninshiki o aratame, dekiru dake ōku no jōhō o eru koto',
+ 'Jidai ya kankyō no seiyaku o kokufuku shite, jibun no sekai ninshiki no genkai o koeru koto',
+ 'Jōhō no gekiryū ni nomikomarezu, jibun no sekai ninshiki no waku kara jiyū ni naru koto',
+ 'Jibun no sekai ninshiki ni dekiru dake jūnansei o motase, sono han’i o jikaku suru koto']},
+
+/* 問題10 */
+58:{s:'“Sonna sakkaku ni toraerareru” to wa dō iu imi ka.', c:[
+ 'Jibun wa nan de mo shitte ite sekai o aite ni dekiru to omou.',
+ 'Kotoba de donna koto de mo tsutaerareru yō na ki ni naru.',
+ 'Gakumon kara erareru koto ni wa genkai ga nai to kanjite shimau.',
+ 'Ningen ga sekai kara manaberu koto wa ika ni ōkii koto ka to omou.']},
+59:{s:'“Kore” to wa nani o sasu ka.', c:[
+ 'Jibun ni dekiru koto o haaku shita ue de shigoto o suru koto',
+ 'Jibun ga sekai no tame ni nani ga dekiru ka o kangaete shigoto ni hagemu koto',
+ 'Dekiru kagiri ōku no chishiki o ete jibun no shigoto ni yakudataseru koto',
+ 'Hito no tame ni dekiru koto wa nani ka o kangaeta ue de shigoto o suru koto']},
+60:{s:'Kono bunshō de wa, gakumon o suru to iu koto o dono yō na rei o tsukatte setsumei shite iru ka.', c:[
+ 'Ataerareta tsuchi o tagayashi, yoi nae o erande ueru.',
+ 'Ataerareta tsuchi o tagayashi, yoi sakumotsu ni naru yō ni nae o sodateru.',
+ 'Ataerareta dojō o kaizen suru tame ni tagayashi tsuzukeru.',
+ 'Ataerareta dojō o kaizen shinagara sekai hyōjun no sakumotsu o sodateru.']},
+61:{s:'Hissha wa “kyōyō” o dono yō na mono da to kangaete iru ka.', c:[
+ 'Aratana kishitsu o miidasu koto ga dekiru gakumon ya shisō',
+ 'Hito sorezore no kishitsu no naka de hagukumareta gakumon ya shisō',
+ 'Ikite iku ue de hitsuyō na senmonteki na chishiki',
+ 'Shomotsu ya gakumon kara erareta ōku no chishiki']},
+
+/* 問題11 */
+62:{s:'Kodomo ni terebi o chōjikan miseru koto ni tsuite, A to B no kanten wa dono yō na mono ka.', c:[
+ 'A wa mondai kaiketsu o ishiki shita kongo no kadai o nobe, B wa hihanteki ni genjō o hōkoku shite iru.',
+ 'A wa kaiketsu o ishiki shita mondai teiki o shi, B wa mondai no gen’in wa shakaiteki haikei ni aru to shiteki shite iru.',
+ 'A wa eikyō no ōkisa o shimeshite chūi o kanki shi, B wa mondai kaiketsu o ishiki shita kongo no kadai o nobete iru.',
+ 'A wa mondai no gen’in wa shakaiteki haikei ni aru to shiteki shi, B wa eikyō no ōkisa o shimeshite chūi o kanki shite iru.']},
+63:{s:'Kodomo to terebi no kankei ni tsuite, A to B wa dono yō ni nobete iru ka.', c:[
+ 'A wa media to no sesshoku yori oyako no kakawari ga taisetsu da to nobe, B wa terebi o miseru yori mo soto de no asobi o jūshi shita hō ga ii to nobete iru.',
+ 'A wa media to no sesshoku ga kodomo no hatsuiku o samatageru yōin da to nobe, B wa kosodate o torimaku jōkyō ga terebi no misesugi o hikiokosu baai ga aru to nobete iru.',
+ 'A wa media to no sesshoku ga nagai koto yori mo jittaiken no fusoku no hō ga mondai da to nobe, B wa seikatsu no naka kara terebi o haijo shita dake de wa mondai wa kaiketsu shinai to nobete iru.',
+ 'A wa media ni chōjikan sessuru koto ga kodomo no seichō ni eikyō o ataeru baai ga ōi to nobe, B wa oya ga kodomo ni tekisetsu ni terebi o miseru koto ga taisetsu da to nobete iru.']},
+
+/* 問題12 */
+64:{s:'“Katachi ni naranai mono” to shite hissha ga agete iru no wa dore ka.', c:['shizen','seimei','kansha','sahō']},
+65:{s:'Kono bunshōchū de hissha wa, jibun no mura ni kurasu hitobito ga donna shisō o motte iru to nobete iru ka.', c:[
+ 'Shizen no naka de ikiru tame no shisō ya, nōgyō ya mura no arikata ni tsuite no shisō',
+ 'Shizen o kowasazu ni kurasu tame ni, nōgyō ya murabito wa dō aru beki ka to iu shisō',
+ 'Shizen ni taisuru kansha o arawasu tame ni, murabito to shite dō suru beki ka to iu shisō',
+ 'Shizen o torimodosu tame no shisō ya, shizen o riyō suru nōgyō no arikata ni tsuite no shisō']},
+66:{s:'Shokuji no sahō wa, tsugi no dono yō na kangaekata to musubitsuite iru ka.', c:[
+ 'Ōku no rōryoku ga sasagerarete tsukurareta tabemono ga, ika ni tattoi mono de aru ka to iu kangaekata',
+ 'Nani ka o tabenai de wa ikite wa ikenai ningen no arikata ga, ika ni tsumibukai mono de aru ka to iu kangaekata',
+ 'Shokuji wa nō ga umidashita mono o itadaku mono de ari, nōgyō o itonamu murabito e no kansha ga hitsuyō da to iu kangaekata',
+ 'Shokuji wa hoka no seimei o jibun no karada ni toriireru mono de ari, sorera no seimei ni kansha shinakereba ikenai to iu kangaekata']},
+67:{s:'Kono bunshōchū de hissha ga nobete iru koto wa dore ka.', c:[
+ 'Shisō no hyōgen wa kanarazushimo bunshō ya sakuhin to iu katachi o toru to wa kagirazu, katachi ni naranai mono mo aru.',
+ 'Shisō wa e ya ongaku no yō na katachi ni arawasareru mono to kangaerarete kita ga, fukai shisō to wa katachi ni naranai mono de aru.',
+ 'Shisō no hyōgen ni wa e ya ongaku nado mo aru shi, katachi ni naranai mono mo aru ga, bunshō de hyōgen sareta mono ga saijō no mono de aru.',
+ 'Shisō wa bunshō ya sakuhin no yō na katachi ni natta mono ga sonchō sareru ga, seikatsu to musubitsuita fukai shisō wa katachi ni naranai mono de aru.']},
+
+/* 問題13 */
+68:{s:'Takagi-san ga seisaku shita ika no sakuhin no uchi, ōbo dekiru mono wa dore ka.', c:[
+ 'Kiyomori Kōkō ni kayotte ita toki nyūshō shita aki no fūkeiga',
+ 'Kiyomori-shi ni aru Kiyomori Onsen no kōyō no abura-e to irasuto',
+ 'Kiyomori-shi ni aru Kiyomori Kōen de totta haru no kigi no shashin',
+ 'Kyonen Kiyomori-shi de okonawareta aki-matsuri no shashin to suisaiga']},
+69:{s:'Nyūshō shita ka dō ka o shiru ni wa, Takagi-san wa dō shitara yoi ka.', c:[
+ 'Ichi-gatsu chūjun ni Kiyomori-shi no hōmupēji o miru.',
+ 'Ichi-gatsu chūjun ni chokusetsu, kankōgakari ni denwa shite kiku.',
+ 'Ni-gatsu gejun ni shiyakusho no madoguchi ni toiawaseru.',
+ 'Ni-gatsu gejun ni todoku yotei no tsūchi o matsu.']}
+
+});
+
+</script>
+<script>
+/* ============================================================
    模擬試験 — JLPT N1 practice test (言語知識・読解), 69 questions.
    Text transcribed from the official practice workbook.
    The workbook PDF carries no answer key, so answers and the
@@ -3094,6 +3651,13 @@ const BLOCKS = [
 ]}
 ];
 
+/* ---------------- English layer ---------------- */
+const EN=(window.EXAM_EN&&window.EXAM_EN.p)?window.EXAM_EN:{p:{},q:{}};
+const RJ=(window.EXAM_RJ&&window.EXAM_RJ.q)?window.EXAM_RJ:{q:{}};
+const esc=t=>String(t).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+const enq=n=>EN.q[n]||null;
+const rjq=n=>RJ.q[n]||null;
+
 /* ---------------- derived ---------------- */
 const SECT=[
   {id:'moji', jp:'文字・語彙', en:'Vocabulary', m:[1,2,3,4]},
@@ -3107,7 +3671,7 @@ const TOTALQ=QS.length, LIMIT=110*60*1000;
 
 /* ---------------- state ---------------- */
 const EKEY='n1kanji.exam.v1';
-function blank(){return {ans:{},flag:{},page:0,timed:true,startedAt:0,submittedAt:0,spent:0,attempts:0,best:null};}
+function blank(){return {ans:{},flag:{},page:0,timed:true,startedAt:0,submittedAt:0,spent:0,attempts:0,best:null,en:false,rj:false,hist:[]};}
 function loadE(){
   try{
     const o=JSON.parse(localStorage.getItem(EKEY)||'null');
@@ -3119,7 +3683,10 @@ function loadE(){
     s.timed=o.timed!==false;
     s.startedAt=+o.startedAt||0; s.submittedAt=+o.submittedAt||0; s.spent=+o.spent||0;
     s.attempts=+o.attempts||0;
+    s.en=o.en===true;
+    s.rj=o.rj===true;
     if(o.best&&typeof o.best==='object')s.best=o.best;
+    if(Array.isArray(o.hist))s.hist=o.hist.filter(h=>h&&typeof h==='object'&&isFinite(+h.total)).slice(-12);
     return s;
   }catch(e){return blank();}
 }
@@ -3160,6 +3727,8 @@ root.innerHTML=`
     <span class="exwhere" id="exWhere"></span>
     <span class="excount" id="exCount"></span>
     <span class="exclock" id="exClock"></span>
+    <button class="exsheetbtn" id="exRjBtn" aria-pressed="false">ローマ字</button>
+    <button class="exsheetbtn" id="exEnBtn" aria-pressed="false">英訳 EN</button>
     <button class="exsheetbtn" id="exSheetBtn" aria-expanded="false">Answer sheet</button>
     <button class="exsubmit" id="exSubmit">答案を提出　Submit</button>
   </div>
@@ -3201,7 +3770,17 @@ function renderIntro(){
                :`<button class="exgo" id="exBegin">${done?'Sit the exam again':'Start the exam'}</button>`}
       ${done?`<button id="exSeeResult">Show the marked paper</button>`:''}
     </div>
-    ${E.attempts?`<p class="exnote">Attempts so far: ${E.attempts}${E.best?`. Best: ${E.best.total}/${TOTALQ}.`:''}</p>`:''}
+    ${(E.hist&&E.hist.length)?`<div class="exhist">
+      <p class="exhistt">これまでの結果　Past attempts${E.best?` · best ${E.best.total}/${TOTALQ}`:''}</p>
+      <ol>${E.hist.slice().reverse().map(h=>{
+        const d=new Date(h.when);
+        return `<li><span>${isFinite(d.getTime())?d.toLocaleDateString():'—'}</span><b>${h.total}/${h.of||TOTALQ}</b><i>${h.spent?clock(h.spent):''}</i></li>`;
+      }).join('')}</ol></div>`:''}
+    <p class="exnote">Two switches in the exam toolbar, both off to begin with so the paper reads as
+    it would on the day. <b>英訳 EN</b> sets an English rendering under every passage paragraph,
+    question and choice. <b>ローマ字</b> adds the reading of every question and choice. The reading
+    passages themselves are not romanised — several hundred characters of romaji is harder to read
+    than the Japanese.</p>
     <p class="exnote">Answers and explanations were worked out from the questions themselves — the
     workbook PDF carries no answer key — so treat a disputed item as worth checking.</p>
   </div>`;
@@ -3239,7 +3818,7 @@ function setStage(s){
 /* ---------------- question rendering ---------------- */
 function passageHTML(key){
   const p=P[key]; if(!p)return '';
-  return `<div class="expassage">
+  return `<div class="expassage" data-en="${key}">
     ${p.title?`<h4 class="ptitle">${p.title}</h4>`:''}
     ${p.html}
     ${p.src?`<p class="psrc">${p.src}</p>`:''}
@@ -3247,26 +3826,46 @@ function passageHTML(key){
   </div>`;
 }
 
+function paintEN(scope){
+  scope.querySelectorAll('.expassage[data-en]').forEach(box=>{
+    box.querySelectorAll(':scope .engloss').forEach(n=>n.remove());
+    if(!E.en)return;
+    const t=EN.p[box.dataset.en]; if(!t)return;
+    let i=0;
+    box.querySelectorAll('p,dd').forEach(n=>{
+      if(n.tagName==='P'&&(n.classList.contains('psrc')||n.classList.contains('ablabel')))return;
+      const line=t[i++]; if(!line)return;
+      const e=document.createElement('div'); e.className='engloss'; e.textContent=line;
+      if(n.tagName==='DD')n.appendChild(e); else n.after(e);
+    });
+  });
+}
+
 function qHTML(q,mode){
   const picked=E.ans[q.n]|0, right=q.a, rev=mode==='review';
+  const en=enq(q.n), showEn=E.en&&en;
+  const rj=rjq(q.n), showRj=E.rj&&rj;
   const choices=q.c.map((c,i)=>{
     const v=i+1; let cls='exchoice';
     if(rev){ if(v===right)cls+=' correct'; if(v===picked&&v!==right)cls+=' wrong'; }
     else if(v===picked)cls+=' picked';
     const mark=rev?(v===right?'✓':(v===picked?'✗':'')):'';
+    let gloss=(showRj&&rj.c&&rj.c[i])?`<span class="enc rjc">${esc(rj.c[i])}</span>`:'';
+    if(showEn&&en.c&&en.c[i])gloss+=`<span class="enc">${esc(en.c[i])}</span>`;
+    if(rev&&en&&en.cn&&en.cn[i])gloss+=`<span class="enc encn">${esc(en.cn[i])}</span>`;
     return `<button class="${cls}" data-q="${q.n}" data-v="${v}" ${rev?'disabled':''}>
-      <span class="num">${v}</span><span class="txt">${c}</span><span class="mk">${mark}</span></button>`;
+      <span class="num">${v}</span><span class="txt">${c}${gloss}</span><span class="mk">${mark}</span></button>`;
   }).join('');
   const verdict=rev?(picked===right?'<span class="exok">正解 Correct</span>'
       :picked?`<span class="exno">不正解 — you chose ${picked}, answer is ${right}</span>`
              :`<span class="exno">未解答 — answer is ${right}</span>`):'';
   return `<div class="exq ${rev&&picked!==right?'ismiss':''}" id="q${q.n}" data-no="${q.n}">
     <div class="exqhead"><span class="exno-badge">${q.n}</span>
-      <div class="exstem">${q.q}</div>
+      <div class="exstem">${q.q}${showRj?`<div class="engloss rjgloss">${esc(rj.s)}</div>`:''}${showEn?`<div class="engloss">${esc(en.s)}</div>`:''}</div>
       ${rev?'':`<button class="exflag ${E.flag[q.n]?'on':''}" data-flag="${q.n}" title="Mark to come back to">★</button>`}
     </div>
     <div class="exchoices">${choices}</div>
-    ${rev?`<div class="exwhy">${verdict}<p>${q.w}</p></div>`:''}
+    ${rev?`<div class="exwhy">${verdict}<p>${q.w}</p>${(en&&en.v)?`<p class="exvocab"><b>語彙</b> ${esc(en.v)}</p>`:''}</div>`:''}
   </div>`;
 }
 
@@ -3293,7 +3892,8 @@ function renderBlock(){
   el('exNext').classList.toggle('isdone',last);
   el('exNext').textContent=last?'答案を提出　Submit':'次へ Next →';
   el('exSub2').hidden=last;
-  wire(exBody);
+  syncEnBtn();
+  wire(exBody); paintEN(exBody);
   if(!exSheet.hidden)renderSheet();
 }
 
@@ -3328,6 +3928,32 @@ function renderSheet(){
     const t=el('q'+q.n); if(t)t.scrollIntoView({block:'center'});
   });
 }
+function syncEnBtn(){
+  const b=el('exEnBtn');
+  b.classList.toggle('on',E.en);
+  b.setAttribute('aria-pressed',String(E.en));
+  b.textContent=E.en?'英訳 EN ON':'英訳 EN';
+  const r=el('exRjBtn');
+  r.classList.toggle('on',E.rj);
+  r.setAttribute('aria-pressed',String(E.rj));
+  r.textContent=E.rj?'ローマ字 ON':'ローマ字';
+}
+function setRj(on){
+  E.rj=!!on; saveE(); syncEnBtn();
+  if(stage==='run')renderBlock();
+  if(stage==='result'&&typeof repaintReview==='function')repaintReview();
+}
+function setEn(on){
+  E.en=!!on; saveE(); syncEnBtn();
+  if(stage==='run')renderBlock();
+  if(stage==='result'){
+    if(typeof repaintReview==='function')repaintReview();
+    const c=el('exEn2'); if(c)c.checked=E.en;
+    const c2=el('exRj2'); if(c2)c2.checked=E.rj;
+  }
+}
+el('exEnBtn').onclick=()=>setEn(!E.en);
+el('exRjBtn').onclick=()=>setRj(!E.rj);
 el('exSheetBtn').onclick=()=>{
   const open=exSheet.hidden;
   exSheet.hidden=!open; el('exSheetBtn').setAttribute('aria-expanded',String(open));
@@ -3363,6 +3989,7 @@ async function submit(auto){
   const s=score();
   const rec={total:s.total,of:s.of,when:E.submittedAt,spent:E.spent};
   if(!E.best||s.total>E.best.total)E.best=rec;
+  E.hist=(E.hist||[]).concat([rec]).slice(-12);
   saveE();
   setStage('result');
 }
@@ -3393,6 +4020,7 @@ document.addEventListener('visibilitychange',()=>{
 });
 
 /* ---------------- result ---------------- */
+let repaintReview=null;
 function renderResult(){
   clearInterval(timer);
   const s=score(), pct=Math.round(s.total/s.of*100);
@@ -3414,6 +4042,8 @@ function renderResult(){
     <div class="exactions">
       <button class="exgo" id="exRetry">Sit it again</button>
       <label class="exonly"><input type="checkbox" id="exOnlyWrong" ${s.wrong.length?'checked':''}> Show only what I got wrong</label>
+      <label class="exonly"><input type="checkbox" id="exRj2" ${E.rj?'checked':''}> ローマ字 Romaji</label>
+      <label class="exonly"><input type="checkbox" id="exEn2" ${E.en?'checked':''}> 英訳 English alongside</label>
     </div>
   </div>
   <div id="exReview"></div>`;
@@ -3425,8 +4055,13 @@ function renderResult(){
       if(!qs.length)return '';
       return `<section class="exblock">${blockHTML({...b,qs,range:[b.qs[0].n,b.qs[b.qs.length-1].n]},'review')}</section>`;
     }).join('')||`<p class="exempty">Every question correct. Nothing to review.</p>`;
+    paintEN(el('exReview'));
   };
-  only.onchange=paint; paint();
+  repaintReview=paint;
+  only.onchange=paint;
+  el('exEn2').onchange=e=>setEn(e.target.checked);
+  el('exRj2').onchange=e=>setRj(e.target.checked);
+  paint();
   el('exRetry').onclick=async()=>{
     const go=await uiConfirm({kick:'確認',title:'Sit the whole exam again?',
       body:`This clears all 69 answers and starts a fresh attempt. Your best score (${E.best?E.best.total:0}/${TOTALQ}) is kept.`,

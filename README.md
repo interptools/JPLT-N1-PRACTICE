@@ -61,7 +61,16 @@ After that, everything runs with no signal: practice, tracing, search and review
   across 問題1–13 (文字・語彙 25, 文法 20, 読解 24), with the reading passages included, an
   optional 110-minute clock, an answer sheet you can jump around in, and a **Submit** button.
   Marking comes straight back: score overall and per section, then every question again with
-  your choice, the right answer and a note on why it is right. There is no listening section.
+  your choice, the right answer and a note on why it is right. Past attempts are listed on the
+  exam's opening card. There is no listening section.
+- **ローマ字 and 英訳 EN** — two switches in the exam toolbar (and on the results card), both off
+  to begin with so the paper reads as it would on the day. **ローマ字** puts the reading under
+  every question stem and every choice; **英訳 EN** puts an English rendering under those and
+  under each paragraph of the reading passages as well. With both on the order is Japanese,
+  romaji, English. The passages are not romanised — several hundred characters of romaji is
+  harder to read than the Japanese. Marked answers also carry a 語彙 line with the vocabulary
+  worth keeping, and 問題4 and 問題6 get their word notes and assembled sentence there, kept out
+  of sight while the paper is still being sat.
 - **Progress** — mastery per set of 100, offline downloads, and progress export/import.
 
 Keyboard, on a desktop: `←` `→` move · `R` replay · `T` trace · `S` star ·
