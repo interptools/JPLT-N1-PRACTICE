@@ -272,6 +272,141 @@ button{touch-action:manipulation}
 }
 @media(max-width:400px){ .list{grid-template-columns:1fr} }
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ---------- exam (模擬試験) ---------- */
+#v-exam{max-width:760px}
+.excard{background:var(--cell);border:1px solid var(--rule);border-top:3px solid var(--ai);padding:22px 20px;border-radius:2px}
+.exkicker{font-family:var(--mincho);font-size:.82rem;color:var(--shu);letter-spacing:.18em;margin:0}
+.excard h2{font-family:var(--mincho);font-size:1.5rem;font-weight:600;margin:.25em 0 .5em;line-height:1.35}
+.exlead{color:var(--ink2);font-size:.9rem;max-width:56ch;margin:0 0 4px}
+.exfacts{display:grid;grid-template-columns:8em 1fr;gap:0;margin:18px 0 0;border-top:1px solid var(--rule-soft)}
+.exfacts dt{font-family:var(--mincho);font-size:.92rem;padding:7px 0;border-bottom:1px solid var(--rule-soft)}
+.exfacts dd{margin:0;padding:7px 0;color:var(--ink2);font-size:.86rem;border-bottom:1px solid var(--rule-soft)}
+.extimed{display:flex;gap:9px;align-items:flex-start;margin:18px 0 0;font-size:.84rem;color:var(--ink2)}
+.extimed input{margin-top:.35em}
+.exactions{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:20px}
+.exactions button{background:var(--cell);border:1px solid var(--rule);border-radius:2px;padding:10px 16px;font-size:.86rem;color:var(--ink2)}
+.exactions button:hover{border-color:var(--ai);color:var(--ai)}
+.exactions .exgo{border-color:var(--ai);background:var(--ai);color:#F5F4EF;font-weight:500}
+body.night .exactions .exgo{color:#171A1E}
+.exnote{color:var(--ink3);font-size:.78rem;margin:14px 0 0;max-width:60ch}
+.exonly{font-size:.8rem;color:var(--ink2);display:flex;gap:7px;align-items:center;margin-left:auto}
+
+/* toolbar */
+.exbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding-bottom:10px;border-bottom:1px solid var(--rule)}
+.exwhere{font-family:var(--mincho);font-size:.95rem}
+.excount{color:var(--ink3);font-size:.78rem}
+.exclock{font-family:var(--mincho);font-size:.9rem;color:var(--ink2);margin-left:auto}
+.exclock.low{color:var(--shu)}
+.exsheetbtn,.exsubmit{background:var(--cell);border:1px solid var(--rule);border-radius:2px;padding:6px 11px;font-size:.78rem;color:var(--ink2)}
+.exsheetbtn:hover{border-color:var(--ai);color:var(--ai)}
+.exsubmit{border-color:var(--shu);color:var(--shu);font-weight:500}
+.exsubmit:hover{background:var(--shu);color:#F5F4EF}
+
+/* answer sheet */
+.exsheet{border-bottom:1px solid var(--rule);padding:14px 0}
+.sheetgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(46px,1fr));gap:4px}
+.cellq{background:var(--cell);border:1px solid var(--rule-soft);border-radius:2px;padding:4px 2px;display:flex;flex-direction:column;align-items:center;line-height:1.2}
+.cellq b{font-size:.62rem;color:var(--ink3);font-weight:400}
+.cellq i{font-family:var(--mincho);font-style:normal;font-size:.95rem;color:var(--ink3)}
+.cellq.has{border-color:var(--ai2)}
+.cellq.has i{color:var(--ai)}
+.cellq.flg{border-left:3px solid var(--kin)}
+
+/* question heads */
+.exhead{margin:22px 0 16px}
+.exmondai{font-family:var(--mincho);font-size:1.14rem;font-weight:600;margin:0}
+.exmondai span{font-family:var(--sans);font-size:.74rem;color:var(--ink3);font-weight:400;margin-left:8px}
+.exinstr{font-size:.86rem;color:var(--ink2);margin:6px 0 0}
+.exhint{font-size:.8rem;color:var(--ink3);margin:8px 0 0;border-left:2px solid var(--rule);padding-left:10px}
+
+/* passages */
+.expassage{background:var(--cell);border:1px solid var(--rule);padding:18px 18px 14px;border-radius:2px;margin-bottom:20px}
+.expassage p{font-family:var(--mincho);font-size:1rem;line-height:1.95;margin:0 0 1em;text-align:justify}
+.expassage p:last-child{margin-bottom:0}
+.expassage .ptitle{font-family:var(--mincho);font-size:1.05rem;text-align:center;margin:0 0 1em;font-weight:600}
+.expassage .ablabel{font-family:var(--sans);font-weight:700;font-size:.9rem;margin:0 0 .4em;color:var(--ai)}
+.expassage sup{font-size:.62rem;color:var(--shu);vertical-align:super}
+.expassage u{text-decoration:none;border-bottom:1px solid var(--shu)}
+.psrc{font-family:var(--sans)!important;font-size:.74rem!important;color:var(--ink3);text-align:right;line-height:1.6!important}
+.pnotes{list-style:none;margin:12px 0 0;padding:10px 0 0;border-top:1px solid var(--rule-soft);font-size:.78rem;color:var(--ink2)}
+.pnotes li{margin-bottom:3px}
+.blk{display:inline-block;min-width:2.2em;text-align:center;border:1px solid var(--ink2);border-radius:2px;font-family:var(--sans);font-size:.76rem;font-weight:500;padding:0 4px;margin:0 2px;vertical-align:middle;background:var(--paper)}
+.flyer{display:grid;grid-template-columns:7em 1fr;gap:0;margin:0;font-family:var(--mincho)}
+.flyer dt{font-weight:600;padding:8px 0;border-bottom:1px solid var(--rule-soft);font-size:.92rem}
+.flyer dd{margin:0;padding:8px 0;border-bottom:1px solid var(--rule-soft);font-size:.92rem;line-height:1.8}
+.exdetails{border:1px solid var(--rule-soft);border-radius:2px;margin-bottom:18px;background:var(--cell)}
+.exdetails summary{padding:9px 12px;font-size:.82rem;color:var(--ai);cursor:pointer}
+.exdetails .expassage{border:0;margin:0;background:transparent}
+
+/* questions */
+.exq{padding:16px 0;border-top:1px solid var(--rule-soft)}
+.exq.ismiss{border-left:3px solid var(--shu);padding-left:12px}
+.exqhead{display:flex;gap:10px;align-items:flex-start}
+.exno-badge{flex:0 0 auto;font-size:.74rem;border:1px solid var(--ink2);padding:1px 7px;border-radius:2px;color:var(--ink2);margin-top:.2em}
+.exstem{flex:1;font-family:var(--mincho);font-size:1.02rem;line-height:1.85}
+.exstem u{text-decoration:none;border-bottom:1.5px solid var(--ink)}
+.exflag{background:none;border:0;color:var(--rule);font-size:1.1rem;line-height:1;padding:2px 4px}
+.exflag.on{color:var(--kin)}
+.exchoices{display:grid;gap:5px;margin:12px 0 0}
+.exchoice{display:grid;grid-template-columns:2em 1fr 1.4em;gap:8px;align-items:baseline;text-align:left;
+  background:var(--cell);border:1px solid var(--rule-soft);border-radius:2px;padding:9px 11px;font-size:.94rem}
+.exchoice .num{font-size:.78rem;color:var(--ink3)}
+.exchoice .txt{font-family:var(--mincho);line-height:1.7}
+.exchoice .mk{font-size:.9rem;text-align:right}
+.exchoice:hover:not(:disabled){border-color:var(--ai)}
+.exchoice.picked{border-color:var(--ai);background:var(--ai-wash)}
+.exchoice.picked .num{color:var(--ai)}
+.exchoice.correct{border-color:var(--moss);border-left:3px solid var(--moss)}
+.exchoice.correct .mk{color:var(--moss)}
+.exchoice.wrong{border-color:var(--shu);border-left:3px solid var(--shu)}
+.exchoice.wrong .mk{color:var(--shu)}
+.exchoice:disabled{opacity:1;cursor:default}
+.exwhy{margin:11px 0 0;padding:10px 12px;background:var(--cell);border:1px solid var(--rule-soft);border-radius:2px}
+.exwhy p{margin:5px 0 0;font-size:.84rem;color:var(--ink2)}
+.exok{font-size:.76rem;color:var(--moss)}
+.exno{font-size:.76rem;color:var(--shu)}
+
+.expager{display:flex;gap:8px;margin-top:28px;padding-top:16px;border-top:1px solid var(--rule)}
+.expager button{flex:1;background:var(--cell);border:1px solid var(--rule);border-radius:2px;padding:12px 10px;font-size:.86rem;color:var(--ink2)}
+.expager button:hover:not(:disabled){border-color:var(--ai);color:var(--ai)}
+.expager button:disabled{color:var(--ink3);opacity:.5}
+
+/* result */
+.exscore .exbig{font-family:var(--mincho);font-size:3.4rem;line-height:1;margin:.1em 0 .2em}
+.exscore .exbig span{font-size:1.1rem;color:var(--ink3);margin-left:8px}
+.exsects{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-top:18px}
+.exsect{border:1px solid var(--rule-soft);padding:11px 12px;border-radius:2px}
+.exsect .jp{font-family:var(--mincho);font-size:.9rem;margin:0}
+.exsect .v{font-family:var(--mincho);font-size:1.5rem;margin:2px 0 6px}
+.exsect .v span{font-size:.78rem;color:var(--ink3)}
+.exsect .bar{display:block;height:6px;background:var(--ai-wash);overflow:hidden}
+.exsect .bar i{display:block;height:100%;background:var(--ai2)}
+.exblock{margin-top:30px}
+.exempty{color:var(--ink2);padding:30px 0}
+
+@media(max-width:760px){
+  .excard{padding:16px 14px}
+  .excard h2{font-size:1.24rem}
+  .exfacts{grid-template-columns:6.5em 1fr}
+  .exbar{gap:8px}
+  .exwhere{flex:1 1 100%}
+  .exclock{margin-left:0}
+  .exsubmit{flex:1 1 100%;padding:11px}
+  .expassage{padding:14px 13px}
+  .expassage p{font-size:.98rem;line-height:1.9}
+  .exstem{font-size:.98rem}
+  .exchoice{grid-template-columns:1.6em 1fr 1.2em;padding:11px 9px;font-size:.92rem}
+  .flyer{grid-template-columns:5.5em 1fr}
+  .flyer dt,.flyer dd{font-size:.86rem}
+  .exscore .exbig{font-size:2.8rem}
+  .sheetgrid{grid-template-columns:repeat(auto-fill,minmax(40px,1fr))}
+  .exonly{margin-left:0;flex:1 1 100%}
+}
+.expager button.isdone{border-color:var(--shu);color:var(--shu);font-weight:500}
+.expager button.isdone:hover{background:var(--shu);color:#F5F4EF}
+.expager .issub{flex:0 0 auto;border-color:var(--shu);color:var(--shu)}
+.expager .issub:hover{background:var(--shu);color:#F5F4EF}
 </style>
 </head>
 <body>
@@ -289,6 +424,7 @@ button{touch-action:manipulation}
     <button role="tab" data-view="browse" aria-selected="false"><span class="jp">一覧</span>Browse</button>
     <button role="tab" data-view="review" aria-selected="false"><span class="jp">復習</span>Review</button>
     <button role="tab" data-view="progress" aria-selected="false"><span class="jp">記録</span>Progress</button>
+    <button role="tab" data-view="exam" aria-selected="false"><span class="jp">試験</span>Exam</button>
   </nav>
 </header>
 
@@ -443,6 +579,9 @@ button{touch-action:manipulation}
   </div>
   <p class="note" id="storeNote"></p>
 </section>
+
+<!-- EXAM -->
+<section class="view" id="v-exam"></section>
 
 </main>
 
@@ -2533,6 +2672,648 @@ fillSetSelects();
 filter();
 renderPractice();
 if(wantView&&views[wantView])show(wantView);
+</script>
+<script>
+/* ============================================================
+   模擬試験 — JLPT N1 practice test (言語知識・読解), 69 questions.
+   Text transcribed from the official practice workbook.
+   The workbook PDF carries no answer key, so answers and the
+   explanations below were worked out from the questions.
+   ============================================================ */
+(function(){
+
+const P = {  /* reading passages, keyed so several blocks can share one */
+
+m7: {
+  title:'広告主の品位',
+  html:`<p>きょうはCMの中身ではなく、CMの出し方について、広告主の人たちにお願いをしたい。</p>
+<p>番組の途中にCMが<b class="blk">41</b>。が、モンダイはその入り方のタイミングだ。たとえば、歌やものまねのうまさを競い合う番組の中で、いざ、審査員の点数が出ようとするその直前に、ポンとCMが割って入る。あるいは、クイズ番組の中で正解が発表されようとするその瞬間に、サッと画面がCMに入れ替わる。ああいうせこい<sup>(注1)</sup>ことは<b class="blk">42</b>。</p>
+<p>あれは広告主がやっているわけでなく、番組を作っているテレビ局の人の考えでやっているんだろう。が、それだったら、そういういやらしいCMの入れ方はしないでほしいと、テレビ局の人に注文をつけてもらいたい。</p>
+<p><b class="blk">43-a</b>、みんながテレビの前で身を乗り出している瞬間にCMを入れれば、見られる<b class="blk">43-b</b>。が、わざわざ番組の流れを断ち切り、視聴者の感興をそいで<sup>(注2)</sup>まで強引にCMを見せようとするやり方って、さもしくないだろうか。みっともなくないだろうか。</p>
+<p>CMのセンスは、企業のセンスのあらわれである。それはCMの中身だけでなく、CMの出し方にも言えることだ。せっかくいいCMを作っても、ああいう出し方をされると、なんと視聴者をバカにした企業だろうと思われてしまう。いやおうなしに<b class="blk">44</b>ああいうやり方は、極端に言えば暴力みたいなものであって、消費者を大切に思う企業のやることじゃない。</p>
+<p>近ごろハヤリの言葉で言えば、これは企業の「品位」にかかわるモンダイである。<b class="blk">45-a</b>だけじゃない、<b class="blk">45-b</b>だいぶ前から、「品がねえぞ」と怒ってるよ。</p>`,
+  src:'（天野祐吉　朝日新聞2008年4月15日付朝刊による）',
+  notes:['(注1) せこい：ずるい','(注2) 感興をそぐ：何かについて持っている興味をなくさせる']
+},
+
+m8a: {
+  html:`<p>食器のバラエティこそ、日本のやきもの<sup>(注)</sup>の特色の一つだと思います。そして、日本人のやきものに対する思いとか愛着は、食器のみならず、種類の豊富さにあらわれているといってもいいでしょう。</p>
+<p>私たちは食事のたびに、もちろん料理も食べていますが、知らずに目で食器も食べているのです。だから興味・関心がないというのは、不注意なだけなのです。すでに下地はできているのですから、あと一歩踏みこめば、やきものに興味・関心がグッと深まるはずなのだと思います。</p>`,
+  src:'（江口滉『やきものの世界』岩波書店による）',
+  notes:['(注) やきもの：陶芸品']
+},
+
+m8b: {
+  html:`<p>おとなは子どもに「嘘つきは泥棒のはじまり」として正直であることを強要しますが、弱者は苦しい嘘をついてでも自らの尊厳を守ろうとします。論理的に正しいことを理性と呼ぶとすれば、理性的にあることができるのは強者だからです。強者はそれゆえに理性的に弱者の過ちを責めようとしますが、弱者の立場からいえば、それは何の意味も持たないことが多いのです。弱者のする謝罪とは、劣勢を一時的に解消する手続きや儀式にすぎないのです。</p>`,
+  src:'（吉田脩二『ヒトとサルのあいだ ― 精神はいつ生まれたのか』文藝春秋による）',
+  notes:[]
+},
+
+m8c: {
+  html:`<p>思春期を迎えた最近の子どもがストレスに弱いのは、それまでの発達過程で適度にストレスにさらされる経験を十分にへてこなかったことが深く関係している。しかもそれは、彼らが社会化を十分に遂げてこなかったことと等しい。というのも、10代前半までの子どもは、それまでの生活圏を出てより広い社会的文脈のなかでいかにして自己を実現させるかという課題に取り組むなかで、もっとも強くストレスを味わうからにほかならない。</p>`,
+  src:'（正高信男『父親力』中央公論新社による）',
+  notes:[]
+},
+
+m9a: {
+  html:`<p>以前、花見をしている時に「桜の花は本当にきれいな正五角形<sup>(注1)</sup>だね」と言ったら、風情のない人だと笑われたことがあった。確かに、桜の花びらには微妙な色合いや形、そして香りに加えて、散りゆく美しさがある。花を愛でる和歌や俳句は数限りないが、そのなかに「正五角形」という言葉が使われたことはおそらく一度もないであろう。科学者特有の美意識は、風流とはかなり異質なものなのだと悟った。</p>
+<p>科学において本質以外を切り捨てるためには、大胆な抽象化と理想化が必要である。桜の花びらのたくさんの特徴の中から、「正五角形」という形だけを取り出すこと。これが抽象化である。実際に数学的な意味で完全な正五角形を示す花びらは少ないだろうが、そこにはあまりこだわらない。これが<u>理想化</u>である。</p>
+<p>自然界で正五角形のような対称性を示すためには、必ず規則的な法則があるはずである。花の場合、品種によって花弁<sup>(注2)</sup>の回転対称性が遺伝子で決定されていることは間違いないから、うまくこの遺伝子を突きとめられれば、花の形を決める普遍的な法則が見つかるに違いない。このように、抽象化と理想化によって自然現象は単純に整理でき、普遍的な法則を見つける助けになる。</p>`,
+  src:'（酒井邦嘉『科学者という仕事』中央公論新社による）',
+  notes:['(注1) 正五角形：五つの辺の長さが等しい五角形','(注2) 花弁：花びら']
+},
+
+m9b: {
+  html:`<p>住居を買おうとするときは、その資産的な価値に重点を置いて考える人が多い。普通の人にとっては、一生に一度の買い物とでもいうべきもので、多額の金を費やさなくてはならないので、当然のことだ。買った後で、何らかの事情で売らなくてはならない羽目になったときに、価値が減少していたのでは、大損害を被る。</p>
+<p>だが、住居にとってより重要なのは、その有用性<sup>(注1)</sup>である。住みやすさが必要なのはもちろんだが、自分のライフスタイルに合った構造になっているとか、生活のしやすい環境にあって利便性<sup>(注2)</sup>に富んでいるとかの点も、重要な要素である。それらは必ずしも<u>世間一般の価値基準</u>とは一致しない。したがって、自分たちの考え方や行動様式に従い、それに照らし合わせて判断する必要がある。</p>
+<p>特に、終の住処<sup>(注3)</sup>として考えるときには、自分たちの生き方をはっきりと見極め、その視点に立ったうえで、選択し決めていかなくてはならない。年を取ってくれば、当然のことながら、行動する能力は衰えてきて、動き回る範囲は狭まってくる。</p>
+<p>自分たちの余生がどのようなものになるかについて、計画を立てたうえに想像力を働かせて、確実性の高い予測を組み立ててみる。その未来図に従って、住むべき場所の見当をつけ、住居の大きさや構造などを決めていく。もちろん、将来の経済状勢の大きな変化に備えて、予算を大きく下回る出費に抑えておくことも必要であることは、いうまでもない。</p>`,
+  src:'（山﨑武也『シニアこそ都会に住もう ― 田舎暮らしは不安がいっぱい』PHP研究所による）',
+  notes:['(注1) 有用性：役に立つこと','(注2) 利便性：便利さ','(注3) 終の住処：人生を終えるまで住む家']
+},
+
+m9c: {
+  html:`<p>人間は、所詮、時代の子であり、環境の子である。わたしたちの認識は、自分の生きてきた時代や環境に大きく左右される。ある意味、閉じ込められているといってもいい。認識できる「世界」はきわめて限定的なのであり、時代や環境の制約によって、認識の鋳型<sup>(注1)</sup>ができてしまうから、場合によっては、大きく歪められた「世界」像しか見えなくなることもある。わたしたちは、<u>①そういう宿命</u>を背負っているのである。</p>
+<p>だから、「世界を知る」といいつつ、実は、偏狭な認識の鋳型で「世界」をくり貫いて<sup>(注2)</sup>いるだけということが生じたりする。鋳型が同じであるかぎり、断片的な情報をいくら集めたところで、「世界」の認識は何も変わらない。固まった世界認識をもつことは、「世界」が大きく変化する状況では非常に危険なことである。</p>
+<p>一方で、これほど情報環境が発達したにもかかわらず、<u>②「世界を知る」ことがますます困難になった</u>と感じている人も増加している。果てしなく茫漠<sup>(注3)</sup>と広がり、しかも絶えず激動する「世界」が、手持ちの世界認識ではさっぱり見えなくなってきているからだ。たしかに、ただ漫然とメディアの情報を眺めているだけでは激流に呑み込まれてしまう。</p>
+<p>いまこそ、時代や環境の制約を乗り越えて、「世界を知る力」を高めることが痛切に求められているのではないか。</p>
+<p>もちろん、時代や環境の制約から完全に自由になることはない。しかし、凝り固まった認識の鋳型をほぐし、世界認識をできるだけ柔らかく広げ、自分たちが背負っているものの見方や考え方の限界がどこにあるのか、しっかりとらえ直すことはできるはずだ。</p>`,
+  src:'（寺島実郎『世界を知る力』PHP研究所による）',
+  notes:['(注1) 鋳型：ここでは、画一化した型','(注2) くり貫いて：ここでは、切り取って','(注3) 茫漠：広がりがあり過ぎて、はっきりしない様子']
+},
+
+m10: {
+  html:`<p>我が身が生涯に望み、知りうることは、世界中を旅行しようと、何をしようと、小さい。あきれるくらい小さいのだが、この小ささに耐えていかなければ、学問はただの大風呂敷<sup>(注1)</sup>になる。言葉の風呂敷はいくらでも広げられるから、そうやっているうちに自分は世界的に考えている、そのなかに世界のすべてを包める、<u>①そんな錯覚に捕らえられる</u>。木でいい家を建てる大工とか、米や野菜を立派に育てる農夫とかは、そういうことにはならない。世界的に木を削ったり、世界標準の稲を育てたりはできないから、彼らはみな、自分の仕事において賢明である。我が身ひとつの能力でできることを知り抜いている。学問をすること、書物に学ぶことは、ほんとうは<u>②これ</u>と少しも変わりはない。なぜなら、そうしたことはみな、我が身ひとつが天地の間でしっかりと生きることだからだ。</p>
+<p>人は世界的にものを考えることなどはできない。それは錯覚であり、空想であり、愚かな思い上がりである。ただし、天地に向かって我が身を開いていることならできる。我が身ひとつでものを考え、ものを作っているほどの人間なら、それがどういう意味合いのことかは、もちろん知っている。人は誰でも自分の気質を背負って生まれる。学問する人にとって、この気質は、農夫に与えられる土壌のようなものである。土壌は天地に開かれていなければ、ひからびて<sup>(注2)</sup>不毛になる。</p>
+<p>与えられたこの土を耕し、水を引き、苗を植える。苗がみずから育つのを、毎日助ける。苗とともに、自分のなかで何かが育つのを感じながら。学問や思想もまた、人の気質に植えられた苗のように育つしかないのではないか。子供は、勉強して自分の気質という土を耕し、水を引き、もらった苗を、書物の言葉を植えるのである。それは、子供自身が何とかやってみるほかはなく、そうやってこそ、子供は学ばれる書物とともに育つことができる。子供が勉強をするのは、自分の気質という土壌から、やがて実る精神の作物を育てるためである。「教養」とは、元来この作物を指して言うのであって、物識り<sup>(注3)</sup>たちの大風呂敷を指して言うのではない。</p>`,
+  src:'（前田英樹『独学の精神』筑摩書房による）',
+  notes:['(注1) 大風呂敷：実際より大きく見せたり言ったりすること','(注2) ひからびて：乾ききって','(注3) 物識り：物事をよく知っている人']
+},
+
+m11: {
+  html:`<p class="ablabel">A</p>
+<p>乳幼児期の子どもは、身近な人とのかかわりあい、そして遊びなどの実体験を重ねることによって、人間関係を築き、心と身体を成長させます。ところが乳児期からのメディア<sup>(注1)</sup>漬けの生活では、外遊びの機会を奪い、人とのかかわり体験の不足を招きます。実際、運動不足、睡眠不足そしてコミュニケーション能力の低下などを生じさせ、その結果、心身の発達の遅れや歪みが生じた事例が臨床<sup>(注2)</sup>の場から報告されています。このようなメディアの弊害は、ごく一部の影響を受けやすい個々の子どもの問題としてではなく、メディアが子ども全体に及ぼす影響の甚大さの警鐘と私たちはとらえています。特に象徴機能<sup>(注3)</sup>が未熟な2歳以下の子どもや、発達に問題のある子どものテレビ画面への早期接触や長時間化は、親子が顔をあわせ一緒に遊ぶ時間を奪い、言葉や心の発達を妨げます。</p>
+<p class="psrc">（社団法人日本小児科医会 2010年6月18日取得による）</p>
+<p class="ablabel">B</p>
+<p>専門家からは「テレビをやめて積極的に外遊びをしましょう」「自然の中で遊びましょう」という意見が聞かれますが、お母さんたちは進んでテレビを見せているのではなく、地域に出ても同世代の子どもがいない、昔と比べて自然がなくなった、という問題もあるのだと思います。（中略）</p>
+<p>多くの親は、テレビの長時間視聴がよくないことを自覚しており、見せる内容にも気を遣っています。生活の中からテレビを排除するだけではなく、一日に六時間も七時間も子どもにテレビを見せる親の背景に何があるのかを考えなければ、問題の根本的な解決にはならないのです。</p>
+<p>したがって、私たちの生活スタイルと、子どもにとって望ましいテレビ視聴のあり方のバランスをとりながら、これらの検証を進める必要があるのではないでしょうか。</p>`,
+  src:'（小西行郎『早期教育と脳』光文社新書による）',
+  notes:['(注1) メディア：ここでは、テレビやビデオ','(注2) 臨床の場：実際の診察、治療の現場','(注3) 象徴機能：ここでは、身の回りのものを、例えば言葉などで表す働き']
+},
+
+m12: {
+  html:`<p>最近、思想を表現する方法について考えることが多くなった。たとえば、文章は思想を表現する方法のひとつだけれど、その文章にもいろいろな表現形式がある。哲学の勉強をはじめた頃の私は、さまざまな形式のなかで論文という形式だけが、思想表現の方法にふさわしいと思っていた。</p>
+<p>しかし、後に、この考え方を訂正しなければならなくなった。思想の表現として、論文が唯一の方法だということは絶対にない。私たちは、すぐれたエッセーや小説、詩をとおして、しばしば思想を学びとる。とすれば、思想を表現する文章のかたちは、自在であってよいはずである。</p>
+<p>ところが、そう考えてもまだ問題はある。というのは、思想の表現形式は、文章というかたちをとるとは限らないのだから。絵でも彫刻でも、音楽でも、つまり実にさまざまなものを用いて、思想を表現するのは可能なはずである。そのなかには、<u>かたちにならないもの</u>もある。</p>
+<p>たとえば私の村に暮らす人々のなかに、自然に対する深い思想をもっていない人など一人もいない。村の面積の96パーセントを森や川がしめるこの村で、自然に対する思想をもたなかったら、人は暮らしていけない。ところが村人は、＜自然について＞などという論文を書くことも、文章を書くこともないのである。そればかりか、自分の自然哲学を、絵や音楽で表現しようとも考えない。</p>
+<p>そんなふうにみていくと、村人は自然に対してだけではなく、農についての深い思想や、村とは何かという思想をももっているのに、それらを何らかのかたちで表現することも、またないのである。</p>
+<p>とすると、村人たちは、どんな方法で自分たちの思想を表現しているのであろうか。私は、それは、＜作法＞をとおしてではないかという気がする。</p>
+<p>（中略）</p>
+<p>考えてみれば、もともとは、作法は、思想と結びつきながら伝承されてきたものであった。たとえば昔は、食事の作法を厳しくしつけられた。食べ物を残すことはもちろんのこと、さわぎながら食事をすることも、けっしてしてはいけなかった。それは、食事は生命をいただくものだ、という厳かな思想があったからである。茶碗の中の米だけをみても、人間はおそらく何万という生命をいただかなければならない。だから、そういう人間のあり方を考えながら、いま自分の身体のなかへと移ってくれる生命に感謝する。この思想が食事の作法をつくりだした。</p>
+<p>ところが、近代から現代の思想は、このような、日々の暮らしとともにあった思想を無視したのである。その結果、思想は、文章という表現形式をもち、文章を書く思想家のものになった。そして、いつの間にか人間の上に君臨し、現実を支配する手段になっていった。</p>`,
+  src:'（内山節『「里」という思想』新潮社による）',
+  notes:[]
+},
+
+m13: {
+  title:'清森市　秋の美術コンクール　作品募集',
+  html:`<dl class="flyer">
+<dt>部門</dt><dd>絵画部門、写真部門</dd>
+<dt>募集期間</dt><dd>2010年11月1日〜11月30日</dd>
+<dt>審査員</dt><dd>山田太郎（日本アート協会会長）、山本花子（画家）、川上次郎（写真家）</dd>
+<dt>応募規定</dt><dd>1　清森市内の秋を題材にしたもの。<br>2　絵画部門に出品する作品は、イラスト、水彩画、油絵、どれでも可。写真部門に出品する写真は、フィルム写真、デジタル写真、どちらも可。<br>※応募作品は各部門1人1点に限ります。<br>※作品の制作年は問わないが、未発表のものに限ります。<br>　（他のコンクールに入賞していたり、出版物や展示会などで公表されたりしていないものであること。）</dd>
+<dt>応募方法</dt><dd>郵送、または持参。ただし、郵送中の事故について、市は責任を負いません。指定の応募用紙を作品裏側に添付のこと。応募用紙は市役所の窓口で、または市のホームページ（http://www.kiyomori-shi.jp）から入手可能。</dd>
+<dt>応募先</dt><dd>清森市商業観光課観光係（〒951-0022 清森市清森2-8、Tel 084-874-8524）</dd>
+<dt>賞</dt><dd>最優秀賞　各部門1点　賞状と副賞（デジタル一眼レフカメラ）<br>優秀賞　各部門2点　賞状と副賞（清森ホテルのペア宿泊券）<br>清森賞　各部門20点以内　賞状と副賞（図書カード5千円分）</dd>
+<dt>審査結果</dt><dd>清森市のホームページ上に1月15日に発表します。入賞者には1月中に結果を郵送します。電話および窓口での問い合わせには応じられません。</dd>
+<dt>表彰式</dt><dd>2011年2月下旬（予定）　最優秀賞と優秀賞の方には、表彰式で賞状および副賞をお渡しします。</dd>
+<dt>注意事項</dt><dd>※入賞作品は、1年を限度に主催者がお預かりして広報活動などに使用し、1年後にお返しします。<br>※上記の応募規定を守っていなかった場合には入賞が取り消されることがあります。</dd>
+</dl>
+<p class="psrc">〈主催〉清森市　〈協賛〉昭和デザイン株式会社、山手百貨店、新東京鉄道、清森ホテル</p>`,
+  src:'',
+  notes:[]
+}
+};
+
+/* Blocks: one screen each. m = 問題 number. */
+const BLOCKS = [
+{m:1, instr:'＿＿＿の言葉の読み方として最もよいものを、1・2・3・4から一つ選びなさい。', qs:[
+ {n:1, q:'去年より<u>利益</u>がわずかに増えた。', c:['りし','りそく','りえき','りじゅん'], a:3,
+  w:'利益 = りえき. 利子（りし）・利息（りそく）・利潤（りじゅん）are all real words, which is what makes this one work as a trap.'},
+ {n:2, q:'橋本選手の活躍で、なんとかピンチを<u>逃</u>れた。', c:['のがれた','はなれた','それた','まぬがれた'], a:1,
+  w:'逃れる = のがれる (get out of, escape). まぬがれる is 免れる, はなれる is 離れる, それる is 逸れる.'},
+ {n:3, q:'子どものおもちゃは、安全性を<u>考慮</u>して選ぶようにしている。', c:['こうろ','こうりょ','こうろう','こうりょう'], a:2,
+  w:'慮 is リョ with a short vowel: 考慮 = こうりょ. Compare 考慮 vs 交流（こうりゅう）in speech — the vowel length is the whole distinction.'},
+ {n:4, q:'この辺りは視界を<u>遮</u>る物が何もない。', c:['さまたげる','さえぎる','せばめる','へだてる'], a:2,
+  w:'遮る = さえぎる (block, cut off). さまたげる = 妨げる, せばめる = 狭める, へだてる = 隔てる.'},
+ {n:5, q:'この説は科学的な<u>根拠</u>に乏しい。', c:['こんしょ','こんじょ','こんきょ','こんぎょ'], a:3,
+  w:'拠 is キョ here: 根拠 = こんきょ. Same reading in 拠点（きょてん）, 占拠（せんきょ）.'},
+ {n:6, q:'何事も初めが<u>肝心</u>だ。', c:['たんしん','かんしん','たんじん','かんじん'], a:4,
+  w:'肝心 = かんじん (essential, crucial). Note the voiced ジン — 心 is read じん in this compound, not しん.'}
+]},
+
+{m:2, instr:'（　　）に入れるのに最もよいものを、1・2・3・4から一つ選びなさい。', qs:[
+ {n:7, q:'物置の隅で、ほこり（　　）になっている古い人形を見つけた。', c:['ぐるみ','がらみ','まみれ','ずくめ'], a:3,
+  w:'〜まみれ = covered/smeared with (ほこりまみれ, 血まみれ, 泥まみれ). ぐるみ = including all of (家族ぐるみ); がらみ = roughly (40がらみ); ずくめ = entirely in (黒ずくめ).'},
+ {n:8, q:'木村さんとは共通の趣味があるので、いつも会話が（　　）。', c:['舞う','弾む','転がる','跳ねる'], a:2,
+  w:'会話／話が弾む = the conversation flows and lifts. 弾む also goes with 心 and 声.'},
+ {n:9, q:'地域の（　　）に合った医療のシステムが求められている。', c:['実情','実況','実権','実在'], a:1,
+  w:'実情 = the actual state of things on the ground. 実況 = live coverage, 実権 = real power, 実在 = actual existence.'},
+ {n:10, q:'その選手は、十年に一人の（　　）だと言われている。', c:['玄人（くろうと）','大家（たいか）','巨匠（きょしょう）','逸材（いつざい）'], a:4,
+  w:'逸材 = outstanding talent, the natural partner of 十年に一人の. 玄人 = a pro rather than an amateur; 大家 and 巨匠 describe an established authority or master, not a young prodigy.'},
+ {n:11, q:'書類に（　　）があった場合、申請は受理されません。', c:['不穏','不当','不備','不順'], a:3,
+  w:'不備 = something missing or incomplete — standard officialese for paperwork. 不穏 = unsettled, 不当 = unjust, 不順 = irregular (天候不順).'},
+ {n:12, q:'約300年前の絵画の（　　）が終わり、来月から公開される予定だ。', c:['回復','修復','復旧','復興'], a:2,
+  w:'修復 = restoration of an artwork or building. 回復 = recovery (health, business), 復旧 = getting a service running again, 復興 = rebuilding after a disaster.'},
+ {n:13, q:'経済だけでなく、法律にも詳しいのが彼の（　　）だ。', c:['深み','強み','高み','重み'], a:2,
+  w:'強み = a strong point, an advantage someone has. The other three describe qualities of a thing, not a personal asset.'}
+]},
+
+{m:3, instr:'＿＿＿の言葉に意味が最も近いものを、1・2・3・4から一つ選びなさい。', qs:[
+ {n:14, q:'この映画は<u>画期的な</u>手法で製作された。', c:['広く知られている','最近ではめずらしい','非常に時間がかかる','今までになく新しい'], a:4,
+  w:'画期的 = epoch-making: it marks off a new period, so 今までになく新しい.'},
+ {n:15, q:'あの企業は海外市場への進出を<u>もくろんで</u>いる。', c:['計画して','果たして','開始して','あきらめて'], a:1,
+  w:'もくろむ = to plan, to have designs on. It carries a faint whiff of scheming, but the plain meaning is 計画する.'},
+ {n:16, q:'問題を解決するために、もう少し<u>手がかり</u>が欲しい。', c:['イメージ','サポート','チャンス','ヒント'], a:4,
+  w:'手がかり = a clue, a lead — a piece of information you can take hold of. ヒント is the closest loanword.'},
+ {n:17, q:'あの人の話は<u>にわかには</u>信じられない。', c:['すぐには','完全には','すなおには','簡単には'], a:1,
+  w:'にわかに = suddenly, immediately. 「にわかには信じられない」= cannot believe it straight away. Tempting to pick 簡単には, but the word is about time, not effort.'},
+ {n:18, q:'この鍋は<u>重宝</u>している。', c:['以前より値上がりしている','形が気に入っている','評価が高まっている','便利で役に立っている'], a:4,
+  w:'重宝する = to find something handy and use it constantly. The 宝 does not mean it is treasured for its value.'},
+ {n:19, q:'中村さんは仕事に対していつも<u>シビアだ</u>。', c:['弱気だ','厳しい','柔軟だ','注意深い'], a:2,
+  w:'シビア (severe) is used in Japanese for someone strict and unsparing — about standards, money, judgement.'}
+]},
+
+{m:4, instr:'次の言葉の使い方として最もよいものを、1・2・3・4から一つ選びなさい。', qs:[
+ {n:20, q:'連携', c:['学校は地域と<u>連携</u>して生徒の安全を守っている。','複数の社員で一台のプリンターを<u>連携</u>して使っている。','最近の株価は、為替レートと<u>連携</u>して上下している。','登山のときには、必ず地図を<u>連携</u>してください。'], a:1,
+  w:'連携 = two parties cooperating toward a shared aim. 2 wants 共有, 3 wants 連動 (moving in step), 4 wants 携帯.'},
+ {n:21, q:'不服', c:['彼の失礼な態度は、そこにいた人々の<u>不服</u>を買った。','カラオケで思い切り歌って、日ごろの<u>不服</u>を晴らそう。','審判の判定に<u>不服</u>を唱えることはできない。','この部署で、お客様からの<u>不服</u>を受け付けています。'], a:3,
+  w:'不服 = formal dissatisfaction with a decision — 不服を唱える／申し立てる. 1 wants 反感, 2 wants 不満, 4 wants 苦情.'},
+ {n:22, q:'かなう', c:['苦労が<u>かない</u>、彼は俳優として成功をおさめた。','天気予報が<u>かない</u>、今日は一日中快晴だった。','準備を重ねてきたイベントが無事<u>かなった</u>。','自分の店を持つという夢が、とうとう<u>かなった</u>。'], a:4,
+  w:'かなう takes a wish or dream as its subject: 夢／願いがかなう. 1 wants 実って, 2 wants 外れて, 3 wants 終わった.'},
+ {n:23, q:'目覚ましい', c:['あの新人選手は<u>目覚ましい</u>成長を見せている。','上の階で<u>目覚ましい</u>ほどの大きな物音がした。','この赤はとても<u>目覚ましい</u>色で人目をひくね。','夕べ早く寝たので、今朝はとても<u>目覚ましい</u>。'], a:1,
+  w:'目覚ましい = remarkable, striking — used of progress, growth, results. It has nothing to do with waking up despite the kanji.'},
+ {n:24, q:'ほどける', c:['ねじが<u>ほどけて</u>、イスがぐらぐらしている。','靴のひもが<u>ほどけない</u>ようにしっかりと結んだ。','シャツのボタンが<u>ほどけて</u>いるから、とめた方がいいよ。','グラスに浮かぶ氷がみるみるうちに<u>ほどけた</u>。'], a:2,
+  w:'ほどける = a knot or tie comes undone. 1 wants ゆるんで, 3 wants 外れて, 4 wants 溶けた.'},
+ {n:25, q:'赴任', c:['明日から三日間東京へ<u>赴任</u>しなければならない。','新入社員の研修では、実際に売り場にも<u>赴任</u>してもらう。','部長が海外の支社に<u>赴任</u>するので、みんなで送別会を開いた。','田中氏が新しい社長に<u>赴任</u>することが発表された。'], a:3,
+  w:'赴任 = to leave for a post in another place, so a farewell party fits. 1 is a 出張, 2 wants 出て, 4 wants 就任 (taking up an office).'}
+]},
+
+{m:5, instr:'次の文の（　　）に入れるのに最もよいものを、1・2・3・4から一つ選びなさい。', qs:[
+ {n:26, q:'人気作家A氏の講演会が無料（　　）、多くのファンが詰めかけた。', c:['にして','にあって','として','とあって'], a:4,
+  w:'〜とあって = given that / seeing as (a noteworthy fact leading to a result). 無料とあって、ファンが詰めかけた.'},
+ {n:27, q:'都会から田舎に移り住んだ人の話を聞く（　　）、「田舎は人を癒す力を持っている」とつくづく感じる。', c:['につけ','なり','とは','にしてみると'], a:1,
+  w:'〜につけ = every time, whenever, and it pairs naturally with つくづく感じる.'},
+ {n:28, q:'この鍋は、いため物に、揚げ物に（　　）何にでも使えて便利です。', c:['は','と','や','か'], a:2,
+  w:'The pattern is 「Aに、Bに、と」— と closes off a list you have just rattled off, before the summary 何にでも.'},
+ {n:29, q:'プリンターの調子が悪くなり、製造会社に電話で問い合わせたら、向こうの担当者に、あれこれ質問に答え（　　）あげく、対応できないと言われた。', c:['させた','させられる','させる','させられた'], a:4,
+  w:'The speaker is the one made to answer, so passive-causative 答えさせられた. 〜あげく needs a past-tense verb before it.'},
+ {n:30, q:'その日、私はホームに入ってきた電車に飛び乗った。ところが、電車は反対方向に走り始めた（　　）。私は電車の行き先を確かめなかったことを後悔した。', c:['ではない','ではないか','のではない','のではないか'], a:2,
+  w:'〜たではないか is the literary exclamation of discovery: "and the train started off the other way!" のではないか would be a guess, which clashes with something already witnessed.'},
+ {n:31, q:'（インタビューで）<br>A「お店で一番気をつけていることは何ですか。」<br>B「衛生管理です。お客様に食事を（　　）、衛生面の管理には、何よりも注意しております。」', c:['お出しになる以上','お出しになるうえ','お出しする以上','お出しするうえ'], a:3,
+  w:'B is talking about their own action, so humble お出しする, not honorific お出しになる. 〜以上（は）sets up the obligation that follows.'},
+ {n:32, q:'留学するまで、私は自分が見ている世界がすべてだと思っていた。実はそれが世界のほんの小さな一部分（　　）気付いていなかった。', c:['でないことにしか','でしかないことに','にないことでしか','にしかないことで'], a:2,
+  w:'〜でしかない = is nothing more than; 〜ことに気付く takes に. Combine: 一部分でしかないことに気付いていなかった.'},
+ {n:33, q:'（パソコンを使いながら）<br>A「ねえ、この前教えた計算機能、使ってみた？」<br>B「うん。今まであんなに時間をかけてたのが（　　）簡単に計算できたよ。」<br>A「でしょ。パソコンのことならまかせてよ。」', c:['ばかばかしい思いをするもので','ばかばかしく思えるもので','ばかばかしい思いをするくらい','ばかばかしく思えるくらい'], a:4,
+  w:'〜くらい = to the point that: so easy it makes the old way seem absurd. 思える (spontaneous) fits the involuntary reaction; 思いをする does not collocate here.'},
+ {n:34, q:'（電話で）<br>山中「あ、木村先生でいらっしゃいますか。AB出版の山中でございますが、今から原稿をいただきに上がってもよろしいでしょうか。」<br>木村「すみません。まだできていないんです。あと3日（　　）。」', c:['待っておいでになります','お待ち申し上げております','待たせていただくことにしましょうか','待っていただくわけにはいきませんか'], a:4,
+  w:'Kimura is asking a favour of Yamanaka: 待っていただくわけにはいきませんか = "could I not ask you to wait?" 1 and 2 point the honorific in the wrong direction.'},
+ {n:35, q:'（宇宙飛行士　山田太郎さんへのインタビューで）<br>山田「実は、初めから宇宙飛行士になる（　　）、そうじゃないんです。大学を出たら、医者になろうと思っていましたから。」<br>記者「では、何がきっかけで、宇宙飛行士になりたいと思ったんですか。」', c:['つもりだったかっていうと','つもりなのかっていわれたら','つもりじゃなかったのかっていわれたら','つもりがなかったかっていうと'], a:1,
+  w:'「〜かっていうと、そうじゃないんです」= "as to whether…, no." He did not intend it from the start, so the question raised is つもりだったか.'}
+]},
+
+{m:6, instr:'次の文の＿★＿に入る最もよいものを、1・2・3・4から一つ選びなさい。', note:'例：あそこで ＿＿ ＿＿ ★ ＿＿ は山田さんです。→ 1 テレビ／3 を／2 見ている／4 人 となり、★には「見ている」（2）が入ります。', qs:[
+ {n:36, q:'大学入試では、試験当日初めてその大学に行き、迷ってしまった ＿＿＿ ＿＿＿ <b>★</b> ＿＿＿ 事前に見学しておくとよい。', c:['ない','という','ように','ことの'], a:1,
+  w:'迷ってしまった<b>という</b> <b>ことの</b> <b>★ない</b> <b>ように</b> 事前に見学しておくとよい。→ 2-4-1-3, so ★ = 1 ない.'},
+ {n:37, q:'趣味を持つのは良いことだと思いますが、家庭を犠牲 ＿＿＿ ＿＿＿ <b>★</b> ＿＿＿ 、それはちょっと問題です。', c:['となる','まで','と','にして'], a:1,
+  w:'家庭を犠牲<b>にして</b> <b>まで</b> <b>★となる</b> <b>と</b>、それはちょっと問題です。→ 4-2-1-3, so ★ = 1 となる.'},
+ {n:38, q:'管理職になったら、たとえ ＿＿＿ ＿＿＿ <b>★</b> ＿＿＿ 部下の失敗も引き受けるというくらいの覚悟がなくてはならない。', c:['だとして','がなくても','自分には責任','自分の責任'], a:4,
+  w:'たとえ<b>自分には責任</b> <b>がなくても</b> <b>★自分の責任</b> <b>だとして</b> 部下の失敗も引き受ける…→ 3-2-4-1, so ★ = 4 自分の責任.'},
+ {n:39, q:'＿＿＿ ＿＿＿ <b>★</b> ＿＿＿ 小さな町工場だった。', c:['もともとは','我が社だが','今でこそ','一流企業と言われる'], a:2,
+  w:'<b>今でこそ</b> <b>一流企業と言われる</b> <b>★我が社だが</b>、<b>もともとは</b> 小さな町工場だった。→ 3-4-2-1, so ★ = 2 我が社だが.'},
+ {n:40, q:'新番組でこれまでにない役柄を演じる俳優の上田秋さん。役作りに悩んでいる ＿＿＿ ＿＿＿ <b>★</b> ＿＿＿ という。', c:['と','そうでもない','思いきや','のか'], a:3,
+  w:'悩んでいる<b>のか</b> <b>と</b> <b>★思いきや</b>、<b>そうでもない</b> という。→ 4-1-3-2, so ★ = 3 思いきや. 〜と思いきや = contrary to expectation.'}
+]},
+
+{m:7, instr:'次の文章を読んで、文章全体の趣旨を踏まえて、41から45の中に入る最もよいものを、1・2・3・4から一つ選びなさい。', p:'m7', qs:[
+ {n:41, q:'<b class="blk">41</b>', c:['入るのにいい','入るのがいいのか','入るのはいい','入るのでいいのか'], a:3,
+  w:'「CMが入るのはいい。が、モンダイは…」— concede the thing itself, then object to the timing. The は marks that concession.'},
+ {n:42, q:'<b class="blk">42</b>', c:['やめようと思う','やめてほしいのだ','やめるのだろうか','やめられるものではない'], a:2,
+  w:'The whole column is addressed to advertisers as a request (お願いをしたい), so やめてほしいのだ.'},
+ {n:43, q:'<b class="blk">43-a</b> ／ <b class="blk">43-b</b>', c:['a　やはり ／ b　ところだった','a　いったい ／ b　のか','a　といっても ／ b　わけでもない','a　たしかに ／ b　ことは間違いない'], a:4,
+  w:'たしかに…ことは間違いない。が、… — concede the point fully, then push back. The が in the next sentence needs a concession before it.'},
+ {n:44, q:'<b class="blk">44</b>', c:['見させてしまう','身を乗り出させる','見られてしまう','身を乗り出される'], a:1,
+  w:'いやおうなしに見させてしまう = making viewers watch whether they like it or not. The subject is the broadcaster, so causative, not passive.'},
+ {n:45, q:'<b class="blk">45-a</b> ／ <b class="blk">45-b</b>', c:['a　ぼく ／ b　みんな','a　広告主 ／ b　みんな','a　広告主 ／ b　ぼくも','a　ぼく ／ b　広告主も'], a:1,
+  w:'「ぼくだけじゃない、みんな…怒ってるよ」— the writer is one of many angry viewers. 広告主 are the people being addressed, not the ones angry.'}
+]},
+
+{m:8, instr:'次の(1)から(3)の文章を読んで、後の問いに対する答えとして最もよいものを、1・2・3・4から一つ選びなさい。', label:'(1)', p:'m8a', qs:[
+ {n:46, q:'筆者の考えに合うのはどれか。', c:['食事のたびに食器を眺めることで、陶芸品への愛着が強まる。','日常使う食器に注意を向けることで、陶芸品への関心が高まる。','食器を通して陶芸品に興味を持つことで、芸術全般への関心が高まる。','家庭にいろいろな食器を取り入れることで、陶芸品への愛着が強まる。'], a:2,
+  w:'「すでに下地はできているのですから、あと一歩踏みこめば…興味・関心がグッと深まる」— the missing step is 不注意 turning into attention to the dishes already in daily use.'}
+]},
+{m:8, label:'(2)', p:'m8b', qs:[
+ {n:47, q:'筆者は、弱者をどのようにとらえているか。', c:['弱者は正直であることで自らの尊厳を守ろうとする。','弱者は理性を持って自らの過ちをわびようとする。','弱者は正論に頼って劣勢を解消しようとする。','弱者は謝罪することで自らを守ろうとする。'], a:4,
+  w:'「弱者のする謝罪とは、劣勢を一時的に解消する手続きや儀式にすぎない」— apology as self-defence. 1 is wrong because the weak lie to protect their dignity; reason belongs to the strong, which rules out 2 and 3.'}
+]},
+{m:8, label:'(3)', p:'m8c', qs:[
+ {n:48, q:'筆者は、思春期を迎える前の子どもにとってどんな経験が必要だと考えているか。', c:['家庭の外の社会で多くの社会問題に取り組む経験','日々の生活の場で自分自身と向き合うような経験','広い社会の中で自分を鍛えることができるような経験','日常生活の中で個人の発達段階に応じた役割を担う経験'], a:3,
+  w:'「それまでの生活圏を出てより広い社会的文脈のなかで…もっとも強くストレスを味わう」— moderate exposure to stress out in the wider world is what toughens them.'}
+]},
+
+{m:9, instr:'次の(1)から(3)の文章を読んで、後の問いに対する答えとして最もよいものを、1・2・3・4から一つ選びなさい。', label:'(1)', p:'m9a', qs:[
+ {n:49, q:'筆者は、自分が笑われた原因はどこにあると考えているか。', c:['科学者らしくない趣のある表現で桜の花を褒めた点','自分が桜の美しさを理解できていなかった点','桜の花は自分が述べた形をしていなかった点','桜の美しさを科学者的な視点から表現した点'], a:4,
+  w:'「科学者特有の美意識は、風流とはかなり異質なものなのだと悟った」— he praised the blossom, but in a scientist\u2019s idiom.'},
+ {n:50, q:'ここでの<u>理想化</u>とは何か。', c:['桜の花はどれも正五角形であるとみなすこと','桜の花には共通する特徴があるとみなすこと','桜の花には数学的な美しさがあると考えること','桜の花は他のどの花よりも正五角形に近いと考えること'], a:1,
+  w:'「完全な正五角形を示す花びらは少ないだろうが、そこにはあまりこだわらない」— treating every blossom as if it were a regular pentagon. Picking out the shape in the first place is 抽象化.'},
+ {n:51, q:'筆者の考えによると、花の場合、抽象化と理想化によって何が期待されるか。', c:['花には品種を越えた共通点があることが明らかになること','自然界に咲いている花の美しさに普遍性が見いだされること','花の形がどのように決まるのかその仕組みが解明されること','花の形の対称性が遺伝子によるものであることが証明されること'], a:3,
+  w:'「うまくこの遺伝子を突きとめられれば、花の形を決める普遍的な法則が見つかる」. That genes decide symmetry is already taken as 間違いない, so 4 is not what is being hoped for.'}
+]},
+{m:9, label:'(2)', p:'m9b', qs:[
+ {n:52, q:'<u>世間一般の価値基準</u>として筆者が本文であげているのは何か。', c:['長期にわたって居住できる物件であること','将来売却するときにも有利な物件であること','購入者の生活様式に合った物件であること','購入時の費用負担が抑えられる物件であること'], a:2,
+  w:'The first paragraph is the general standard: 資産的な価値 — value that does not fall if you have to sell. 3 is the writer\u2019s own criterion (有用性), not the crowd\u2019s.'},
+ {n:53, q:'筆者の考えでは、年を取ってから住む家として住居を選ぶときに最も大切なことは何か。', c:['老後の生き方や行動範囲に沿っているかを判断する。','老後は行動する能力が衰えるため家の構造を優先する。','未来の予測に沿って決めた予算と同じくらいのものを選ぶ。','いつか売るときのことも考えて資産的な価値を重視する。'], a:1,
+  w:'「自分たちの生き方をはっきりと見極め、その視点に立ったうえで、選択し」, with the narrowing range of movement in old age factored in.'},
+ {n:54, q:'住居選びについて、筆者が最も言いたいことは何か。', c:['人が生活する上でどんな住居に住むかはとても大切であり、一般的な価値基準も参考にしたほうがよい。','他人と考え方が異なったとしても、自分の生活スタイルを重視して将来の住居を決定したほうがよい。','将来の経済状勢の変化に備えて、できるだけ資産価値の下がりにくそうな住居を選んだほうがよい。','年を取るにつれて住居の好みも変わってくるため、その時々の考えに合わせて住居を選択したほうがよい。'], a:2,
+  w:'「それらは必ずしも世間一般の価値基準とは一致しない。したがって、自分たちの考え方や行動様式に従い…判断する必要がある」.'}
+]},
+{m:9, label:'(3)', p:'m9c', qs:[
+ {n:55, q:'<u>①そういう宿命</u>とはどういう意味か。', c:['現代の人々は考えが時代や環境に歪められ、「世界」の見方が定まらない。','現代の人々は時代や環境の制約を受けており、「世界」が正しく見えないこともある。','人間はものの見方が時代や環境に縛られ、「世界」が正しく見えないこともある。','人間は生き方が時代や環境に大きく影響を受け、「世界」の見方が定まらない。'], a:3,
+  w:'「人間は、所詮、時代の子であり、環境の子である」— humans in general, not just people today, which rules out 1 and 2. What is constrained is 認識 (how they see), not 生き方.'},
+ {n:56, q:'<u>②「世界を知る」ことがますます困難になった</u>のはなぜか。', c:['個人の世界認識が狭まり、実世界の時代の変化をつかみにくいから','個人の世界認識が固まらず、実世界の情報に惑わされてしまうから','個人の世界認識が、実世界のめまぐるしい変化や情報量に対応できないから','個人の世界認識が、高度に発達している実世界の情報環境に追いつけないから'], a:3,
+  w:'「果てしなく茫漠と広がり、しかも絶えず激動する『世界』が、手持ちの世界認識ではさっぱり見えなくなってきているからだ」— the gap is with the world itself, not with the media environment.'},
+ {n:57, q:'筆者は、「世界を知る力」を高めるためにできることは何だと考えているか。', c:['今までの世界認識を改め、できるだけ多くの情報を得ること','時代や環境の制約を克服して、自分の世界認識の限界を越えること','情報の激流に呑み込まれず、自分の世界認識の枠から自由になること','自分の世界認識にできるだけ柔軟性を持たせ、その範囲を自覚すること'], a:4,
+  w:'「認識の鋳型をほぐし、世界認識をできるだけ柔らかく広げ…限界がどこにあるのか、しっかりとらえ直す」. Complete freedom from the constraint is explicitly ruled out, so 2 and 3 overshoot.'}
+]},
+
+{m:10, instr:'次の文章を読んで、後の問いに対する答えとして最もよいものを、1・2・3・4から一つ選びなさい。', p:'m10', qs:[
+ {n:58, q:'<u>①そんな錯覚に捕らえられる</u>とはどういう意味か。', c:['自分は何でも知っていて世界を相手にできると思う。','言葉でどんなことでも伝えられるような気になる。','学問から得られることには限界がないと感じてしまう。','人間が世界から学べることはいかに大きいことかと思う。'], a:1,
+  w:'「自分は世界的に考えている、そのなかに世界のすべてを包める」— the illusion is about the reach of one\u2019s own mind, not about language or about learning having no limits.'},
+ {n:59, q:'<u>②これ</u>とは何を指すか。', c:['自分にできることを把握したうえで仕事をすること','自分が世界のために何ができるかを考えて仕事に励むこと','できる限り多くの知識を得て自分の仕事に役立たせること','人のためにできることは何かを考えたうえで仕事をすること'], a:1,
+  w:'これ points back to the carpenter and the farmer: 「我が身ひとつの能力でできることを知り抜いている」.'},
+ {n:60, q:'この文章では、学問をするということをどのような例を使って説明しているか。', c:['与えられた土を耕し、よい苗を選んで植える。','与えられた土を耕し、よい作物になるように苗を育てる。','与えられた土壌を改善するために耕し続ける。','与えられた土壌を改善しながら世界標準の作物を育てる。'], a:2,
+  w:'The soil is your 気質 — given, not chosen and not improved. You till it, water it, and help the seedling grow: 「苗がみずから育つのを、毎日助ける」.'},
+ {n:61, q:'筆者は「教養」をどのようなものだと考えているか。', c:['新たな気質を見いだすことができる学問や思想','人それぞれの気質の中で育まれた学問や思想','生きていくうえで必要な専門的な知識','書物や学問から得られた多くの知識'], a:2,
+  w:'「『教養』とは、元来この作物を指して言うのであって、物識りたちの大風呂敷を指して言うのではない」— the crop that ripens out of your own temperament.'}
+]},
+
+{m:11, instr:'次のAとBは、子どもがテレビを見ることについての専門家の意見である。後の問いに対する答えとして最もよいものを、1・2・3・4から一つ選びなさい。', p:'m11', qs:[
+ {n:62, q:'子どもにテレビを長時間見せることについて、AとBの観点はどのようなものか。', c:['Aは問題解決を意識した今後の課題を述べ、Bは批判的に現状を報告している。','Aは解決を意識した問題提起をし、Bは問題の原因は社会的背景にあると指摘している。','Aは影響の大きさを示して注意を喚起し、Bは問題解決を意識した今後の課題を述べている。','Aは問題の原因は社会的背景にあると指摘し、Bは影響の大きさを示して注意を喚起している。'], a:3,
+  w:'A ends on 「影響の甚大さの警鐘」— a warning. B ends on 「バランスをとりながら、これらの検証を進める必要があるのではないでしょうか」— an agenda for what to do next.'},
+ {n:63, q:'子どもとテレビの関係について、AとBはどのように述べているか。', c:['Aはメディアとの接触より親子のかかわりが大切だと述べ、Bはテレビを見せるよりも外での遊びを重視したほうがいいと述べている。','Aはメディアとの接触が子どもの発育を妨げる要因だと述べ、Bは子育てを取り巻く状況がテレビの見せ過ぎを引き起こす場合があると述べている。','Aはメディアとの接触が長いことよりも実体験の不足のほうが問題だと述べ、Bは生活の中からテレビを排除しただけでは問題は解決しないと述べている。','Aはメディアに長時間接することが子どもの成長に影響を与える場合が多いと述べ、Bは親が子どもに適切にテレビを見せることが大切だと述べている。'], a:2,
+  w:'A: メディア漬けの生活が心身の発達の遅れや歪みを招く. B: 同世代の子がいない、自然がなくなったといった背景があってテレビになる. Outdoor play (1) is the view B is answering, not B\u2019s own.'}
+]},
+
+{m:12, instr:'次の文章を読んで、後の問いに対する答えとして最もよいものを、1・2・3・4から一つ選びなさい。', p:'m12', qs:[
+ {n:64, q:'<u>かたちにならないもの</u>として筆者が挙げているのはどれか。', c:['自然','生命','感謝','作法'], a:4,
+  w:'The villagers write no essays and make no pictures or music; 「それは、＜作法＞をとおしてではないか」— manners are the formless vehicle.'},
+ {n:65, q:'この文章中で筆者は、自分の村に暮らす人々がどんな思想をもっていると述べているか。', c:['自然の中で生きるための思想や、農業や村のあり方についての思想','自然を壊さずに暮らすために、農業や村人はどうあるべきかという思想','自然に対する感謝を表すために、村人としてどうするべきかという思想','自然を取り戻すための思想や、自然を利用する農業のあり方についての思想'], a:1,
+  w:'「村人は自然に対してだけではなく、農についての深い思想や、村とは何かという思想をももっている」.'},
+ {n:66, q:'食事の作法は、次のどのような考え方と結びついているか。', c:['多くの労力がささげられて作られた食べ物が、いかに尊いものであるかという考え方','何かを食べないでは生きてはいけない人間のあり方が、いかに罪深いものであるかという考え方','食事は農が生み出したものをいただくものであり、農業を営む村人への感謝が必要だという考え方','食事は他の生命を自分の身体に取り入れるものであり、それらの生命に感謝しなければいけないという考え方'], a:4,
+  w:'「食事は生命をいただくものだ」「いま自分の身体のなかへと移ってくれる生命に感謝する」— gratitude to the lives taken, not to the labour or the farmers.'},
+ {n:67, q:'この文章中で筆者が述べていることはどれか。', c:['思想の表現は必ずしも文章や作品というかたちをとるとは限らず、かたちにならないものもある。','思想は絵や音楽のようなかたちに表わされるものと考えられてきたが、深い思想とはかたちにならないものである。','思想の表現には絵や音楽などもあるし、かたちにならないものもあるが、文章で表現されたものが最上のものである。','思想は文章や作品のようなかたちになったものが尊重されるが、生活と結びついた深い思想はかたちにならないものである。'], a:1,
+  w:'The thesis the essay builds to: 「思想の表現形式は、文章というかたちをとるとは限らない…そのなかには、かたちにならないものもある」, illustrated by the villagers. 4 reads well too, but it adds a ranking (尊重される) that belongs only to the closing criticism of modern thought.'}
+]},
+
+{m:13, instr:'右の案内は、清森市が主催する「秋の美術コンクール」の作品募集の案内である。高木さんは、今回このコンクールに応募しようと思っている。下の問いに対する答えとして最もよいものを、1・2・3・4から一つ選びなさい。', p:'m13', qs:[
+ {n:68, q:'高木さんが制作した以下の作品のうち、応募できるものはどれか。', c:['清森高校に通っていたとき入賞した秋の風景画','清森市にある清森温泉の紅葉の油絵とイラスト','清森市にある清森公園で撮った春の木々の写真','去年清森市で行われた秋祭りの写真と水彩画'], a:4,
+  w:'One photo plus one watercolour is 各部門1人1点, both on an autumn subject inside 清森市. 1 has already won a prize (未発表 only), 2 puts two works into 絵画部門, 3 is spring.'},
+ {n:69, q:'入賞したかどうかを知るには、高木さんはどうしたらよいか。', c:['1月中旬に清森市のホームページを見る。','1月中旬に直接、観光係に電話して聞く。','2月下旬に市役所の窓口に問い合わせる。','2月下旬に届く予定の通知を待つ。'], a:1,
+  w:'Results go up on the website on 1月15日, and 「電話および窓口での問い合わせには応じられません」. Mail goes only to winners, so waiting tells you nothing if you did not win.'}
+]}
+];
+
+/* ---------------- derived ---------------- */
+const SECT=[
+  {id:'moji', jp:'文字・語彙', en:'Vocabulary', m:[1,2,3,4]},
+  {id:'bunpou', jp:'文法', en:'Grammar', m:[5,6,7]},
+  {id:'dokkai', jp:'読解', en:'Reading', m:[8,9,10,11,12,13]}
+];
+const sectOf=m=>SECT.find(s=>s.m.includes(m)).id;
+const QS=[]; BLOCKS.forEach((b,bi)=>b.qs.forEach(q=>QS.push({...q, m:b.m, bi, sect:sectOf(b.m)})));
+const byNo={}; QS.forEach(q=>byNo[q.n]=q);
+const TOTALQ=QS.length, LIMIT=110*60*1000;
+
+/* ---------------- state ---------------- */
+const EKEY='n1kanji.exam.v1';
+function blank(){return {ans:{},flag:{},page:0,timed:true,startedAt:0,submittedAt:0,spent:0,attempts:0,best:null};}
+function loadE(){
+  try{
+    const o=JSON.parse(localStorage.getItem(EKEY)||'null');
+    if(!o||typeof o!=='object')return blank();
+    const s=blank();
+    if(o.ans&&typeof o.ans==='object')for(const k in o.ans){const n=+k,v=+o.ans[k];if(byNo[n]&&v>=1&&v<=4)s.ans[n]=v;}
+    if(o.flag&&typeof o.flag==='object')for(const k in o.flag){const n=+k;if(byNo[n]&&o.flag[k])s.flag[n]=1;}
+    s.page=Math.min(BLOCKS.length-1,Math.max(0,+o.page||0));
+    s.timed=o.timed!==false;
+    s.startedAt=+o.startedAt||0; s.submittedAt=+o.submittedAt||0; s.spent=+o.spent||0;
+    s.attempts=+o.attempts||0;
+    if(o.best&&typeof o.best==='object')s.best=o.best;
+    return s;
+  }catch(e){return blank();}
+}
+let E=loadE(), persist=true;
+function saveE(){ if(!persist)return; try{localStorage.setItem(EKEY,JSON.stringify(E));}catch(e){persist=false;} }
+
+const answered=()=>Object.keys(E.ans).length;
+const running=()=>E.startedAt>0&&!E.submittedAt;
+const remaining=()=>Math.max(0,LIMIT-E.spent);
+function clock(ms){const t=Math.max(0,Math.round(ms/1000));return String(Math.floor(t/3600)).padStart(2,'0')+':'+String(Math.floor(t%3600/60)).padStart(2,'0')+':'+String(t%60).padStart(2,'0');}
+
+/* ---------------- scoring ---------------- */
+function score(){
+  const out={total:0, wrong:[], blank:0, sect:{}};
+  SECT.forEach(s=>out.sect[s.id]={got:0,of:0});
+  QS.forEach(q=>{
+    const s=out.sect[q.sect]; s.of++;
+    const a=E.ans[q.n];
+    if(!a)out.blank++;
+    if(a===q.a){out.total++;s.got++;}
+    else out.wrong.push(q.n);
+  });
+  out.of=TOTALQ;
+  const lang=out.sect.moji.got+out.sect.bunpou.got, langOf=out.sect.moji.of+out.sect.bunpou.of;
+  out.scaled={
+    lang:Math.round(lang/langOf*60), read:Math.round(out.sect.dokkai.got/out.sect.dokkai.of*60)
+  };
+  return out;
+}
+
+/* ---------------- DOM ---------------- */
+const el=id=>document.getElementById(id);
+const root=el('v-exam');
+root.innerHTML=`
+<div id="exIntro" class="exintro"></div>
+<div id="exRun" hidden>
+  <div class="exbar">
+    <span class="exwhere" id="exWhere"></span>
+    <span class="excount" id="exCount"></span>
+    <span class="exclock" id="exClock"></span>
+    <button class="exsheetbtn" id="exSheetBtn" aria-expanded="false">Answer sheet</button>
+    <button class="exsubmit" id="exSubmit">答案を提出　Submit</button>
+  </div>
+  <div class="exsheet" id="exSheet" hidden></div>
+  <div id="exBody"></div>
+  <div class="expager">
+    <button id="exPrev">← 前へ Back</button>
+    <button id="exSub2" class="issub">提出</button>
+    <button id="exNext">次へ Next →</button>
+  </div>
+</div>
+<div id="exResult" hidden></div>`;
+
+const exIntro=el('exIntro'), exRun=el('exRun'), exResult=el('exResult'),
+      exBody=el('exBody'), exSheet=el('exSheet'), exWhere=el('exWhere'),
+      exCount=el('exCount'), exClock=el('exClock');
+
+/* ---------------- intro ---------------- */
+function renderIntro(){
+  const partial=E.startedAt&&!E.submittedAt&&answered()>0;
+  const done=!!E.submittedAt;
+  exIntro.innerHTML=`
+  <div class="excard">
+    <p class="exkicker">模擬試験</p>
+    <h2>N1 言語知識（文字・語彙・文法）・読解</h2>
+    <p class="exlead">Sixty-nine questions from the official N1 practice workbook, sat on screen.
+    Answer, submit, and every question comes back with the right answer and why it is right.
+    There is no listening section here.</p>
+    <dl class="exfacts">
+      <dt>文字・語彙</dt><dd>問題1–4 · 25 questions</dd>
+      <dt>文法</dt><dd>問題5–7 · 20 questions</dd>
+      <dt>読解</dt><dd>問題8–13 · 24 questions</dd>
+      <dt>制限時間</dt><dd>110 minutes, as in the real paper</dd>
+    </dl>
+    <label class="extimed"><input type="checkbox" id="exTimed" ${E.timed?'checked':''}> Run the 110-minute clock (it pauses whenever you leave this tab)</label>
+    <div class="exactions">
+      ${partial?`<button class="exgo" id="exResume">Carry on — ${answered()} of ${TOTALQ} answered</button>
+                 <button id="exFresh">Start again</button>`
+               :`<button class="exgo" id="exBegin">${done?'Sit the exam again':'Start the exam'}</button>`}
+      ${done?`<button id="exSeeResult">Show the marked paper</button>`:''}
+    </div>
+    ${E.attempts?`<p class="exnote">Attempts so far: ${E.attempts}${E.best?`. Best: ${E.best.total}/${TOTALQ}.`:''}</p>`:''}
+    <p class="exnote">Answers and explanations were worked out from the questions themselves — the
+    workbook PDF carries no answer key — so treat a disputed item as worth checking.</p>
+  </div>`;
+  el('exTimed').onchange=e=>{E.timed=e.target.checked;saveE();};
+  const begin=el('exBegin'); if(begin)begin.onclick=()=>start(true);
+  const res=el('exResume'); if(res)res.onclick=()=>{setStage('run');};
+  const fresh=el('exFresh'); if(fresh)fresh.onclick=()=>{if(confirm('Clear your answers and start the exam from question 1?'))start(true);};
+  const seen=el('exSeeResult'); if(seen)seen.onclick=()=>{setStage('result');};
+}
+
+function start(reset){
+  if(reset){E.ans={};E.flag={};E.page=0;E.submittedAt=0;E.spent=0;}
+  E.startedAt=Date.now(); saveE(); setStage('run');
+}
+
+/* ---------------- stages ---------------- */
+let stage='intro';
+function setStage(s){
+  stage=s;
+  exIntro.hidden=s!=='intro'; exRun.hidden=s!=='run'; exResult.hidden=s!=='result';
+  if(s!=='run'){exBody.innerHTML='';exSheet.innerHTML='';exSheet.hidden=true;el('exSheetBtn').setAttribute('aria-expanded','false');}
+  if(s!=='result')exResult.innerHTML='';
+  if(s==='intro')renderIntro();
+  if(s==='run'){renderBlock();tick();}
+  if(s==='result')renderResult();
+  window.scrollTo({top:0});
+}
+
+/* ---------------- question rendering ---------------- */
+function passageHTML(key){
+  const p=P[key]; if(!p)return '';
+  return `<div class="expassage">
+    ${p.title?`<h4 class="ptitle">${p.title}</h4>`:''}
+    ${p.html}
+    ${p.src?`<p class="psrc">${p.src}</p>`:''}
+    ${p.notes.length?`<ul class="pnotes">${p.notes.map(n=>`<li>${n}</li>`).join('')}</ul>`:''}
+  </div>`;
+}
+
+function qHTML(q,mode){
+  const picked=E.ans[q.n]|0, right=q.a, rev=mode==='review';
+  const choices=q.c.map((c,i)=>{
+    const v=i+1; let cls='exchoice';
+    if(rev){ if(v===right)cls+=' correct'; if(v===picked&&v!==right)cls+=' wrong'; }
+    else if(v===picked)cls+=' picked';
+    const mark=rev?(v===right?'✓':(v===picked?'✗':'')):'';
+    return `<button class="${cls}" data-q="${q.n}" data-v="${v}" ${rev?'disabled':''}>
+      <span class="num">${v}</span><span class="txt">${c}</span><span class="mk">${mark}</span></button>`;
+  }).join('');
+  const verdict=rev?(picked===right?'<span class="exok">正解 Correct</span>'
+      :picked?`<span class="exno">不正解 — you chose ${picked}, answer is ${right}</span>`
+             :`<span class="exno">未解答 — answer is ${right}</span>`):'';
+  return `<div class="exq ${rev&&picked!==right?'ismiss':''}" id="q${q.n}" data-no="${q.n}">
+    <div class="exqhead"><span class="exno-badge">${q.n}</span>
+      <div class="exstem">${q.q}</div>
+      ${rev?'':`<button class="exflag ${E.flag[q.n]?'on':''}" data-flag="${q.n}" title="Mark to come back to">★</button>`}
+    </div>
+    <div class="exchoices">${choices}</div>
+    ${rev?`<div class="exwhy">${verdict}<p>${q.w}</p></div>`:''}
+  </div>`;
+}
+
+function blockHTML(b,mode){
+  const first=b.qs[0].n, last=b.qs[b.qs.length-1].n;
+  const head=`<div class="exhead">
+    <p class="exmondai">問題${b.m}${b.label?' '+b.label:''} <span>Q${first}–${last}</span></p>
+    ${b.instr?`<p class="exinstr">${b.instr}</p>`:''}
+    ${b.note?`<p class="exhint">${b.note}</p>`:''}
+  </div>`;
+  const pass=b.p?(mode==='review'
+      ?`<details class="exdetails"><summary>本文を読む　Show the passage</summary>${passageHTML(b.p)}</details>`
+      :passageHTML(b.p)):'';
+  return head+pass+b.qs.map(q=>qHTML(q,mode)).join('');
+}
+
+function renderBlock(){
+  const b=BLOCKS[E.page];
+  exBody.innerHTML=blockHTML(b,'exam');
+  exWhere.textContent=`問題${b.m}${b.label?' '+b.label:''} · ${SECT.find(s=>s.id===sectOf(b.m)).jp}`;
+  exCount.textContent=`${answered()} / ${TOTALQ} answered`;
+  const last=E.page===BLOCKS.length-1;
+  el('exPrev').disabled=E.page===0;
+  el('exNext').classList.toggle('isdone',last);
+  el('exNext').textContent=last?'答案を提出　Submit':'次へ Next →';
+  el('exSub2').hidden=last;
+  wire(exBody);
+  if(!exSheet.hidden)renderSheet();
+}
+
+function wire(scope){
+  scope.querySelectorAll('.exchoice').forEach(btn=>btn.onclick=()=>{
+    const n=+btn.dataset.q, v=+btn.dataset.v;
+    if(E.ans[n]===v)delete E.ans[n]; else E.ans[n]=v;
+    saveE();
+    btn.parentElement.querySelectorAll('.exchoice').forEach(x=>x.classList.toggle('picked',+x.dataset.v===E.ans[n]));
+    exCount.textContent=`${answered()} / ${TOTALQ} answered`;
+    if(!exSheet.hidden)renderSheet();
+  });
+  scope.querySelectorAll('.exflag').forEach(btn=>btn.onclick=()=>{
+    const n=+btn.dataset.flag;
+    if(E.flag[n])delete E.flag[n]; else E.flag[n]=1;
+    btn.classList.toggle('on',!!E.flag[n]); saveE();
+    if(!exSheet.hidden)renderSheet();
+  });
+}
+
+/* ---------------- answer sheet ---------------- */
+function renderSheet(){
+  exSheet.innerHTML=`<div class="sheetgrid">`+QS.map(q=>{
+    const a=E.ans[q.n];
+    return `<button class="cellq ${a?'has':''} ${E.flag[q.n]?'flg':''}" data-jump="${q.n}">
+      <b>${q.n}</b><i>${a||'·'}</i></button>`;
+  }).join('')+`</div>
+  <p class="exnote">${answered()} answered · ${TOTALQ-answered()} left · ${Object.keys(E.flag).length} marked</p>`;
+  exSheet.querySelectorAll('[data-jump]').forEach(b=>b.onclick=()=>{
+    const q=byNo[+b.dataset.jump];
+    if(E.page!==q.bi){E.page=q.bi;saveE();renderBlock();}
+    const t=el('q'+q.n); if(t)t.scrollIntoView({block:'center'});
+  });
+}
+el('exSheetBtn').onclick=()=>{
+  const open=exSheet.hidden;
+  exSheet.hidden=!open; el('exSheetBtn').setAttribute('aria-expanded',String(open));
+  if(open)renderSheet();
+};
+
+/* ---------------- paging, submit, clock ---------------- */
+el('exPrev').onclick=()=>{if(E.page>0){E.page--;saveE();renderBlock();window.scrollTo({top:0});}};
+el('exNext').onclick=()=>{
+  if(E.page<BLOCKS.length-1){E.page++;saveE();renderBlock();window.scrollTo({top:0});}
+  else submit(false);
+};
+el('exSubmit').onclick=()=>submit(false);
+el('exSub2').onclick=()=>submit(false);
+
+function submit(auto){
+  const left=TOTALQ-answered();
+  if(!auto&&left&&!confirm(`${left} question${left>1?'s are':' is'} still blank. Submit anyway?`))return;
+  E.submittedAt=Date.now();
+  E.attempts++;
+  const s=score();
+  const rec={total:s.total,of:s.of,when:E.submittedAt,spent:E.spent};
+  if(!E.best||s.total>E.best.total)E.best=rec;
+  saveE();
+  setStage('result');
+}
+
+let timer=null;
+function tick(){
+  clearInterval(timer);
+  if(!running()){exClock.textContent='';exClock.classList.remove('low');return;}
+  const paint=inc=>{
+    if(inc){E.spent+=1000; if(E.spent%15000<1000)saveE();}
+    if(!E.timed){exClock.textContent='経過 '+clock(E.spent);return;}
+    const r=remaining();
+    exClock.textContent='残り '+clock(r);
+    exClock.classList.toggle('low',r<10*60*1000);
+    if(r<=0){clearInterval(timer);saveE();alert('110分が経過しました。答案を提出します。');submit(true);}
+  };
+  paint(false);
+  if(!E.submittedAt)timer=setInterval(()=>paint(true),1000);
+}
+document.addEventListener('visibilitychange',()=>{
+  if(document.hidden){clearInterval(timer);saveE();}
+  else if(stage==='run')tick();
+});
+
+/* ---------------- result ---------------- */
+function renderResult(){
+  clearInterval(timer);
+  const s=score(), pct=Math.round(s.total/s.of*100);
+  const sc=s.scaled, pass=sc.lang>=19&&sc.read>=19&&(sc.lang+sc.read)>=Math.round(100*2/3);
+  exResult.innerHTML=`
+  <div class="excard exscore">
+    <p class="exkicker">採点結果</p>
+    <p class="exbig">${s.total}<span>/ ${s.of}</span></p>
+    <p class="exlead">${pct}% correct${s.blank?` · ${s.blank} left blank`:''}${E.spent?` · ${clock(E.spent)} on the clock`:''}</p>
+    <div class="exsects">
+      ${SECT.map(x=>{const g=s.sect[x.id];return `<div class="exsect">
+        <p class="jp">${x.jp}</p><p class="v">${g.got}<span>/${g.of}</span></p>
+        <span class="bar"><i style="width:${Math.round(g.got/g.of*100)}%"></i></span></div>`}).join('')}
+    </div>
+    <p class="exnote">Rough scaled equivalent: 言語知識 ${sc.lang}/60 · 読解 ${sc.read}/60.
+    The real test scales scores by item difficulty and needs 19 in each section, so read this as a
+    ballpark only — ${pass?'you would be in the range that passes these two sections':'as it stands this would fall short'}.
+    There is no listening section here, which is a third of the real paper.</p>
+    <div class="exactions">
+      <button class="exgo" id="exRetry">Sit it again</button>
+      <label class="exonly"><input type="checkbox" id="exOnlyWrong" ${s.wrong.length?'checked':''}> Show only what I got wrong</label>
+    </div>
+  </div>
+  <div id="exReview"></div>`;
+  const only=el('exOnlyWrong');
+  const paint=()=>{
+    const w=only.checked;
+    el('exReview').innerHTML=BLOCKS.map(b=>{
+      const qs=w?b.qs.filter(q=>E.ans[q.n]!==q.a):b.qs;
+      if(!qs.length)return '';
+      return `<section class="exblock">${blockHTML({...b,qs},'review')}</section>`;
+    }).join('')||`<p class="exempty">Every question correct. Nothing to review.</p>`;
+  };
+  only.onchange=paint; paint();
+  el('exRetry').onclick=()=>{if(confirm('Clear your answers and sit the exam again?')){E.submittedAt=0;start(true);}};
+}
+
+/* ---------------- entry ---------------- */
+function enter(){
+  if(E.submittedAt)setStage('result');
+  else if(E.startedAt&&answered()>0)setStage('run');
+  else setStage('intro');
+}
+let entered=false;
+document.querySelectorAll('nav.tabs button').forEach(b=>b.addEventListener('click',()=>{
+  if(b.dataset.view!=='exam'){clearInterval(timer);saveE();return;}
+  if(!entered){entered=true;enter();}
+  else if(stage==='run')tick();
+}));
+if(root.classList.contains('on')){entered=true;enter();}
+renderIntro();
+
+})();
+
 </script>
 </body>
 </html>

@@ -57,6 +57,11 @@ After that, everything runs with no signal: practice, tracing, search and review
   of 100 or by status.
 - **Review** — spaced repetition (SM-2). Mixed direction by default: kanji → meaning,
   meaning → kanji, kanji → reading. Again / Hard / Good / Easy.
+- **Exam** — a full N1 practice paper from the official workbook, sat on screen: 69 questions
+  across 問題1–13 (文字・語彙 25, 文法 20, 読解 24), with the reading passages included, an
+  optional 110-minute clock, an answer sheet you can jump around in, and a **Submit** button.
+  Marking comes straight back: score overall and per section, then every question again with
+  your choice, the right answer and a note on why it is right. There is no listening section.
 - **Progress** — mastery per set of 100, offline downloads, and progress export/import.
 
 Keyboard, on a desktop: `←` `→` move · `R` replay · `T` trace · `S` star ·
@@ -64,6 +69,12 @@ Keyboard, on a desktop: `←` `→` move · `R` replay · `T` trace · `S` star 
 
 ## Notes
 
+- The exam answer key and explanations were worked out from the questions themselves — the
+  workbook carries no key — so an item you disagree with is worth checking against a
+  published key.
+- Exam answers are kept separately from review history (`n1kanji.exam.v1`), so they are not
+  part of the progress export. Leaving the tab pauses the exam clock; a part-finished paper
+  is picked up where it was left.
 - Review history lives in this browser's local storage, and an installed app has its own
   storage separate from the browser tab. Export a copy before clearing site data or
   moving devices, then import it on the other side.
