@@ -407,6 +407,43 @@ body.night .exactions .exgo{color:#171A1E}
 .expager button.isdone:hover{background:var(--shu);color:#F5F4EF}
 .expager .issub{flex:0 0 auto;border-color:var(--shu);color:var(--shu)}
 .expager .issub:hover{background:var(--shu);color:#F5F4EF}
+
+/* ---------- in-app dialogs ---------- */
+dialog.mdl{
+  border:0;padding:0;background:transparent;max-width:min(420px,calc(100vw - 28px));width:100%;
+  color:var(--ink);
+}
+dialog.mdl::backdrop{background:rgba(16,18,22,.52)}
+body.night dialog.mdl::backdrop{background:rgba(0,0,0,.68)}
+.mdlcard{
+  background:var(--cell);border:1px solid var(--rule);border-top:3px solid var(--ai);
+  border-radius:2px;padding:20px 20px 16px;box-shadow:0 18px 40px rgba(16,18,22,.28);
+}
+body.night .mdlcard{box-shadow:0 18px 40px rgba(0,0,0,.5)}
+.mdlcard .mdlkick{font-family:var(--mincho);font-size:.78rem;color:var(--shu);letter-spacing:.16em;margin:0 0 4px}
+.mdlcard .mdlt{font-family:var(--mincho);font-size:1.14rem;font-weight:600;margin:0;line-height:1.5}
+.mdlcard .mdlb{margin:9px 0 0;font-size:.88rem;color:var(--ink2);line-height:1.65}
+.mdlrow{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;margin-top:20px}
+.mdlrow button{
+  background:var(--cell);border:1px solid var(--rule);border-radius:2px;
+  padding:9px 15px;font-size:.86rem;color:var(--ink2);min-width:5.5em;
+}
+.mdlrow button:hover{border-color:var(--ai);color:var(--ai)}
+.mdlrow .mdlok{border-color:var(--ai);background:var(--ai);color:#F5F4EF;font-weight:500}
+body.night .mdlrow .mdlok{color:#171A1E}
+.mdlrow .mdlok.danger{border-color:var(--shu);background:var(--shu);color:#F5F4EF}
+.mdlrow .mdlalt{border-color:var(--ai);color:var(--ai)}
+@media(max-width:760px){
+  dialog.mdl{max-width:none;width:calc(100vw - 24px)}
+  .mdlcard{padding:17px 15px 14px}
+  .mdlrow{margin-top:17px}
+  .mdlrow button{flex:1 1 auto;padding:12px 12px;min-width:0}
+  .mdlrow .mdlok{order:3;flex-basis:100%}
+}
+@media (prefers-reduced-motion:no-preference){
+  dialog.mdl[open] .mdlcard{animation:mdlin .16s ease-out}
+  @keyframes mdlin{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+}
 </style>
 </head>
 <body>
@@ -585,6 +622,68 @@ body.night .exactions .exgo{color:#171A1E}
 
 </main>
 
+<script>
+/* ============================================================
+   In-app dialogs — one small card for every question the app
+   needs to ask, in place of the browser's own confirm/alert.
+   uiConfirm({...}) resolves true / false / 'alt'
+   uiNotice({...})  resolves when the reader closes it
+   ============================================================ */
+(function(){
+const d=document.createElement('dialog');
+d.className='mdl'; d.id='uiDlg';
+d.setAttribute('aria-labelledby','mdlTitle');
+d.innerHTML=`<div class="mdlcard">
+  <p class="mdlkick" id="mdlKick"></p>
+  <h3 class="mdlt" id="mdlTitle"></h3>
+  <p class="mdlb" id="mdlBody"></p>
+  <div class="mdlrow">
+    <button type="button" class="mdlx" id="mdlCancel"></button>
+    <button type="button" class="mdlalt" id="mdlAlt"></button>
+    <button type="button" class="mdlok" id="mdlOk"></button>
+  </div>
+</div>`;
+document.body.appendChild(d);
+const kick=d.querySelector('#mdlKick'), ttl=d.querySelector('#mdlTitle'),
+      body=d.querySelector('#mdlBody'), bOk=d.querySelector('#mdlOk'),
+      bNo=d.querySelector('#mdlCancel'), bAlt=d.querySelector('#mdlAlt');
+
+let settle=null, lastFocus=null;
+function done(v){
+  if(d.open)d.close();
+  if(lastFocus&&lastFocus.focus)try{lastFocus.focus();}catch(e){}
+  const f=settle; settle=null; if(f)f(v);
+}
+bOk.onclick=()=>done(true);
+bNo.onclick=()=>done(false);
+bAlt.onclick=()=>done('alt');
+d.addEventListener('cancel',e=>{e.preventDefault();done(false);});      /* Esc */
+d.addEventListener('click',e=>{if(e.target===d)done(false);});          /* tap outside */
+
+function open(o){
+  const supported=typeof d.showModal==='function';
+  if(!supported){                                                       /* very old browser */
+    const t=(o.title||'')+(o.body?'\n\n'+o.body:'');
+    return Promise.resolve(o.cancel?window.confirm(t):(window.alert(t),true));
+  }
+  kick.textContent=o.kick||''; kick.hidden=!o.kick;
+  ttl.textContent=o.title||'';
+  body.textContent=o.body||''; body.hidden=!o.body;
+  bOk.textContent=o.ok||'OK'; bOk.className='mdlok'+(o.danger?' danger':'');
+  bNo.textContent=o.cancel||''; bNo.hidden=!o.cancel;
+  bAlt.textContent=o.alt||''; bAlt.hidden=!o.alt;
+  if(settle)done(false);
+  lastFocus=document.activeElement;
+  return new Promise(res=>{
+    settle=res; d.showModal();
+    ((o.danger&&o.cancel)?bNo:bOk).focus();
+  });
+}
+window.uiConfirm=o=>open({ok:'OK',cancel:'Cancel',...o});
+window.uiNotice=o=>open({...o,cancel:null,alt:null,ok:o.ok||'OK'});
+})();
+
+</script>
 <script src="https://cdn.jsdelivr.net/npm/hanzi-writer@3/dist/hanzi-writer.min.js"></script>
 <script>
 /* ============================================================
@@ -2547,11 +2646,22 @@ impFile.onchange=async e=>{
     idx=S.last;renderPractice();renderProgress();filter();
     const n=Object.keys(S.cards).length, st=Object.keys(S.stars).length;
     storeNote.textContent=`Progress imported — ${n} card${n===1?'':'s'} and ${st} star${st===1?'':'s'}.`;
-  }catch(err){storeNote.textContent='That file is not a progress export from this app.';}
+    uiNotice({kick:'読み込み完了',title:'Progress imported',
+      body:`${n} card${n===1?'':'s'} and ${st} star${st===1?'':'s'} restored. Review is scheduled from the dates in the file.`,
+      ok:'Done'});
+  }catch(err){
+    storeNote.textContent='That file is not a progress export from this app.';
+    uiNotice({kick:'読み込み失敗',title:'That file was not recognised',
+      body:'Pick the JSON file this app exported (n1-kanji-progress-....json). Nothing has been changed.',
+      ok:'OK'});
+  }
   e.target.value='';
 };
-resetBtn.onclick=()=>{
-  if(!confirm('Clear all review history, intervals and stars? This cannot be undone.'))return;
+resetBtn.onclick=async()=>{
+  const n=Object.keys(S.cards).length;
+  if(await uiConfirm({kick:'確認',title:'Clear all review history?',
+      body:`Intervals, due dates and stars for ${n} kanji go for good. Export your progress first if you want a copy.`,
+      ok:'Clear everything',cancel:'Keep it',danger:true})!==true)return;
   S={cards:{},stars:{},dir:S.dir,newPerDay:S.newPerDay,setFilter:S.setFilter,night:S.night,last:idx,day:today(),doneToday:0,newToday:0};
   save();renderProgress();renderTags();filter();
 };
@@ -3098,7 +3208,13 @@ function renderIntro(){
   el('exTimed').onchange=e=>{E.timed=e.target.checked;saveE();};
   const begin=el('exBegin'); if(begin)begin.onclick=()=>start(true);
   const res=el('exResume'); if(res)res.onclick=()=>{setStage('run');};
-  const fresh=el('exFresh'); if(fresh)fresh.onclick=()=>{if(confirm('Clear your answers and start the exam from question 1?'))start(true);};
+  const fresh=el('exFresh'); if(fresh)fresh.onclick=async()=>{
+    const n=answered();
+    const go=await uiConfirm({kick:'確認',title:'Start the exam again from question 1?',
+      body:`Your ${n} saved answer${n===1?'':'s'} will be cleared and the clock reset.`,
+      ok:'Start again',cancel:'Keep going',danger:true});
+    if(go===true)start(true);
+  };
   const seen=el('exSeeResult'); if(seen)seen.onclick=()=>{setStage('result');};
 }
 
@@ -3227,9 +3343,21 @@ el('exNext').onclick=()=>{
 el('exSubmit').onclick=()=>submit(false);
 el('exSub2').onclick=()=>submit(false);
 
-function submit(auto){
+async function submit(auto){
   const left=TOTALQ-answered();
-  if(!auto&&left&&!confirm(`${left} question${left>1?'s are':' is'} still blank. Submit anyway?`))return;
+  if(!auto&&left){
+    const first=QS.find(q=>!E.ans[q.n]);
+    const r=await uiConfirm({kick:'確認',
+      title:`${left} question${left>1?'s are':' is'} still blank`,
+      body:`Submitting now marks ${left===1?'it':'them'} wrong. The first one left is question ${first.n}, in 問題${first.m}.`,
+      ok:'Submit anyway',alt:`Go to question ${first.n}`,cancel:'Keep working'});
+    if(r==='alt'){
+      if(E.page!==first.bi){E.page=first.bi;saveE();renderBlock();}
+      const t=el('q'+first.n); if(t)t.scrollIntoView({block:'center'});
+      return;
+    }
+    if(r!==true)return;
+  }
   E.submittedAt=Date.now();
   E.attempts++;
   const s=score();
@@ -3249,7 +3377,12 @@ function tick(){
     const r=remaining();
     exClock.textContent='残り '+clock(r);
     exClock.classList.toggle('low',r<10*60*1000);
-    if(r<=0){clearInterval(timer);saveE();alert('110分が経過しました。答案を提出します。');submit(true);}
+    if(r<=0){
+      clearInterval(timer);saveE();submit(true);
+      uiNotice({kick:'時間終了',title:'110分が経過しました',
+        body:'Time is up, so the paper has been submitted and marked. Anything left blank counts as wrong.',
+        ok:'採点結果を見る'});
+    }
   };
   paint(false);
   if(!E.submittedAt)timer=setInterval(()=>paint(true),1000);
@@ -3294,13 +3427,20 @@ function renderResult(){
     }).join('')||`<p class="exempty">Every question correct. Nothing to review.</p>`;
   };
   only.onchange=paint; paint();
-  el('exRetry').onclick=()=>{if(confirm('Clear your answers and sit the exam again?')){E.submittedAt=0;start(true);}};
+  el('exRetry').onclick=async()=>{
+    const go=await uiConfirm({kick:'確認',title:'Sit the whole exam again?',
+      body:`This clears all 69 answers and starts a fresh attempt. Your best score (${E.best?E.best.total:0}/${TOTALQ}) is kept.`,
+      ok:'Start a new attempt',cancel:'Stay here'});
+    if(go===true){E.submittedAt=0;start(true);}
+  };
 }
 
 /* ---------------- entry ---------------- */
 function enter(){
+  /* A fresh load lands on the intro, which reports where the paper stands and
+     offers Carry on / Start again. Switching tabs inside one session does not
+     come back through here, so it never interrupts a paper in progress. */
   if(E.submittedAt)setStage('result');
-  else if(E.startedAt&&answered()>0)setStage('run');
   else setStage('intro');
 }
 let entered=false;
