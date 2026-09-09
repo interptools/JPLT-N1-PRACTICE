@@ -4,7 +4,7 @@
    STROKES : not versioned, holds per-character stroke data you have downloaded.
    Only SHELL is cleared on update, so a downloaded kanji set survives upgrades. */
 
-const VERSION = 'v8';
+const VERSION = 'v9';
 const SHELL   = 'n1-shell-' + VERSION;
 const RUNTIME = 'n1-runtime';
 const STROKES = 'n1-strokes';
