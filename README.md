@@ -10,17 +10,20 @@ spaced-review deck. Installs to a phone home screen and works without a connecti
 index.html              the whole app, including all 1,504 entries
 manifest.webmanifest    name, icons and colours used when installed
 sw.js                   service worker: makes the app work offline
-icons/                  app icons (192, 512, maskable, apple-touch, favicon)
+icon-192.png  icon-512.png  icon-maskable-512.png
+apple-touch-icon.png  favicon-32.png
 ```
 
-All four must sit in the same folder. `sw.js` has to be at the same level as
+Everything sits in one flat folder — the manifest and the `apple-touch-icon` link
+refer to the icons with no folder prefix, so putting them in an `icons/` subfolder
+leaves them 404 and iOS falls back to using a screenshot of the page as the icon. `sw.js` has to be at the same level as
 `index.html` or it cannot cache the app.
 
 ## Publish on GitHub Pages
 
 1. Create a public repository, e.g. `n1-kanji`.
-2. Upload `index.html`, `manifest.webmanifest`, `sw.js` and the `icons` folder,
-   keeping the folder structure above.
+2. Upload `index.html`, `manifest.webmanifest`, `sw.js` and the five icon files,
+   all in the same folder.
 3. Settings → Pages → Source: *Deploy from a branch* → branch `main`, folder `/ (root)` → Save.
 4. Open `https://<your-username>.github.io/n1-kanji/`.
 
@@ -87,8 +90,11 @@ Keyboard, on a desktop: `←` `→` move · `R` replay · `T` trace · `S` star 
   part of the progress export. Leaving the tab pauses the exam clock; a part-finished paper
   is picked up where it was left.
 - Review history lives in this browser's local storage, and an installed app has its own
-  storage separate from the browser tab. Export a copy before clearing site data or
-  moving devices, then import it on the other side.
+  storage separate from the browser tab — so a freshly installed app opens empty even
+  though the same history is still there in Safari. Moving it across: **Copy progress**
+  in the browser, then **Paste progress** in the installed app. (Export/Import to a file
+  works too, but handing a file between Safari and an installed app is unreliable on iOS.)
+  Do the same before clearing site data or changing device.
 - Stroke paths come from the KanjiVG-derived `hanzi-writer-data-jp` set, so the forms
   follow Japanese handwriting rather than Chinese. A few rare characters have no stroke
   data and fall back to freehand tracing over the outline.

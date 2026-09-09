@@ -206,6 +206,8 @@ body.night .cellbar button[aria-pressed="true"]{color:#171A1E}
 .legend .m::before{background:var(--kin)}
 .legend .l::before{background:var(--ai2)}
 .legend .n::before{background:var(--ai-wash)}
+.xfer{margin-top:14px;border:1px solid var(--rule);border-radius:2px;padding:12px;background:var(--cell)}
+.xfer textarea{width:100%;box-sizing:border-box;font-family:ui-monospace,Menlo,monospace;font-size:.72rem;line-height:1.5;color:var(--ink2);background:var(--paper);border:1px solid var(--rule-soft);border-radius:2px;padding:8px;margin:6px 0 10px;resize:vertical}
 .datatools{display:flex;gap:8px;flex-wrap:wrap;margin-top:26px}
 .datatools button,.datatools label{background:var(--cell);border:1px solid var(--rule);padding:8px 14px;border-radius:2px;font-size:.84rem;color:var(--ink2)}
 .datatools .danger{border-color:var(--shu);color:var(--shu)}
@@ -640,10 +642,20 @@ body.night .mdlrow .mdlok{color:#171A1E}
   <h3 class="sec" style="margin-top:30px">Your progress file</h3>
   <div class="datatools">
     <button id="expBtn">Export progress</button>
-    <label>Import progress<input id="impFile" type="file" accept="application/json" hidden></label>
+    <label>Import progress<input id="impFile" type="file" accept=".json,application/json,text/plain" hidden></label>
+    <button id="copyBtn">Copy progress</button>
+    <button id="pasteBtn">Paste progress</button>
     <button class="danger" id="resetBtn">Reset all progress</button>
   </div>
   <p class="note" id="storeNote"></p>
+  <div id="xfer" class="xfer" hidden>
+    <p class="note" id="xferNote"></p>
+    <textarea id="xferBox" rows="4" spellcheck="false" autocapitalize="off" autocorrect="off"></textarea>
+    <div class="datatools">
+      <button class="go" id="xferApply" hidden>Import this</button>
+      <button id="xferClose">Close</button>
+    </div>
+  </div>
 </section>
 
 <!-- EXAM -->
@@ -2734,10 +2746,9 @@ expBtn.onclick=()=>{
   document.body.appendChild(a);a.click();a.remove();
   setTimeout(()=>URL.revokeObjectURL(a.href),4000);
 };
-impFile.onchange=async e=>{
-  const f=e.target.files[0];if(!f)return;
+function applyImport(raw){
   try{
-    const d=JSON.parse(await f.text());
+    const d=JSON.parse(raw);
     if(!d||typeof d!=='object'||(!d.cards&&!d.stars))throw 0;
     S=sane(d);save();
     document.body.classList.toggle('night',S.night);
@@ -2750,12 +2761,37 @@ impFile.onchange=async e=>{
       ok:'Done'});
   }catch(err){
     storeNote.textContent='That file is not a progress export from this app.';
-    uiNotice({kick:'読み込み失敗',title:'That file was not recognised',
-      body:'Pick the JSON file this app exported (n1-kanji-progress-....json). Nothing has been changed.',
+    uiNotice({kick:'読み込み失敗',title:'That was not recognised',
+      body:'Use the JSON this app exported, or the text from Copy progress. Nothing has been changed.',
       ok:'OK'});
+    return false;
   }
-  e.target.value='';
+  xfer.hidden=true;xferBox.value='';
+  return true;
+}
+impFile.onchange=async e=>{const f=e.target.files[0];if(f)applyImport(await f.text());e.target.value='';};
+
+/* clipboard route: an installed app has its own storage, and on iOS passing a
+   file between Safari and the installed app often does not work */
+function showXfer(note,text,applyable){
+  xfer.hidden=false;
+  xferNote.textContent=note;
+  xferBox.value=text||'';
+  xferApply.hidden=!applyable;
+  if(!applyable){xferBox.focus();xferBox.select();}
+}
+copyBtn.onclick=async()=>{
+  const t=JSON.stringify(S), kb=Math.max(1,Math.round(t.length/1024));
+  let copied=false;
+  try{ if(navigator.clipboard&&navigator.clipboard.writeText){await navigator.clipboard.writeText(t);copied=true;} }catch(err){}
+  showXfer(copied
+    ? 'Copied — '+kb+' KB on the clipboard. Open the installed app, tap Paste progress there, and paste it in.'
+    : 'Select all of the text below and copy it, then paste it into the installed app under Paste progress.',
+    t,false);
 };
+pasteBtn.onclick=()=>showXfer('Paste the progress you copied, then tap Import this. Everything in this copy of the app is replaced.','',true);
+xferApply.onclick=()=>{const v=xferBox.value.trim();if(v)applyImport(v);};
+xferClose.onclick=()=>{xfer.hidden=true;xferBox.value='';};
 resetBtn.onclick=async()=>{
   const n=Object.keys(S.cards).length;
   if(await uiConfirm({kick:'確認',title:'Clear all review history?',
